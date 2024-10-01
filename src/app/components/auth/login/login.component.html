@@ -1,3 +1,51 @@
-<h1 class="text-3xl font-bold underline text-red-500">
-  Hello world!
-</h1>
+<div class="grid grid-cols-4 gap-0">
+  <picture class="col-span-1 ">
+    <img
+      src="/assets/images/Login.webp"
+      alt="Login Image"
+      loading="lazy"
+      class="w-full h-svh"
+    />
+  </picture>
+  <div class="col-span-3 flex justify-center items-center flex-col ">
+    <picture class="mb-5">
+      <img src="/assets/images/logo.webp" alt="Login Image" loading="lazy" />
+    </picture>
+    <p class="text-[32px] font-semibold text-primary mb-2">
+      Precision Accounting Work Flow
+    </p>
+    <p class="text-sub-text text-lg">
+      We kindly request you to provide your details.
+    </p>
+    <div class="px-8 mt-8 ">
+      <mat-form-field class="w-full mb-4 ">
+        <mat-label>Email or Phone number</mat-label>
+        <input matInput class="w-full" />
+      </mat-form-field>
+      <mat-form-field class="w-full ">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide() ? 'password' : 'text'"
+          class="w-full border border-red-600 rounded-ful"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide()"
+        >
+          <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="flex justify-between items-center">
+      <mat-checkbox>Remember me</mat-checkbox>
+      <a class="text-primary">Forgot password?</a>
+      </div>
+    </div>
+            <button mat-flat-button class="rounded-none" class="w-1/4 my-16">
+          Sign In
+        </button>
+  </div>
+</div>

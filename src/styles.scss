@@ -2,5 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@layer base {
+  html,
+  body ,p,h1,h2,h3,h4,h5,h6{
+    @apply font-sans;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+.mat-mdc-form-field-focus-overlay,
+.mdc-text-field__input
+{
+  opacity:1 !important;
+  background-color: #F8FAFC !important;
+}
+.ng-tns-c508571215-0{
+  color: #64748B;
+}
+.mdc-line-ripple::before {
+  z-index: 0 !important;
+  border-bottom-width: 0px !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: #64748B !important;
+}
+.mdc-checkbox__background {
+  border: 1px solid #CBD5E1 !important;
+}
+.mdc-text-field--filled{
+  border: 1px solid #CBD5E1;
+  border-radius: 8px !important;
+}
+.mat-mdc-unelevated-button,
+.mat-mdc-unelevated-button .mdc-button__ripple {
+  border-radius: 6px !important;
+}
