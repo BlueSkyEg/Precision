@@ -2,6 +2,13 @@
 module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
+    container: {
+      center: true,
+      padding: "16px",
+      screens: {
+        "2xl": "1248px",
+      },
+    },
     extend: {
       colors: {
         primary: "#3360D3",
@@ -10,7 +17,7 @@ module.exports = {
         "gray-200": "#EDEFF2",
         "gray-100": "#F7F7F7",
         "gray-300": "#DCDEE1",
-        "sub-text":"#465866",
+        "sub-text": "#465866",
         "state-fail-100": "#FFE0E0",
         "state-fail-300": "#C33F2A",
         "state-success-100": "#CCFAD1",

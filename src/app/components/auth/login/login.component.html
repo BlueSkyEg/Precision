@@ -1,5 +1,5 @@
 <div class="grid grid-cols-4 gap-0">
-  <picture class="col-span-1 ">
+  <picture class="col-span-1 hidden lg:block">
     <img
       src="/assets/images/Login.webp"
       alt="Login Image"
@@ -7,7 +7,9 @@
       class="w-full h-svh"
     />
   </picture>
-  <div class="col-span-3 flex justify-center items-center flex-col ">
+  <div
+    class="col-span-4 lg:col-span-3 flex justify-center items-center flex-col h-svh"
+  >
     <picture class="mb-5">
       <img src="/assets/images/logo.webp" alt="Login Image" loading="lazy" />
     </picture>
@@ -17,35 +19,52 @@
     <p class="text-sub-text text-lg">
       We kindly request you to provide your details.
     </p>
-    <div class="px-8 mt-8 ">
-      <mat-form-field class="w-full mb-4 ">
-        <mat-label>Email or Phone number</mat-label>
-        <input matInput class="w-full" />
-      </mat-form-field>
-      <mat-form-field class="w-full ">
-        <mat-label>Password</mat-label>
-        <input
-          matInput
-          [type]="hide() ? 'password' : 'text'"
-          class="w-full border border-red-600 rounded-ful"
-        />
+    <div class="px-8 mt-8">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <mat-form-field class="w-full mb-4">
+          <mat-label>Email or Phone number</mat-label>
+          <input formControlName="email" matInput class="w-full" />
+          @if (loginForm.get('email')?.invalid&&
+          loginForm.get('email')?.touched) {
+          <mat-error>{{ emailErrorMessage() }}</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="w-full">
+          <mat-label>Password</mat-label>
+          <input
+            formControlName="password"
+            matInput
+            [type]="hide() ? 'password' : 'text'"
+            class="w-full"
+          />
+          @if (loginForm.get('password')?.invalid&&
+          loginForm.get('password')?.touched) {
+          <mat-error>{{ passwordErrorMessage() }}</mat-error>
+          }
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="flex justify-between items-center">
+          <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
+          <a class="text-primary">Forgot password?</a>
+        </div>
+
         <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
+          [disabled]="loginForm.invalid"
+          mat-flat-button
+          class="rounded-none w-full my-20 text-xl font-medium"
         >
-          <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
+          Login
         </button>
-      </mat-form-field>
-      <div class="flex justify-between items-center">
-      <mat-checkbox>Remember me</mat-checkbox>
-      <a class="text-primary">Forgot password?</a>
-      </div>
+      </form>
     </div>
-            <button mat-flat-button class="rounded-none" class="w-1/4 my-16">
-          Sign In
-        </button>
   </div>
 </div>
