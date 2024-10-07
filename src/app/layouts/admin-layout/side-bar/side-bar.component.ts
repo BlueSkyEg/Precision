@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TREE_DATA } from 'app/core/data/side-bar-data';
 import { SideNavElements } from 'app/core/interfaces/side-nav-elements';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 
 
 @Component({
@@ -18,6 +18,7 @@ import { NgClass, NgIf } from '@angular/common';
     NavigationIconComponent,
     NgClass,
     NgIf,
+    NgFor
   ],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
@@ -32,6 +33,7 @@ export class SideBarComponent {
   // This function handles selecting a tab
   selectTab(childNode: any) {
     this.selectedTab = childNode;
+    console.log(this.selectedTab)
   }
   isChildOfDashboard(node: any): boolean {
     const parentNode = this.getParentNode(node);

@@ -30,8 +30,7 @@
       <!-- Node without children -->
       <mat-tree-node *matTreeNodeDef="let node; when: !hasChild">
         <div
-          class="flex items-center gap-2"
-          [ngClass]="{'text-red-500': isChildOfDashboard(node)}">
+          class="flex items-center gap-2">
           @if (node.icon) {
           <app-navigation-icon [iconName]="node.icon"></app-navigation-icon>
           }
@@ -64,6 +63,30 @@
             </button>
           </div>
         </div>
+    <!-- Tabs layout for the children of 'Dashboard' -->
+    <div [class.example-tree-invisible]="!tree.isExpanded(node)" *ngIf="node.name === 'Dashboard'" role="group">
+      <div class="flex space-x-4 border-b border-red-300">
+        <button
+          *ngFor="let child of node.children"
+          (click)="selectTab(child)"
+          [ngClass]="{
+            'text-primary border-primary border-b-2': selectedTab === child,
+            'text-gray-500': selectedTab !== child
+          }"
+          class="pb-2"
+        >
+          {{ child.name }}
+        </button>
+      </div>
+
+      <!-- Display selected tab content -->
+      <div class="py-4">
+        <ng-container *ngIf="selectedTab">
+          <p>You have selected: {{ selectedTab.name }}</p>
+          <!-- Add more content as needed -->
+        </ng-container>
+      </div>
+    </div>
 
         <div
           [class.example-tree-invisible]="!tree.isExpanded(node)"
