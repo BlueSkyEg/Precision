@@ -5,26 +5,40 @@ export const TREE_DATA: SideNavElements[] = [
     children: [
       {
         name: 'Dashboard',
+        route: 'insights/dashboard',
         icon: 'dashboard',
         children: [
-          { name: 'Admin Dashboard ' },
-          { name: 'Client Dashboard' },
-          { name: 'Accountant Dashboard' },
+          {
+            name: 'Admin Dashboard ',
+            route: 'insights/dashboard/admin-dashboard',
+          },
+          {
+            name: 'Client Dashboard',
+            route: 'insights/dashboard/client-dashboard',
+          },
+          {
+            name: 'Accountant Dashboard',
+            route: 'insights/dashboard/accountant-dashboard',
+          },
         ],
       },
-      { name: 'Transactions', icon: 'Transactions' },
+      {
+        name: 'Transactions',
+        icon: 'Transactions',
+        route: 'insights/transactions',
+      },
       { name: 'Balance Sheet', icon: 'Balance Sheet' },
       { name: 'Profit & Loss', icon: 'ProfitAndLoss' },
       {
         name: 'Documents',
-        icon:'Documents',
+        icon: 'Documents',
         children: [
-          { name: 'Request Document', icon: 'request_page' },
-          { name: 'Documents Dashboard', icon: 'dashboard' },
+          { name: 'Request Document' },
+          { name: 'Documents Dashboard' },
         ],
       },
-      { name: 'Subcontractors ', icon: 'group' },
-      { name: 'Tax Return History ', icon: 'history' },
+      { name: 'Subcontractors ', icon: 'Subcontractors' },
+      { name: 'Tax Return History ', icon: 'Tax Return History' },
     ],
   },
   {
@@ -36,7 +50,7 @@ export const TREE_DATA: SideNavElements[] = [
       },
       {
         name: 'Tickets ',
-        icon: 'ballot',
+        icon: 'Tickets',
       },
     ],
   },
@@ -46,10 +60,6 @@ export const TREE_DATA: SideNavElements[] = [
       {
         name: 'Dashboard ',
         icon: 'dashboard',
-      },
-      {
-        name: 'Tickets ',
-        icon: 'ballot',
       },
     ],
   },
