@@ -1,8 +1,4 @@
-<div class="grid grid-cols-12">
-  <app-side-bar
-    [isOpen]="isOpen"
-    [ngClass]="isOpen ? 'col-span-2' : 'col-span-1'"
-    (isOpenChange)="onSidebarToggle($event)"
-  />
-  <router-outlet></router-outlet>
+<app-side-bar (onToggleSideNav)="onToggleSideNav($event)"/>
+<div class="container mx-auto transition-all duration-300" [ngClass]="{'ml-16': !isCollapsed, 'ml-64': isCollapsed}">
+<router-outlet></router-outlet>
 </div>

@@ -1,24 +1,27 @@
-.example-tree-invisible {
-  display: none;
+
+.side-nav-collapsed{
+  width: 16.5626rem;
 }
 
-.example-tree ul,
-.example-tree li {
-  margin-top: 0;
-  margin-bottom: 0;
-  list-style-type: none;
+.side-nav{
+@apply p-3 flex flex-col items-center cursor-pointer
+
 }
 
-
-
-.example-tree .mat-nested-tree-node div[role=group] {
-  padding-left: 20px;
+.side-nav-item {
+  @apply  w-full mb-2
 }
 
-.example-tree div[role=group]>.mat-tree-node {
-  padding-left: 0px;
+.side-nav-link{
+  @apply flex items-center h-12 text-gray-400 gap-2 px-2  transition duration-200 w-fit
 }
-.mat-tree
+
+.side-nav-link:hover
 {
-  background-color: transparent !important;
+  @apply bg-white border border-gray-300 rounded-md py-2 text-primary
 }
+.active{
+    @apply bg-white border border-gray-300 rounded-md py-2 text-primary
+}
+
+
