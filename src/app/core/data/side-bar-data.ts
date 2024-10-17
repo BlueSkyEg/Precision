@@ -1,8 +1,6 @@
-import { SideNavElements } from '../interfaces/side-nav-elements';
-export const TREE_DATA: SideNavElements[] = [
-  {
-    name: 'Insights',
-    children: [
+import { SideNavElements } from '../interfaces/side-nav/side-nav-elements';
+export const navBarData: SideNavElements[] = [
+
       {
         name: 'Dashboard',
         route: 'insights/dashboard',
@@ -63,8 +61,7 @@ export const TREE_DATA: SideNavElements[] = [
         icon: 'Tax Return History',
         route: 'insights/tax-return-history',
       },
-    ],
-  },
+
   {
     name: 'Communications',
     children: [

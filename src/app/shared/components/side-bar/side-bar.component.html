@@ -1,163 +1,52 @@
-<header class="border border-gray-300 bg-gray-100 h-screen" [ngClass]="isOpen ? 'block' : 'hidden'" >
+<header
+  class="border border-gray-300 bg-gray-100 h-screen transition-all duration-75 fixed w-20 shadow-sm overflow-x-hidden"
+  [ngClass]="collapsed ? 'side-nav-collapsed' : ''"
+>
   <!-- logo and label -->
-  <div class="container mx-auto my-5">
+  <div class="container mx-auto my-5 logo-container">
     <div class="flex items-center gap-5 relative">
-      <picture>
-        <img
-          src="/assets/images/white-logo.webp"
-          alt="Precision Logo"
-          loading="lazy"
-          class="bg-primary p-3 rounded-md"
-        />
-      </picture>
+      <div class="flex flex-col gap-5 items-center justify-center">
+        @if(!collapsed){
+        <div
+          class="bg-white w-10 h-10 flex justify-center items-center rounded-full cursor-pointer text-gray-400"
+          (click)="toggleCollapse()"
+        >
+          <app-navigation-icon
+            iconName="Icon Button Open"
+            class="w-3 cursor-pointer"
+            iconColor="text-gray-400"
+          ></app-navigation-icon>
+        </div>
+        }
+
+        <picture (click)="toggleCollapse()" class="w-12 cursor-pointer">
+          <img
+            src="/assets/images/white-logo.webp"
+            alt="Precision Logo"
+            loading="lazy"
+            class="bg-primary p-3 rounded-md w-full"
+          />
+        </picture>
+      </div>
+
+      @if(collapsed) {
       <div>
         <p class="text-primary font-medium text-lg">Precision Acc.</p>
         <p class="font-medium text-sm text-gray-400">Insights</p>
       </div>
+      } @if(collapsed){
+
       <div
-        class="bg-white w-10 h-10 flex justify-center items-center rounded-full absolute end-[-34px] cursor-pointer"   (click)="toggleSidebar()">
+        class="bg-white w-10 h-10 flex justify-center items-center rounded-full absolute end-[-34px] cursor-pointer text-gray-400"
+        (click)="toggleCollapse()"
+      >
         <app-navigation-icon
           iconName="Icon Button Close"
           class="w-3 cursor-pointer"
+          iconColor="text-gray-400"
         ></app-navigation-icon>
       </div>
-    </div>
-    <div
-      class="after:content-[''] after:block after:border-b after:border-gray-300 after:mt-4 after:w-full after:mx-auto"
-    ></div>
-  </div>
-  <!-- navigation links -->
-  <div class="container mx-auto px-4 py-5 ">
-    <mat-tree
-      #tree
-      [dataSource]="dataSource"
-      [childrenAccessor]="childrenAccessor"
-      class="example-tree"
-    >
-      <!-- Node without children -->
-      <mat-tree-node *matTreeNodeDef="let node; when: !hasChild">
-        <div
-          class="flex items-center px-3 gap-2 cursor-pointer font-semibold text-base text-gray-400"
-          [routerLink]="node.route"
-          routerLinkActive=" bg-white border border-gray-300 rounded-md py-2 !text-secondary"
-          role="button"
-          (click)="$event.stopPropagation()"
-        >
-          @if (node.icon) {
-          <app-navigation-icon [iconName]="node.icon"></app-navigation-icon>
-          }
-          <p>{{ node.name }}</p>
-        </div>
-      </mat-tree-node>
-
-      <!-- Node with children -->
-      <mat-nested-tree-node
-        *matTreeNodeDef="let node; when: hasChild"
-        matTreeNodeToggle
-        [cdkTreeNodeTypeaheadLabel]="node.name"
-      >
-        <div class="mat-tree-node">
-          @if (node.icon) {
-          <div
-            class="flex items-center gap-5 cursor-pointer px-3 font-semibold text-base text-gray-400"
-            [routerLink]="node.route"
-            routerLinkActive=" bg-white border border-gray-300 rounded-md py-2 !text-secondary "
-            role="button"
-            (click)="$event.stopPropagation()"
-          >
-            <app-navigation-icon [iconName]="node.icon"></app-navigation-icon>
-            <p>{{ node.name }}</p>
-            <button
-              mat-icon-button
-              matTreeNodeToggle
-              [attr.aria-label]="'Toggle ' + node.name"
-            >
-              <mat-icon>
-                {{
-                  tree.isExpanded(node) ? "arrow_drop_up" : "arrow_drop_down"
-                }}
-              </mat-icon>
-            </button>
-          </div>
-          } @else {
-          <div
-            class="flex items-center gap-0 cursor-pointer px-3 font-semibold text-base text-gray-400"
-            [routerLink]="node.route"
-            routerLinkActive=" bg-white border border-gray-300 rounded-md py-2 !text-secondary "
-            role="button"
-            (click)="$event.stopPropagation()"
-          >
-            <button
-              mat-icon-button
-              matTreeNodeToggle
-              [attr.aria-label]="'Toggle ' + node.name"
-            >
-              <mat-icon>
-                {{
-                  tree.isExpanded(node) ? "arrow_drop_up" : "arrow_drop_down"
-                }}
-              </mat-icon>
-            </button>
-            <p>{{ node.name }}</p>
-          </div>
-
-          }
-        </div>
-        <!-- Tabs layout for the children of 'Dashboard' -->
-        @if (node.name === 'Documents'||node.name === 'Dashboard') {
-        <div
-          [class.example-tree-invisible]="!tree.isExpanded(node)"
-          role="group"
-        >
-          <div
-            class="flex justify-center items-start flex-col border-s my-2 text-sm border-gray-300 text-gray-400"
-          >
-            @for (child of node.children; track child) {
-            <button
-              (click)="selectTab(child); $event.stopPropagation()"
-              class="pb-4 ps-4 last:pb-0"
-              [routerLink]="child.route"
-              routerLinkActive="border-primary border-s-2 text-primary"
-            >
-              {{ child.name }}
-            </button>
-            }
-          </div>
-        </div>
-        } @if(node.name !== 'Dashboard'&& node.name !== 'Documents'){
-        <div
-          [class.example-tree-invisible]="!tree.isExpanded(node)"
-          role="group"
-        >
-          <ng-container matTreeNodeOutlet></ng-container>
-        </div>
-        }
-      </mat-nested-tree-node>
-    </mat-tree>
-  </div>
-</header>
-<header class="border border-gray-300 bg-gray-100 h-screen"[ngClass]="!isOpen ? 'block' : 'hidden'">
-  <!-- logo and label -->
-  <div class="container mx-auto my-5">
-    <div class="flex items-center justify-center gap-5 relative">
-      <picture>
-        <img
-          src="/assets/images/white-logo.webp"
-          alt="Precision Logo"
-          loading="lazy"
-          class="bg-primary p-3 rounded-md"
-        />
-      </picture>
-
-      <div
-        class="bg-white w-10 h-10 flex justify-center items-center rounded-full absolute end-[-34px]"
-          (click)="toggleSidebar()"
-      >
-        <app-navigation-icon
-          iconName="Icon Button Close"
-          class="w-3"
-        ></app-navigation-icon>
-      </div>
+      }
     </div>
     <div
       class="after:content-[''] after:block after:border-b after:border-gray-300 after:mt-4 after:w-full after:mx-auto"
@@ -165,26 +54,25 @@
   </div>
   <!-- navigation links -->
   <div class="container mx-auto px-4 py-5">
-    <mat-tree
-      #tree
-      [dataSource]="dataSourceIcons"
-      [childrenAccessor]="childrenAccessor"
-      class="example-tree"
-    >
-      <mat-tree-node *matTreeNodeDef="let node; when: !hasChild">
-        <div
-          [routerLink]="node.route"
-          role="button"
-          (click)="$event.stopPropagation()"
-         class="cursor-pointer flex justify-center items-center space-x-2 w-full group relative">
+    <ul class="side-nav">
+      @for (item of navData; track $index) {
+      <li class="side-nav-item">
+        <a
+          class="side-nav-link"
+          [routerLink]="[item.route]"
+          routerLinkActive="active "
+        >
+          @if(item.icon) {
           <app-navigation-icon
-            [iconName]="node.icon"
+            class="side-nav-link-icon "
+            [iconName]="item.icon"
           ></app-navigation-icon>
-       <!-- Tooltip on hover -->
-  <div class="absolute left-2/3 ml-2 top-1/2 transform -translate-y-1/2 bg-white text-gray-800 text-sm font-semibold px-4 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">          {{ node.name }}
-        </div>
-        </div>
-      </mat-tree-node>
-    </mat-tree>
+          } @if(collapsed) {
+          <span class="side-nav-link-text w-44">{{ item.name }}</span>
+          }
+        </a>
+      </li>
+      }
+    </ul>
   </div>
 </header>

@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SideNavToggle } from 'app/core/interfaces/side-nav/side-nav-toggle';
 import { SideBarComponent } from 'app/shared/components/side-bar/side-bar.component';
 
 @Component({
@@ -11,8 +12,11 @@ import { SideBarComponent } from 'app/shared/components/side-bar/side-bar.compon
   styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent {
-  isOpen: boolean = true;
-  onSidebarToggle(isOpen: boolean): void {
-    this.isOpen = isOpen;
+isCollapsed: boolean = false;
+screenWidth: number = 0;
+
+  onToggleSideNav(data: SideNavToggle): void {
+    this.screenWidth = data.screenWidth;
+    this.isCollapsed = data.collapsed;
   }
 }
