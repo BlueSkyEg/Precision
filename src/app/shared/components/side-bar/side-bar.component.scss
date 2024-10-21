@@ -1,9 +1,4 @@
-.header{
-  @apply border border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm
-}
-.logo-container{
-  @apply container my-5
-}
+
 .logo-container-heading{
   @apply flex items-center gap-5 relative transition-all duration-300
 }

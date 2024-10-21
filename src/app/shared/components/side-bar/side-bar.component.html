@@ -1,9 +1,9 @@
 <header
-  class="header"
+  class="border border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm"
   [ngClass]="!collapsed ? 'side-nav-collapsed' : ''"
 >
   <!-- logo and label -->
-  <div class=" logo-container">
+  <div class="container my-5">
     <div
       class="logo-container-heading"
       [ngClass]="{ 'h-16': !collapsed, 'h-32': collapsed }">
@@ -42,7 +42,7 @@
       >
         <app-navigation-icon
           iconName="Icon Button Close"
-          class="w-3 cursor-pointer"
+          class="w-3 cursor-pointer ps-[2px]"
           iconColor="text-gray-400"
         ></app-navigation-icon>
       </div>

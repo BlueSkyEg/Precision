@@ -1,10 +1,10 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { navBarData } from 'app/core/data/side-bar-data';
 import { SideNavElements } from 'app/core/interfaces/side-nav/side-nav-elements';
 @Component({
@@ -28,16 +28,26 @@ export class SideBarComponent implements OnInit {
   navData = navBarData;
   @Output() collapseStateChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
-
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
   ngOnInit(): void {
-    const storedCollapsedState = sessionStorage.getItem('sidebar-collapsed');
-    if (storedCollapsedState !== null) {
-      this.collapsed = JSON.parse(storedCollapsedState);
+    if (isPlatformBrowser(this.platformId)) {
+      const storedCollapsedState = sessionStorage.getItem('sidebar-collapsed');
+      if (storedCollapsedState !== null) {
+        this.collapsed = JSON.parse(storedCollapsedState);
+      }
+      const storedNavState = localStorage.getItem('sidebar-nav-state');
+      if (storedNavState !== null) {
+        const savedNavState = JSON.parse(storedNavState);
+        this.navData = this.restoreExpandedState(this.navData, savedNavState);
+      }
     }
-    const storedNavState = localStorage.getItem('sidebar-nav-state');
-    if (storedNavState !== null) {
-      const savedNavState = JSON.parse(storedNavState);
-      this.navData = this.restoreExpandedState(this.navData, savedNavState);
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize( ): void {
+    if (window.innerWidth < 768) {
+      this.collapsed = true;
+    } else {
+      this.collapsed = false;
     }
   }
   toggleCollapse(): void {
@@ -59,7 +69,7 @@ export class SideBarComponent implements OnInit {
     item.expanded = false;
     if (item.children) {
       item.children.forEach((child) => {
-        this.collapseAllChildren(child); 
+        this.collapseAllChildren(child);
       });
     }
   }
