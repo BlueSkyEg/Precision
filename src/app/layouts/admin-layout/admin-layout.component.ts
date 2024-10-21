@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SideNavToggle } from 'app/core/interfaces/side-nav/side-nav-toggle';
 import { SideBarComponent } from 'app/shared/components/side-bar/side-bar.component';
 
 @Component({
@@ -12,11 +11,15 @@ import { SideBarComponent } from 'app/shared/components/side-bar/side-bar.compon
   styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent {
-isCollapsed: boolean = false;
-screenWidth: number = 0;
-
-  onToggleSideNav(data: SideNavToggle): void {
-    this.screenWidth = data.screenWidth;
-    this.isCollapsed = data.collapsed;
+  collapsed: boolean = false;
+  ngOnInit(): void {
+    const storedCollapsedState = sessionStorage.getItem('sidebar-collapsed');
+    if (storedCollapsedState !== null) {
+      this.collapsed = JSON.parse(storedCollapsedState);
+    }
+  }
+  onCollapseChange(collapsed: boolean): void {
+    this.collapsed = collapsed;
+    sessionStorage.setItem('sidebar-collapsed', JSON.stringify(this.collapsed));
   }
 }

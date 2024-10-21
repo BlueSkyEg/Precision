@@ -1,4 +1,9 @@
-<app-side-bar (onToggleSideNav)="onToggleSideNav($event)"/>
-<div class="container mx-auto transition-all duration-300" [ngClass]="{'ml-16': !isCollapsed, 'ml-64': isCollapsed}">
-<router-outlet></router-outlet>
+<div class="layout-container">
+  <!-- Sidebar -->
+  <app-side-bar (collapseStateChange)="onCollapseChange($event)"></app-side-bar>
+
+  <!-- Main content -->
+  <main class="container" [ngClass]="{'ms-80': !collapsed, 'ms-28': collapsed}">
+    <router-outlet></router-outlet>
+  </main>
 </div>

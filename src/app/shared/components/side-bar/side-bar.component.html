@@ -1,19 +1,20 @@
 <header
-  class="border border-gray-300 bg-gray-100 h-screen transition-all duration-75 fixed w-20 shadow-sm overflow-x-hidden"
-  [ngClass]="collapsed ? 'side-nav-collapsed' : ''"
+  class="border border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm"
+  [ngClass]="!collapsed ? 'side-nav-collapsed' : ''"
 >
   <!-- logo and label -->
-  <div class="container mx-auto my-5 logo-container">
-    <div class="flex items-center gap-5 relative">
-      <div class="flex flex-col gap-5 items-center justify-center">
-        @if(!collapsed){
+  <div class="container my-5">
+    <div
+      class="logo-container-heading"
+      [ngClass]="{ 'h-16': !collapsed, 'h-32': collapsed }">
+      <div class="image">
+        @if(collapsed){
         <div
-          class="bg-white w-10 h-10 flex justify-center items-center rounded-full cursor-pointer text-gray-400"
+          class="close-open-btn"
           (click)="toggleCollapse()"
         >
           <app-navigation-icon
             iconName="Icon Button Open"
-            class="w-3 cursor-pointer"
             iconColor="text-gray-400"
           ></app-navigation-icon>
         </div>
@@ -29,48 +30,101 @@
         </picture>
       </div>
 
-      @if(collapsed) {
+      @if(!collapsed) {
       <div>
         <p class="text-primary font-medium text-lg">Precision Acc.</p>
         <p class="font-medium text-sm text-gray-400">Insights</p>
       </div>
-      } @if(collapsed){
-
+      } @if(!collapsed){
       <div
-        class="bg-white w-10 h-10 flex justify-center items-center rounded-full absolute end-[-34px] cursor-pointer text-gray-400"
+        class="close-open-btn absolute end-[-34px]  z-50"
         (click)="toggleCollapse()"
       >
         <app-navigation-icon
           iconName="Icon Button Close"
-          class="w-3 cursor-pointer"
+          class="w-3 cursor-pointer ps-[2px]"
           iconColor="text-gray-400"
         ></app-navigation-icon>
       </div>
       }
     </div>
     <div
-      class="after:content-[''] after:block after:border-b after:border-gray-300 after:mt-4 after:w-full after:mx-auto"
+      class="border-bottom"
     ></div>
   </div>
   <!-- navigation links -->
-  <div class="container mx-auto px-4 py-5">
+  <div class="container py-3">
     <ul class="side-nav">
-      @for (item of navData; track $index) {
-      <li class="side-nav-item">
-        <a
-          class="side-nav-link"
-          [routerLink]="[item.route]"
-          routerLinkActive="active "
-        >
-          @if(item.icon) {
-          <app-navigation-icon
-            class="side-nav-link-icon "
-            [iconName]="item.icon"
-          ></app-navigation-icon>
-          } @if(collapsed) {
-          <span class="side-nav-link-text w-44">{{ item.name }}</span>
+      @for (item of navData ; track $index) {
+      <li
+        class="parent"
+        (click)="toggleExpand(item, navData)"
+      >
+        @if(!collapsed) {
+        <div class="flex items-center mb-4">
+          <mat-icon class="pe-6" [ngClass]="{ 'rotate-180': item.expanded }"
+            >arrow_drop_down</mat-icon
+          >
+          <a>
+            @if(!collapsed) {
+            <span class="">{{ item.name }}</span>
+            }
+          </a>
+        </div>
+        } @if(item.children && (item.expanded ||collapsed)) {
+        <ul class="p-0 m-0 ms-2 ">
+          @for(child of item.children; track $index) {
+          <li
+            class="side-nav-item-child"
+            (click)="
+              toggleExpand(child, item.children); $event.stopPropagation()
+            "
+          >
+            <a class="flex justify-between items-center side-nav-link "
+              [routerLink]="[child.route]"
+              routerLinkActive="child-active"
+            >
+              <div class="flex items-center gap-2  transition ">
+                @if(child.icon) {
+                <app-navigation-icon
+                  class="side-nav-link-icon ps-2"
+                  [iconName]="child.icon"
+                ></app-navigation-icon>
+                } @if(!collapsed) {
+                <span class="side-nav-link-text">{{ child.name }}</span>
+                }
+              </div>
+              @if(!collapsed && child.children?.length) {
+              <mat-icon [ngClass]="{ 'rotate-180': child.expanded }"
+                >arrow_drop_down</mat-icon
+              >
+
+              }
+            </a>
+            @if(child.children &&(child.expanded||collapsed)) {
+            <ul class="ms-7 border-s my-3 text-sm !font-normal">
+              @for(grandChild of child.children; track $index) {
+              <li
+                class="side-nav-item-child "
+                (click)="$event.stopPropagation()"
+              >
+                @if(!collapsed) {
+                <a
+                  class="ps-3 hover:text-primary"
+                  [routerLink]="[grandChild.route]"
+                  routerLinkActive="border-s-2 border-primary  !text-primary"
+                >
+                  <span class="side-nav-link-text">{{ grandChild.name }}</span>
+                </a>
+                }
+              </li>
+              }
+            </ul>
+            }
+          </li>
           }
-        </a>
+        </ul>
+        }
       </li>
       }
     </ul>
