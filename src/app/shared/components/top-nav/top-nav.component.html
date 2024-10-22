@@ -1,0 +1,7 @@
+<div class=" flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-0 border-b border-gray-300 pb-7 !px-0 ">
+  <app-bread-crumb [items]="items" />
+  @if(user){
+  <app-user [userName]="userName" [pcName]=" pcName" />
+  }
+  <app-filter-dropdown-menue />
+</div>

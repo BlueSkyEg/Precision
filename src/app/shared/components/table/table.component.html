@@ -1,0 +1,43 @@
+<div class=" my-9 border !border-gray-300 rounded-2xl p-10">
+<div class="card">
+  <div class="flex mb-2 gap-2 justify-content-end">
+    @if( items!=undefined){
+    <p-button (onClick)="activeItem = items[0]" [rounded]="true" label="1" styleClass="w-2rem h-2rem p-0"
+      [outlined]="activeItem !== items[0]" />
+    <p-button (onClick)="activeItem = items[1]" [rounded]="true" label="2" styleClass="w-2rem h-2rem p-0"
+      [outlined]="activeItem !== items[1]" />
+    <p-button (onClick)="activeItem = items[2]" [rounded]="true" label="3" styleClass="w-2rem h-2rem p-0"
+      [outlined]="activeItem !== items[2]" />
+    }
+
+  </div>
+  <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)" />
+</div>
+
+  <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}" >
+    <ng-template pTemplate="header" >
+      <tr>
+        <th pSortableColumn="code" style="width:20%">
+          Code <p-sortIcon field="code" />
+        </th>
+        <th pSortableColumn="name" style="width:20%">
+          Name <p-sortIcon field="name" />
+        </th>
+        <th pSortableColumn="category" style="width:20%">
+          Category <p-sortIcon field="category" />
+        </th>
+        <th pSortableColumn="quantity" style="width:20%">
+          Quantity <p-sortIcon field="quantity" />
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.code }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.quantity }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

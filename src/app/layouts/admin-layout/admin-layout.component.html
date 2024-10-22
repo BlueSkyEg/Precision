@@ -1,9 +1,9 @@
-<div class="layout-container">
+<div class=" flex">
   <!-- Sidebar -->
   <app-side-bar (collapseStateChange)="onCollapseChange($event)"></app-side-bar>
 
   <!-- Main content -->
-  <main class="container" [ngClass]="{'ms-80': !collapsed, 'ms-28': collapsed}">
+  <main class="px-8 lg:px-4 py-6 flex-grow" [ngClass]="{'ms-72': !collapsed, 'ms-28': collapsed}">
     <router-outlet></router-outlet>
   </main>
 </div>
