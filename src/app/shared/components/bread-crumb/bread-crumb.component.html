@@ -1,0 +1,18 @@
+<nav>
+  <ul class="flex flex-col lg:flex-row list-none p-0">
+    @for( item of items;track $index ; let last =$last){
+    <li class="mr-2">
+      <a
+        [routerLink]="item.routerLink"
+        class="text-gray-400 !font-bold "
+        routerLinkActive="font-bold text-black "
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        {{ item.label }}
+      </a>
+
+      <ng-container *ngIf="!last"> / </ng-container>
+    </li>
+    }
+  </ul>
+</nav>
