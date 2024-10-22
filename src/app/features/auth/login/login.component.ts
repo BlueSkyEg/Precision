@@ -11,13 +11,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import { MatCheckbox } from '@angular/material/checkbox';
 import { EmailOrPhoneValidator, PasswordValidator } from 'app/core/validators';
 import { merge } from 'rxjs';
 import { AuthService } from 'app/core/services/auth/auth.service';
 import { ILoginData } from 'app/shared/interfaces/auth/login-form.interface';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -29,7 +29,7 @@ import { Router } from '@angular/router';
     FormsModule,
     MatCheckbox,
     ReactiveFormsModule,
-],
+  ],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -40,10 +40,16 @@ export class LoginComponent {
   emailErrorMessage = signal('');
   passwordErrorMessage = signal('');
   hide = signal(true);
+
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, EmailOrPhoneValidator()]],
+    password: ['', [Validators.required, PasswordValidator()]],
+    rememberMe: [false],
+  });
+
   constructor() {
     const emailControl = this.loginForm.get('email');
     const passwordControl = this.loginForm.get('password');
-    const savedEmail = localStorage.getItem('savedEmail');
 
     if (emailControl) {
       merge(emailControl.statusChanges, emailControl.valueChanges)
@@ -56,17 +62,16 @@ export class LoginComponent {
         .pipe(takeUntilDestroyed())
         .subscribe(() => this.updatePasswordErrorMessage());
     }
-    if (savedEmail) {
-      this.loginForm.get('email')?.setValue(savedEmail);
-      this.loginForm.get('rememberMe')?.setValue(true);
+
+    // Check if localStorage is available
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const savedEmail = localStorage.getItem('savedEmail');
+      if (savedEmail) {
+        this.loginForm.get('email')?.setValue(savedEmail);
+        this.loginForm.get('rememberMe')?.setValue(true);
+      }
     }
   }
-
-  loginForm = this.fb.group({
-    email: ['', [Validators.required, EmailOrPhoneValidator()]],
-    password: ['', [Validators.required, PasswordValidator()]],
-    rememberMe: [false],
-  });
 
   updateEmailErrorMessage() {
     const emailControl = this.loginForm.get('email');
@@ -95,29 +100,38 @@ export class LoginComponent {
       }
     }
   }
+
   clickEvent(event: MouseEvent) {
     this.hide.set(!this.hide());
     event.stopPropagation();
   }
+
   onLogin() {
     if (this.loginForm.valid) {
       const loginData = this.loginForm.value as ILoginData;
-    if (this.loginForm.value.rememberMe) {
-      localStorage.setItem('savedEmail', loginData.email);
-    } else {
-      localStorage.removeItem('savedEmail');
-    }
+
+      // Check if localStorage is available
+      if (
+        typeof window !== 'undefined' &&
+        typeof localStorage !== 'undefined'
+      ) {
+        if (this.loginForm.value.rememberMe) {
+          localStorage.setItem('savedEmail', loginData.email!);
+        } else {
+          localStorage.removeItem('savedEmail');
+        }
+      }
 
       this._AuthService.Login(loginData).subscribe({
         next: (res) => {
-          if (!res.succeeded)
+          if (!res.succeeded) {
             this.snackBar.open(res.message, 'X', { duration: 3000 });
-          else {
+          } else {
             this.snackBar.open('Logged in successfully!', 'X', {
               duration: 3000,
             });
             const role = res.data?.accessRole;
-            if (role == 'admin' || role == '') {
+            if (role === 'admin' || role === '') {
               this._Router.navigate(['/dashboard']);
             }
           }

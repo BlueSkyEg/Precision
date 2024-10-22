@@ -44,3 +44,20 @@ body {
 .mat-typography p {
   margin: 0 0 0 0 !important;
 }
+.p-dropdown {
+  @apply border border-gray-300 rounded-md w-full text-start;
+}
+.p-table {
+  @apply border border-gray-500 rounded-md w-full text-start;
+}
+.p-dropdown-trigger-icon {
+  transition: transform 0.3s ease;
+}
+
+.p-dropdown-trigger[aria-expanded="true"] {
+  transform: rotate(180deg);
+}
+
+.p-dropdown-header {
+  @apply bg-transparent
+}
