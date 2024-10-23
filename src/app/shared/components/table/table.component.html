@@ -1,43 +1,57 @@
-<div class=" my-9 border !border-gray-300 rounded-2xl p-10">
-<div class="card">
-  <div class="flex mb-2 gap-2 justify-content-end">
-    @if( items!=undefined){
-    <p-button (onClick)="activeItem = items[0]" [rounded]="true" label="1" styleClass="w-2rem h-2rem p-0"
-      [outlined]="activeItem !== items[0]" />
-    <p-button (onClick)="activeItem = items[1]" [rounded]="true" label="2" styleClass="w-2rem h-2rem p-0"
-      [outlined]="activeItem !== items[1]" />
-    <p-button (onClick)="activeItem = items[2]" [rounded]="true" label="3" styleClass="w-2rem h-2rem p-0"
-      [outlined]="activeItem !== items[2]" />
-    }
-
-  </div>
-  <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)" />
-</div>
-
-  <p-table [value]="products" [tableStyle]="{'min-width': '60rem'}" >
-    <ng-template pTemplate="header" >
-      <tr>
-        <th pSortableColumn="code" style="width:20%">
-          Code <p-sortIcon field="code" />
-        </th>
-        <th pSortableColumn="name" style="width:20%">
-          Name <p-sortIcon field="name" />
-        </th>
-        <th pSortableColumn="category" style="width:20%">
-          Category <p-sortIcon field="category" />
-        </th>
-        <th pSortableColumn="quantity" style="width:20%">
-          Quantity <p-sortIcon field="quantity" />
-        </th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-product>
-      <tr>
-        <td>{{ product.code }}</td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.category }}</td>
-        <td>{{ product.quantity }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
+<div class="my-9 border !border-gray-300 rounded-2xl p-1 shadow-sm">
+  <p-tabView
+    [(activeIndex)]="selectedTabIndex"
+    (activeIndexChange)="searchQuery = ''"
+  >
+    <!-- Reset search query on tab change -->
+    <p-tabPanel *ngFor="let tab of tabs">
+      <ng-template pTemplate="header">
+        {{ tab.title }}
+        <span
+          class="ms-2 bg-gray-200 border border-[#BFBFBF] px-2 rounded-full"
+          >{{ tab.count }}</span
+        >
+      </ng-template>
+      <div class="flex gap-1 border-b border-gray-300 pb-3 items-center ps-5">
+        <app-navigation-icon
+          iconType="search"
+          iconName="search-icon"
+          class="text-white"
+        />
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="searchQuery"
+          [placeholder]="'Search ' + tabs[selectedTabIndex].title"
+          class="focus-visible:outline-none w-full"
+        />
+      </div>
+      <p-table
+        [value]="filteredCustomers"
+        [paginator]="true"
+        [rows]="5"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>_</th>
+            <th style="width: 25%">Name</th>
+            <th style="width: 20%">Company</th>
+            <th style="width: 20%">Status</th>
+            <!-- Add other headers as needed -->
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-customer>
+          <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.company }}</td>
+            <td>{{ customer.status }}</td>
+            <!-- Add other data as needed -->
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+  </p-tabView>
 </div>
