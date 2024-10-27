@@ -98,3 +98,19 @@ body {
  {
   @apply text-sm font-bold ;
 }
+
+p-dropdown
+{
+  @apply ms-auto;
+}
+.p-paginator button.p-disabled
+{
+@apply hidden;
+}
+.p-paginator button{
+  @apply border border-gray-300 rounded-none text-gray-400 font-bold text-sm;
+}
+.p-paginator button.p-highlight {
+  @apply text-primary bg-gray-100;
+}
+

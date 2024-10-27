@@ -1,0 +1,58 @@
+<style>
+  .pagination-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  button {
+    padding: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  button.active {
+    background-color: #007bff;
+    color: white;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  select {
+    margin-left: 10px;
+  }
+</style>
+<div class="pagination-container">
+  <button (click)="goToPage(1)" [disabled]="currentPage === 1">«</button>
+  <button (click)="previousPage()" [disabled]="currentPage === 1">‹</button>
+  @for(page of pages ;track $index ;){
+
+  <ng-container>
+    <button [class.active]="page === currentPage" (click)="goToPage(page)">
+      {{ page }}
+    </button>
+  </ng-container>
+  }
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+    ›
+  </button>
+  <button
+    (click)="goToPage(totalPages)"
+    [disabled]="currentPage === totalPages"
+  >
+    »
+  </button>
+
+  <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+    @for(option of itemsPerPageOptions ;track $index ;){
+    <option [value]="option">
+      {{ option }}
+    </option>
+    }
+  </select>
+
+  <span>{{ getPageRange() }} of {{ totalItems }}</span>
+</div>

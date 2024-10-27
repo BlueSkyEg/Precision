@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { NavigationIconComponent } from '../../../core/icons/navigation-icons/navigation-icon.component';
 import { FormsModule } from '@angular/forms';
+import { PaginatorModule } from 'primeng/paginator';
 interface Customer {
   id: number;
   name: string;
@@ -18,13 +19,22 @@ interface Tab {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [TableModule, TabViewModule, CommonModule, NavigationIconComponent,FormsModule],
+  imports: [
+    TableModule,
+    TabViewModule,
+    CommonModule,
+    NavigationIconComponent,
+    FormsModule,
+    PaginatorModule,
+  ],
   templateUrl: './table.component.html',
 })
 export class TableComponent implements OnInit {
-  tabs: Tab[] = [];
+  @Input() tabs: Tab[]=[];
   selectedTabIndex = 0;
   searchQuery = '';
+  currentPage = 0;
+  rowsPerPage = 10;
   ngOnInit() {
     this.tabs = [
       {
@@ -381,5 +391,25 @@ export class TableComponent implements OnInit {
     return currentTab.customers.filter((customer) =>
       customer.name.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
+  }
+
+  get paginatedCustomers(): Customer[] {
+    const start = this.currentPage * this.rowsPerPage;
+    const end = start + this.rowsPerPage;
+    return this.filteredCustomers.slice(start, end);
+  }
+
+  onPageChange(event: any) {
+    this.currentPage = event.page;
+    this.rowsPerPage = event.rows;
+  }
+
+  onTabChange() {
+    this.searchQuery = '';
+    this.currentPage = 0;
+  }
+
+  resetPagination() {
+    this.currentPage = 0;
   }
 }
