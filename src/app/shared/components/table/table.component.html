@@ -1,9 +1,7 @@
-<div class="my-9 border !border-gray-300 rounded-2xl p-1 shadow-sm">
+<div class="mt-9 border mb-6 !border-gray-300 rounded-2xl p-1 shadow-sm">
   <p-tabView
     [(activeIndex)]="selectedTabIndex"
-    (activeIndexChange)="searchQuery = ''"
-  >
-    <!-- Reset search query on tab change -->
+    (activeIndexChange)="onTabChange()">
     <p-tabPanel *ngFor="let tab of tabs">
       <ng-template pTemplate="header">
         {{ tab.title }}
@@ -22,14 +20,15 @@
           type="text"
           pInputText
           [(ngModel)]="searchQuery"
+          (ngModelChange)="resetPagination()"
           [placeholder]="'Search ' + tabs[selectedTabIndex].title"
           class="focus-visible:outline-none w-full"
         />
       </div>
+
       <p-table
-        [value]="filteredCustomers"
-        [paginator]="true"
-        [rows]="5"
+        [value]="paginatedCustomers"
+        [rows]="rowsPerPage"
         [tableStyle]="{ 'min-width': '50rem' }"
         [rowsPerPageOptions]="[5, 10, 20]"
       >
@@ -39,7 +38,6 @@
             <th style="width: 25%">Name</th>
             <th style="width: 20%">Company</th>
             <th style="width: 20%">Status</th>
-            <!-- Add other headers as needed -->
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-customer>
@@ -55,3 +53,10 @@
     </p-tabPanel>
   </p-tabView>
 </div>
+<p-paginator
+  [rows]="rowsPerPage"
+  [totalRecords]="filteredCustomers.length"
+  (onPageChange)="onPageChange($event)"
+  [rowsPerPageOptions]="[5, 10, 20]"
+>
+</p-paginator>
