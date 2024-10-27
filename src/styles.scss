@@ -80,7 +80,9 @@ body {
 .p-tabview .p-tabview-nav .p-highlight .p-tabview-nav-link {
   @apply text-primary border-b-4 border-primary;
 }
-
+.p-tabview .p-tabview-nav .p-highlight .p-tabview-nav-link span {
+  @apply border-none;
+}
 .p-datatable-thead {
   @apply border border-[#BFBFBF]
 }
