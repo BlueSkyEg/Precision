@@ -1,7 +1,8 @@
 <div class="mt-9 border mb-6 !border-gray-300 rounded-2xl p-1 shadow-sm">
   <p-tabView
     [(activeIndex)]="selectedTabIndex"
-    (activeIndexChange)="onTabChange()">
+    (activeIndexChange)="onTabChange()"
+  >
     <p-tabPanel *ngFor="let tab of tabs">
       <ng-template pTemplate="header">
         {{ tab.title }}
@@ -21,42 +22,76 @@
           pInputText
           [(ngModel)]="searchQuery"
           (ngModelChange)="resetPagination()"
-          [placeholder]="'Search ' + tabs[selectedTabIndex].title"
+          [placeholder]="
+            'Search ' +
+            (tabs[selectedTabIndex].searchTitle
+              ? tabs[selectedTabIndex].searchTitle
+              : tabs[selectedTabIndex].title)
+          "
           class="focus-visible:outline-none w-full"
         />
       </div>
 
       <p-table
-        [value]="paginatedCustomers"
+        [value]="paginatedUsers"
         [rows]="rowsPerPage"
         [tableStyle]="{ 'min-width': '50rem' }"
         [rowsPerPageOptions]="[5, 10, 20]"
       >
+        <th pSortableColumn="category" style="width: 20%">
+          Category <p-sortIcon field="category" />
+        </th>
+        <th pSortableColumn="quantity" style="width: 20%">
+          Quantity <p-sortIcon field="quantity" />
+        </th>
+
         <ng-template pTemplate="header">
           <tr>
             <th>_</th>
-            <th style="width: 25%">Name</th>
-            <th style="width: 20%">Company</th>
-            <th style="width: 20%">Status</th>
+            <th class="p-0">Name</th>
+            <th pSortableColumn="companiesCount" style="width: 20%">
+              <div class="flex">
+                companies <p-sortIcon field="companiesCount" />
+              </div>
+            </th>
+            <th pSortableColumn="pendingTrxCount" style="width: 20%">
+              <div class="flex">
+                Pending <p-sortIcon field="pendingTrxCount" />
+              </div>
+            </th>
+            <th pSortableColumn="awaitingTrxCount" style="width: 20%">
+              <div class="flex">
+                Awaiting <p-sortIcon field="awaitingTrxCount" />
+              </div>
+            </th>
+            <th pSortableColumn="reviewedTrxCount" style="width: 20%">
+              <div class="flex">
+                Reviewed <p-sortIcon field="reviewedTrxCount" />
+              </div>
+            </th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-customer>
+        <ng-template pTemplate="body" let-user ; let-index="rowIndex">
           <tr>
-            <td>{{ customer.id }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.company }}</td>
-            <td>{{ customer.status }}</td>
-            <!-- Add other data as needed -->
+            <td>{{ index + 1 }}</td>
+            <td>{{ user.qbMemberName }}</td>
+            <td>{{ user.companiesCount }}</td>
+            <td>{{ user.pendingTrxCount }}</td>
+            <td>{{ user.awaitingTrxCount }}</td>
+            <td>{{ user.reviewedTrxCount }}</td>
           </tr>
         </ng-template>
       </p-table>
     </p-tabPanel>
   </p-tabView>
 </div>
+@if(filteredUsers.length>rowsPerPage){
 <p-paginator
   [rows]="rowsPerPage"
-  [totalRecords]="filteredCustomers.length"
+  [totalRecords]="filteredUsers.length"
   (onPageChange)="onPageChange($event)"
   [rowsPerPageOptions]="[5, 10, 20]"
 >
 </p-paginator>
+
+}

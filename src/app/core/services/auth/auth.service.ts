@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { IApiResponse } from 'app/shared/interfaces/api-response-interface';
 import { IAuthedUser } from 'app/shared/interfaces/auth/authed-user.interface';
 import { ILoginData } from 'app/shared/interfaces/auth/login-form.interface';
-import { environment } from 'enviroments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
