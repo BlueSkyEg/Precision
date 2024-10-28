@@ -61,11 +61,19 @@ body {
 .p-dropdown-trigger-icon {
   transition: transform 0.3s ease;
 }
-
+.p-dropdown .p-placeholder {
+  @apply text-gray-400 text-sm font-bold font-sans;
+}
+.p-dropdown input::placeholder {
+  @apply text-gray-400 text-sm  font-sans;
+}
 .p-dropdown-trigger[aria-expanded="true"] {
   transform: rotate(180deg);
 }
-
+.p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: 0px 0px 3px 0px rgba(51, 96, 211, 0.5);
+  @apply border-[1.5px] border-primary;
+}
 .p-dropdown-header {
   @apply bg-transparent;
 }
@@ -84,35 +92,31 @@ body {
   @apply border-none;
 }
 .p-datatable-thead {
-  @apply border border-[#BFBFBF]
+  @apply border border-[#BFBFBF];
 }
 .p-datatable-thead th {
-  @apply bg-[#EAEAEA]
+  @apply bg-[#EAEAEA];
 }
 .p-datatable-tbody tr {
-@apply border-b border-gray-300 hover:bg-gray-200 cursor-pointer;
+  @apply border-b border-gray-300 hover:bg-gray-200 cursor-pointer;
 }
 
 .p-datatable-tbody tr:last-child {
   border-bottom: none;
 }
-.p-datatable-table
- {
-  @apply text-sm font-bold ;
+.p-datatable-table {
+  @apply text-sm font-bold;
 }
 
-p-dropdown
-{
+p-dropdown {
   @apply ms-auto;
 }
-.p-paginator button.p-disabled
-{
-@apply hidden;
+.p-paginator button.p-disabled {
+  @apply hidden;
 }
-.p-paginator button{
+.p-paginator button {
   @apply border border-gray-300 rounded-none text-gray-400 font-bold text-sm;
 }
 .p-paginator button.p-highlight {
   @apply text-primary bg-gray-100;
 }
-

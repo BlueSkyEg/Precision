@@ -20,4 +20,11 @@ export class DashboardService {
   getbusinesses(): Observable<any> {
     return this._HttpClient.get(`${this.apiUrl}businesses`);
   }
+  getProfileById(id: string): Observable<any> {
+    return this._HttpClient.get(`${this.apiUrl}profiles/${id}`);
+  }
+
+  getClientById(id: string): Observable<any> {
+    return this._HttpClient.get(`${this.apiUrl}clients/${id}`);
+  }
 }
