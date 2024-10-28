@@ -1,7 +1,7 @@
 <div class="mt-9 border mb-6 !border-gray-300 rounded-2xl p-1 shadow-sm">
   <p-tabView
     [(activeIndex)]="selectedTabIndex"
-    (activeIndexChange)="onTabChange()"
+    (activeIndexChange)="onTabChange($event)"
   >
     <p-tabPanel *ngFor="let tab of tabs">
       <ng-template pTemplate="header">
@@ -38,33 +38,44 @@
         [tableStyle]="{ 'min-width': '50rem' }"
         [rowsPerPageOptions]="[5, 10, 20]"
       >
-        <th pSortableColumn="category" style="width: 20%">
-          Category <p-sortIcon field="category" />
-        </th>
-        <th pSortableColumn="quantity" style="width: 20%">
-          Quantity <p-sortIcon field="quantity" />
-        </th>
-
         <ng-template pTemplate="header">
           <tr>
             <th>_</th>
-            <th class="p-0">Name</th>
-            <th pSortableColumn="companiesCount" style="width: 20%">
+            <th class="lowercase" >Name</th>
+            @if(isUserType()){
+
+            <th pSortableColumn="companiesCount" >
               <div class="flex">
                 companies <p-sortIcon field="companiesCount" />
               </div>
             </th>
-            <th pSortableColumn="pendingTrxCount" style="width: 20%">
+            } @if(isBusinessType()){
+            <th pSortableColumn="ownerName" >
+              <div class="flex">Owner <p-sortIcon field="ownerName" /></div>
+            </th>
+            <th pSortableColumn="qbMemberName" >
+              <div class="flex">
+                Accountant <p-sortIcon field="qbMemberName" />
+              </div>
+            </th>
+            <th pSortableColumn="lastQBUpdate" >
+              <div class="flex">
+                LastUpdate <p-sortIcon field="lastQBUpdate" />
+              </div>
+            </th>
+
+            }
+            <th pSortableColumn="pendingTrxCount" >
               <div class="flex">
                 Pending <p-sortIcon field="pendingTrxCount" />
               </div>
             </th>
-            <th pSortableColumn="awaitingTrxCount" style="width: 20%">
+            <th pSortableColumn="awaitingTrxCount" >
               <div class="flex">
                 Awaiting <p-sortIcon field="awaitingTrxCount" />
               </div>
             </th>
-            <th pSortableColumn="reviewedTrxCount" style="width: 20%">
+            <th pSortableColumn="reviewedTrxCount" >
               <div class="flex">
                 Reviewed <p-sortIcon field="reviewedTrxCount" />
               </div>
@@ -72,14 +83,55 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user ; let-index="rowIndex">
-          <tr>
+          <tr >
             <td>{{ index + 1 }}</td>
-            <td>{{ user.qbMemberName }}</td>
+            @if(isUserType()){
+            <td (click)="onRowClick(user.profileId ,user.profileType)">{{ user.profileName }}</td>
             <td>{{ user.companiesCount }}</td>
-            <td>{{ user.pendingTrxCount }}</td>
-            <td>{{ user.awaitingTrxCount }}</td>
-            <td>{{ user.reviewedTrxCount }}</td>
-          </tr>
+            } @if(isBusinessType()){
+            <td>{{ user.companyName }}</td>
+            <td>{{ user.ownerName }}</td>
+            <td>{{ user.qbMemberName }}</td>
+            <td>{{ user.lastQBUpdate }}</td>
+            }
+            <td>
+              <p
+                class="rounded-full w-fit px-4 py-1"
+                [ngClass]="{
+                  ' bg-[#FFE0E0] text-[#C33F2A]': user.pendingTrxCount > 0,
+                  'border border-[#BFBFBF] bg-[#EAEAEA] ':
+                    user.pendingTrxCount === 0
+                }"
+              >
+                {{ user.pendingTrxCount > 0 ? user.pendingTrxCount : "-" }}
+              </p>
+            </td>
+
+            <td>
+              <p
+                class="rounded-full w-fit px-4 py-1"
+                [ngClass]="{
+                  ' bg-[#FFFAD1] ': user.awaitingTrxCount > 0,
+                  'border border-[#BFBFBF] bg-[#EAEAEA] ':
+                    user.awaitingTrxCount === 0
+                }"
+              >
+                {{ user.awaitingTrxCount > 0 ? user.awaitingTrxCount : "-" }}
+              </p>
+            </td>
+
+            <td>
+              <p
+                class="rounded-full w-fit px-4 py-1"
+                [ngClass]="{
+                  ' bg-[#CCFAD1] text-[#008A44]': user.reviewedTrxCount > 0,
+                  'border border-[#BFBFBF] bg-[#EAEAEA] ':
+                    user.reviewedTrxCount === 0
+                }"
+              >
+                {{ user.reviewedTrxCount > 0 ? user.reviewedTrxCount : "-" }}
+              </p>
+            </td>          </tr>
         </ng-template>
       </p-table>
     </p-tabPanel>

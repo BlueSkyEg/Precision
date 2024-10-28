@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
 import { TableModule } from 'primeng/table';
 import { NavigationIconComponent } from '../../../core/icons/navigation-icons/navigation-icon.component';
@@ -7,8 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
 import { IUser } from 'app/shared/interfaces/insights/iuser';
 import { ITab } from 'app/shared/interfaces/insights/itab';
-
-
+import { IBusinesses } from 'app/shared/interfaces/insights/IBusinesses';
 
 @Component({
   selector: 'app-table',
@@ -25,35 +24,65 @@ import { ITab } from 'app/shared/interfaces/insights/itab';
 })
 export class TableComponent {
   @Input() tabs: ITab[] = [];
+  @Output() userClick = new EventEmitter<string>();
+  @Output() tabChange = new EventEmitter<number>();
+
   selectedTabIndex = 0;
   searchQuery = '';
   currentPage = 0;
   rowsPerPage = 10;
 
-  get filteredUsers(): IUser[] {
+  get filteredUsers(): (IUser | IBusinesses)[] {
     const currentTab = this.tabs[this.selectedTabIndex];
-    return currentTab.users.filter((user) =>
-      user.qbMemberName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    return currentTab.users.filter((user: IUser | IBusinesses) => {
+      if ('profileName' in user && user.profileName) {
+        return user.profileName
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+      } else if ('companyName' in user && user.companyName) {
+        return user.companyName
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+      } else {
+        return false;
+      }
+    });
   }
 
-  get paginatedUsers(): IUser[] {
+  get paginatedUsers(): (IUser | IBusinesses)[] {
     const start = this.currentPage * this.rowsPerPage;
     const end = start + this.rowsPerPage;
     return this.filteredUsers.slice(start, end);
   }
-
   onPageChange(event: any) {
     this.currentPage = event.page;
     this.rowsPerPage = event.rows;
   }
 
-  onTabChange() {
+  onTabChange(index: number) {
     this.searchQuery = '';
     this.currentPage = 0;
+    this.tabChange.emit(index);
   }
 
   resetPagination() {
     this.currentPage = 0;
+  }
+
+  onRowClick(userId: string ,userType:string) {
+    this.userClick.emit(userId);
+    this.userClick.emit(userType);
+    this.selectedTabIndex = 2;
+  }
+  isUserType(): boolean {
+    return (
+      this.filteredUsers.length > 0 && 'profileName' in this.filteredUsers[0]
+    );
+  }
+
+  isBusinessType(): boolean {
+    return (
+      this.filteredUsers.length > 0 && 'companyName' in this.filteredUsers[0]
+    );
   }
 }

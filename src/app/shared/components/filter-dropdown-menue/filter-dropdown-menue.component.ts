@@ -1,40 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { DropdownFilterOptions } from 'primeng/dropdown';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
-
-interface City {
-  name: string;
-  code: string;
-}
+import { IBusinesses } from 'app/shared/interfaces/insights/IBusinesses';
+import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-filter-dropdown-menue',
   standalone: true,
-  imports: [FormsModule, DropdownModule,NavigationIconComponent],
+  imports: [FormsModule, DropdownModule, NavigationIconComponent],
   templateUrl: './filter-dropdown-menue.component.html',
 })
 export class FilterDropdownMenueComponent implements OnInit {
-  countries: City[] | undefined;
-  selectedCountry: City | null = null;
+  bussiness: IBusinesses[] | undefined;
+  selectedbussiness: IBusinesses | null = null;
   filterValue: string | undefined = '';
+  _DashboardService = inject(DashboardService);
 
-  ngOnInit() {
-    this.countries = [
-      { name: 'Australia', code: 'AU' },
-      { name: 'Brazil', code: 'BR' },
-      { name: 'China', code: 'CN' },
-      { name: 'Egypt', code: 'EG' },
-      { name: 'France', code: 'FR' },
-      { name: 'Germany', code: 'DE' },
-      { name: 'India', code: 'IN' },
-      { name: 'Japan', code: 'JP' },
-      { name: 'Spain', code: 'ES' },
-      { name: 'United States', code: 'US' },
-    ];
+ngOnInit(): void {
+    this.getBusinesses()
+}
+  getBusinesses() {
+    this._DashboardService.getbusinesses().subscribe({
+      next: (response) => {
+        this.bussiness = response.data.items;
+      },
+    });
   }
-
   resetFunction(options?: DropdownFilterOptions) {
     if (options && options.reset) {
       options?.reset();

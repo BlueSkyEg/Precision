@@ -28,7 +28,7 @@ export class AccountantComponent {
     },
   ];
   tabs: ITab[] = [
-    { title: 'My Profiles', searchTitle: 'Accountant', count: 0, users: [] },
+    { title: 'My Profiles', searchTitle: 'Accountant', count: 0, users: []},
   ];
 
   ngOnInit() {

@@ -1,3 +1,3 @@
 <app-top-nav [items]="breadcrumbItems" />
 <app-total-transactions-card [pendingtransactionNumber]="pending" [awaitingtransactionNumber]="awaiting" [reviewedtransactionNumber]="reviewed"/>
-<app-table [tabs]="tabs"/>
+<app-table [tabs]="tabs" (userClick)="getBusinessById($event,$event)"   (tabChange)="selectTab($event)" />

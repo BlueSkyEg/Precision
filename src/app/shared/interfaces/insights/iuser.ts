@@ -1,8 +1,9 @@
 export interface IUser {
-  qbMemberId: string;
-  qbMemberName: string;
+  profileId: string;
+  profileName: string;
   companiesCount: number;
   pendingTrxCount: number;
   awaitingTrxCount: number;
   reviewedTrxCount: number;
+  profileType:string;
 }
