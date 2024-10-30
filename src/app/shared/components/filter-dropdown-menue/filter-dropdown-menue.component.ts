@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { DropdownFilterOptions } from 'primeng/dropdown';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
-import { IBusinesses } from 'app/shared/interfaces/insights/IBusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
 
 @Component({

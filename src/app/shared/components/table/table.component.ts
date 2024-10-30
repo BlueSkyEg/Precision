@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
 import { IUser } from 'app/shared/interfaces/insights/iuser';
 import { ITab } from 'app/shared/interfaces/insights/itab';
-import { IBusinesses } from 'app/shared/interfaces/insights/IBusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
 
 @Component({
   selector: 'app-table',
@@ -24,14 +24,13 @@ import { IBusinesses } from 'app/shared/interfaces/insights/IBusinesses';
 })
 export class TableComponent {
   @Input() tabs: ITab[] = [];
-  @Output() userClick = new EventEmitter<string>();
+  @Output() userClick = new EventEmitter<{ id: string; type: string }>();
   @Output() tabChange = new EventEmitter<number>();
-
+  @Input() isLoading: boolean = true;
   selectedTabIndex = 0;
   searchQuery = '';
   currentPage = 0;
   rowsPerPage = 10;
-
   get filteredUsers(): (IUser | IBusinesses)[] {
     const currentTab = this.tabs[this.selectedTabIndex];
     return currentTab.users.filter((user: IUser | IBusinesses) => {
@@ -69,9 +68,8 @@ export class TableComponent {
     this.currentPage = 0;
   }
 
-  onRowClick(userId: string ,userType:string) {
-    this.userClick.emit(userId);
-    this.userClick.emit(userType);
+  onRowClick(userId: string, userType: string) {
+    this.userClick.emit({ id: userId, type: userType });
     this.selectedTabIndex = 2;
   }
   isUserType(): boolean {
