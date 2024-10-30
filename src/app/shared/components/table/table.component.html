@@ -41,41 +41,41 @@
         <ng-template pTemplate="header">
           <tr>
             <th>_</th>
-            <th class="lowercase" >Name</th>
+            <th>Name</th>
             @if(isUserType()){
 
-            <th pSortableColumn="companiesCount" >
+            <th pSortableColumn="companiesCount">
               <div class="flex">
-                companies <p-sortIcon field="companiesCount" />
+                Companies <p-sortIcon field="companiesCount" />
               </div>
             </th>
             } @if(isBusinessType()){
-            <th pSortableColumn="ownerName" >
+            <th pSortableColumn="ownerName">
               <div class="flex">Owner <p-sortIcon field="ownerName" /></div>
             </th>
-            <th pSortableColumn="qbMemberName" >
+            <th pSortableColumn="qbMemberName">
               <div class="flex">
                 Accountant <p-sortIcon field="qbMemberName" />
               </div>
             </th>
-            <th pSortableColumn="lastQBUpdate" >
+            <th pSortableColumn="lastQBUpdate">
               <div class="flex">
                 LastUpdate <p-sortIcon field="lastQBUpdate" />
               </div>
             </th>
 
             }
-            <th pSortableColumn="pendingTrxCount" >
+            <th pSortableColumn="pendingTrxCount">
               <div class="flex">
                 Pending <p-sortIcon field="pendingTrxCount" />
               </div>
             </th>
-            <th pSortableColumn="awaitingTrxCount" >
+            <th pSortableColumn="awaitingTrxCount">
               <div class="flex">
                 Awaiting <p-sortIcon field="awaitingTrxCount" />
               </div>
             </th>
-            <th pSortableColumn="reviewedTrxCount" >
+            <th pSortableColumn="reviewedTrxCount">
               <div class="flex">
                 Reviewed <p-sortIcon field="reviewedTrxCount" />
               </div>
@@ -83,10 +83,13 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-user ; let-index="rowIndex">
-          <tr >
+          @if(!isLoading) {
+          <tr>
             <td>{{ index + 1 }}</td>
             @if(isUserType()){
-            <td (click)="onRowClick(user.profileId ,user.profileType)">{{ user.profileName }}</td>
+            <td (click)="onRowClick(user.profileId, user.profileType)">
+              {{ user.profileName }}
+            </td>
             <td>{{ user.companiesCount }}</td>
             } @if(isBusinessType()){
             <td>{{ user.companyName }}</td>
@@ -131,7 +134,14 @@
               >
                 {{ user.reviewedTrxCount > 0 ? user.reviewedTrxCount : "-" }}
               </p>
-            </td>          </tr>
+            </td>
+          </tr>
+          }
+          @else {
+            <tr>
+              <td colspan="6" class="text-center">Loading...</td>
+            </tr>
+          }
         </ng-template>
       </p-table>
     </p-tabPanel>
