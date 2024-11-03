@@ -1,3 +1,9 @@
 <app-top-nav [items]="breadcrumbItems" />
-<app-total-transactions-card [pendingtransactionNumber]="pending" [awaitingtransactionNumber]="awaiting" [reviewedtransactionNumber]="reviewed"/>
+<div class="flex justify-between mt-6">
+<app-total-transactions-card [totalNumber]="pending" iconName="pending-transactions" cardName="Total Pending Transactions" [isBordered]="true" />
+<app-total-transactions-card [totalNumber]="awaiting" iconName="awaiting-transaction" cardName="Total Awaiting Transactions" [isBordered]="true"/>
+<app-total-transactions-card [totalNumber]="reviewed" iconName="reviewed-transactions" cardName="Total Reviewed Transactions"/>
+</div>
+
+
 <app-table    [isLoading]="isLoading" [tabs]="tabs" (userClick)="getBusinessById($event.id, $event.type)"   (tabChange)="selectTab($event)" />

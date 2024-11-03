@@ -1,3 +1,56 @@
-<app-top-nav [items]="breadcrumbItems"/>
-<app-total-transactions-card [pendingtransactionNumber]="pending" [awaitingtransactionNumber]="awaiting" [reviewedtransactionNumber]="reviewed"/>
-<app-table [tabs]="tabs"/>
+<app-top-nav [items]="breadcrumbItems" />
+<div class="flex gap-6 mt-6 w-full">
+  <div class="border-e border-gray-300 pe-6 w-full">
+    <div class="flex gap-3 items-center text-gray-400">
+      <app-navigation-icon
+        class="text-white"
+        iconType="common"
+        iconName="pending-transactions"
+      />
+      <p class="font-medium text-2xl">Pending Transactions</p>
+    </div>
+    <div class="flex gap-2 text-gray-400">
+      <app-total-transactions-card
+        [totalNumber]="pending"
+        cardName="Total Pending Transactions"
+        [isBg]="true"
+        textSize="text-sm"
+        class="w-full"
+      />
+      <app-total-transactions-card
+        [totalNumber]="awaiting"
+        cardName="Awaiting Your Review"
+        [isBg]="true"
+        textSize="text-sm"
+        class="w-full"
+      />
+    </div>
+  </div>
+  <div class="w-full">
+    <div class="flex gap-3 items-center text-gray-400 ">
+      <app-navigation-icon
+        class="text-white"
+        iconType="common"
+        iconName="businesses"
+      />
+      <p class="font-medium text-2xl">Businesses</p>
+    </div>
+    <div class="flex gap-2 text-gray-400 ">
+      <app-total-transactions-card
+        [totalNumber]="pending"
+        cardName="Total Businesses "
+        [isBg]="true"
+        textSize="text-sm"
+        class="w-full"
+      />
+      <app-total-transactions-card
+        [totalNumber]="awaiting"
+        cardName="Business with Pending Transactions"
+        [isBg]="true"
+        textSize="text-sm"
+        class="w-full"
+      />
+    </div>
+  </div>
+</div>
+<app-table [tabs]="tabs" />

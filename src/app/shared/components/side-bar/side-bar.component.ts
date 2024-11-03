@@ -21,7 +21,6 @@ import { SideNavElements } from 'app/core/interfaces/side-nav/side-nav-elements'
     CommonModule,
   ],
   templateUrl: './side-bar.component.html',
-  styleUrls: ['./side-bar.component.scss'],
 })
 export class SideBarComponent implements OnInit {
   collapsed: boolean = false;
