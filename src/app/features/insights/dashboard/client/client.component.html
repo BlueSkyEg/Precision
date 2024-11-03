@@ -1,23 +1,117 @@
-<app-top-nav [items]="breadcrumbItems" pcName="computer" userName="miral sobhy" [user]="true" />
-
-<div class="border-e border-gray-300 pe-6 w-full mt-6 ">
-  <div class="mb-4">
-    <div class="flex gap-3 items-center text-gray-400">
-      <app-navigation-icon class="text-white" iconType="common" iconName="net-income-main" />
-      <p class="font-medium text-2xl">Net Income</p>
+<app-top-nav
+  [items]="breadcrumbItems"
+  pcName="computer"
+  userName="miral sobhy"
+  [user]="true"
+/>
+<div class="mt-6 flex">
+  <div class="border-e border-gray-300 pe-6 w-full">
+    <div class="mb-4">
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          class="text-white"
+          iconType="common"
+          iconName="net-income-main"
+        />
+        <p class="font-medium text-2xl">Net Income</p>
+      </div>
+      <div class="flex gap-2">
+        <app-total-transactions-card
+          [totalNumber]="totalIncome"
+          [percentage]="85"
+          [isBg]="true"
+          class="text-primary w-full"
+          textSize="text-sm"
+          textColor="text-primary"
+          iconName="net-income"
+          iconColor="text-primary"
+        />
+      </div>
     </div>
-    <div class="flex gap-2 text-gray-400">
-      <app-total-transactions-card [totalNumber]="totalIncome" [percentage]='85' [isBg]="true"  class="text-primary w-full" textSize="text-sm" textColor="text-primary" iconName="net-income" iconColor="text-primary"/>
+    <div>
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          class="text-white"
+          iconType="common"
+          iconName="total-expense-main"
+        />
+        <p class="font-medium text-2xl">Total Expense</p>
+      </div>
+      <div class="flex gap-2">
+        <app-total-transactions-card
+          [totalNumber]="totalIncome"
+          [percentage]="90"
+          [isBg]="true"
+          class="text-[#ff0000] w-full"
+          textSize="text-sm"
+          textColor="text-[#FF0000]"
+          iconName="total-expense"
+          iconColor="text-[#FF0000]"
+        />
+      </div>
     </div>
   </div>
-  <div>
-    <div class="flex gap-3 items-center text-gray-400">
-      <app-navigation-icon class="text-white" iconType="common" iconName="total-expense-main" />
-      <p class="font-medium text-2xl">Total Expense </p>
+  <div class="w-full ps-6">
+    <div class="mb-4">
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          class="text-white"
+          iconType="common"
+          iconName="gross-profit-main"
+        />
+        <p class="font-medium text-2xl">Gross Profit</p>
+      </div>
+      <div class="flex gap-2">
+        <app-total-transactions-card
+          [totalNumber]="totalIncome"
+          [percentage]="85"
+          [isBg]="true"
+          class="text-[#20B62F] w-full"
+          textSize="text-sm"
+          textColor="text-[#20B62F]"
+          iconName="gross-profit"
+          iconColor="text-[#20B62F]"
+        />
+      </div>
     </div>
-    <div class="flex gap-2 text-gray-400">
-      <app-total-transactions-card [totalNumber]="totalIncome" [percentage]='90' [isBg]="true" class="text-primary w-full"
-        textSize="text-sm" textColor="text-red-[#FF0000]" iconName="total-expense" iconColor="text-red-[#FF0000]" class="text-red-[#FF0000]" />
+    <div class="w-full">
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          class="text-white"
+          iconType="common"
+          iconName="pending-transactions"
+        />
+        <p class="font-medium text-2xl">Pending Transactions</p>
+      </div>
+      <div class="flex gap-2 text-gray-400">
+        <app-total-transactions-card
+          [totalNumber]="pending"
+          cardName="Total Pending Transactions"
+          [isBg]="true"
+          textSize="text-sm"
+          class="w-full"
+        />
+        <app-total-transactions-card
+          [totalNumber]="awaiting"
+          cardName="Awaiting Your Review"
+          [isBg]="true"
+          textSize="text-sm"
+          class="w-full"
+        />
+      </div>
     </div>
   </div>
+</div>
+<div class="mt-9 border mb-6 !border-gray-300 rounded-2xl p-1 shadow-sm">
+  <p-tabView>
+    <p-tabPanel header="Net income">
+      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+    </p-tabPanel>
+    <p-tabPanel header="Expenses">
+      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+    </p-tabPanel>
+    <p-tabPanel header="Gross profit">
+      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
+    </p-tabPanel>
+  </p-tabView>
 </div>

@@ -1,9 +1,31 @@
 <app-top-nav [items]="breadcrumbItems" />
-<div class="flex justify-between mt-6">
-<app-total-transactions-card [totalNumber]="pending" iconName="pending-transactions" cardName="Total Pending Transactions" [isBordered]="true" />
-<app-total-transactions-card [totalNumber]="awaiting" iconName="awaiting-transaction" cardName="Total Awaiting Transactions" [isBordered]="true"/>
-<app-total-transactions-card [totalNumber]="reviewed" iconName="reviewed-transactions" cardName="Total Reviewed Transactions"/>
+<div class="flex mt-6 text-gray-400">
+  <app-total-transactions-card
+    [totalNumber]="pending"
+    iconName="pending-transactions"
+    cardName="Total Pending Transactions"
+    numberColor="text-black"
+    [isBordered]="true"
+  />
+  <app-total-transactions-card
+    [totalNumber]="awaiting"
+    iconName="awaiting-transaction"
+    cardName="Total Awaiting Transactions"
+    numberColor="text-black"
+    [isBordered]="true"
+  />
+  <app-total-transactions-card
+    [totalNumber]="reviewed"
+    iconName="reviewed-transactions"
+    cardName="Total Reviewed Transactions"
+    numberColor="text-black"
+    class="ps-9"
+  />
 </div>
 
-
-<app-table    [isLoading]="isLoading" [tabs]="tabs" (userClick)="getBusinessById($event.id, $event.type)"   (tabChange)="selectTab($event)" />
+<app-table
+  [isLoading]="isLoading"
+  [tabs]="tabs"
+  (userClick)="getBusinessById($event.id, $event.type)"
+  (tabChange)="selectTab($event)"
+/>

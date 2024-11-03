@@ -1,1 +1,86 @@
-<p>documents-dashboard works!</p>
+<app-top-nav
+  [items]="breadcrumbItems"
+  [filter]="false"
+/>
+<div class="mt-6 flex">
+  <div class="border-e border-gray-300 pe-6 w-full">
+    <div class="mb-4">
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          iconType="common"
+          iconName="indvidual"
+        />
+        <p class="font-medium text-2xl">Indvidual</p>
+      </div>
+      <div class="flex gap-2 text-gray-400">
+        <app-total-transactions-card
+          [totalNumber]="pending"
+          cardName="Total Requested Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class="w-full"
+        />
+        <app-total-transactions-card
+          [totalNumber]="awaiting"
+          cardName="Total Remaining Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class=" w-full"
+          numberColor="text-[#ff0000] "
+        />
+      </div>
+    </div>
+    <div>
+      <div class="flex gap-2">
+        <app-total-transactions-card
+          [totalNumber]="pending"
+          cardName="Total Received Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class=" w-full"
+          numberColor="text-[#20B62F] "
+        />
+      </div>
+    </div>
+  </div>
+  <div class=" ps-6 w-full">
+    <div class="mb-4">
+      <div class="flex gap-3 items-center text-gray-400 mb-2">
+        <app-navigation-icon
+          iconType="common"
+          iconName="Business"
+        />
+        <p class="font-medium text-2xl">Business</p>
+      </div>
+      <div class="flex gap-2 text-gray-400">
+        <app-total-transactions-card
+          [totalNumber]="pending"
+          cardName="Total Requested Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class="w-full"
+        />
+        <app-total-transactions-card
+          [totalNumber]="awaiting"
+          cardName="Total Remaining Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class=" w-full"
+          numberColor="text-[#ff0000] "
+        />
+      </div>
+    </div>
+    <div>
+      <div class="flex gap-2">
+        <app-total-transactions-card
+          [totalNumber]="pending"
+          cardName="Total Received Documents"
+          [isBg]="true"
+          textSize="text-sm"
+          class=" w-full"
+          numberColor="text-[#20B62F] "
+        />
+      </div>
+    </div>
+  </div>
+</div>

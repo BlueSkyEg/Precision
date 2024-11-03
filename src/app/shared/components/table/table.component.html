@@ -136,11 +136,10 @@
               </p>
             </td>
           </tr>
-          }
-          @else {
-            <tr>
-              <td colspan="6" class="text-center">Loading...</td>
-            </tr>
+          } @else {
+          <tr>
+            <td colspan="6" class="text-center">Loading...</td>
+          </tr>
           }
         </ng-template>
       </p-table>
@@ -155,5 +154,4 @@
   [rowsPerPageOptions]="[5, 10, 20]"
 >
 </p-paginator>
-
 }

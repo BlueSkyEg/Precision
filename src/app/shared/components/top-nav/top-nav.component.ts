@@ -7,7 +7,12 @@ import { NavigationIconComponent } from "../../../core/icons/navigation-icons/na
 @Component({
   selector: 'app-top-nav',
   standalone: true,
-  imports: [BreadCrumbComponent, UserComponent, FilterDropdownMenueComponent, NavigationIconComponent],
+  imports: [
+    BreadCrumbComponent,
+    UserComponent,
+    FilterDropdownMenueComponent,
+    NavigationIconComponent,
+  ],
   templateUrl: './top-nav.component.html',
 })
 export class TopNavComponent {
@@ -19,4 +24,5 @@ export class TopNavComponent {
   @Input() userIconName: string = 'user';
   @Input() pcIconName: string = 'monitor';
   @Input() user?: boolean = false;
+  @Input() filter?: boolean = true;
 }
