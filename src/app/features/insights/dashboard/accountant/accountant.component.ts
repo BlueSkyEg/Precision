@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
 import { TableComponent } from 'app/shared/components/table/table.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
@@ -9,7 +10,7 @@ import { IUser } from 'app/shared/interfaces/insights/iuser';
 @Component({
   selector: 'app-accountant',
   standalone: true,
-  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent],
+  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent,NavigationIconComponent],
   templateUrl: './accountant.component.html',
 })
 export class AccountantComponent {

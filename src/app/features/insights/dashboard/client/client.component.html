@@ -1,1 +1,23 @@
 <app-top-nav [items]="breadcrumbItems" pcName="computer" userName="miral sobhy" [user]="true" />
+
+<div class="border-e border-gray-300 pe-6 w-full mt-6 ">
+  <div class="mb-4">
+    <div class="flex gap-3 items-center text-gray-400">
+      <app-navigation-icon class="text-white" iconType="common" iconName="net-income-main" />
+      <p class="font-medium text-2xl">Net Income</p>
+    </div>
+    <div class="flex gap-2 text-gray-400">
+      <app-total-transactions-card [totalNumber]="totalIncome" [percentage]='85' [isBg]="true"  class="text-primary w-full" textSize="text-sm" textColor="text-primary" iconName="net-income" iconColor="text-primary"/>
+    </div>
+  </div>
+  <div>
+    <div class="flex gap-3 items-center text-gray-400">
+      <app-navigation-icon class="text-white" iconType="common" iconName="total-expense-main" />
+      <p class="font-medium text-2xl">Total Expense </p>
+    </div>
+    <div class="flex gap-2 text-gray-400">
+      <app-total-transactions-card [totalNumber]="totalIncome" [percentage]='90' [isBg]="true" class="text-primary w-full"
+        textSize="text-sm" textColor="text-red-[#FF0000]" iconName="total-expense" iconColor="text-red-[#FF0000]" class="text-red-[#FF0000]" />
+    </div>
+  </div>
+</div>
