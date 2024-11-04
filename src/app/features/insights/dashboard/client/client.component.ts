@@ -37,6 +37,17 @@ export class ClientComponent implements OnInit {
     const textColorSecondary = documentStyle.getPropertyValue(
       '--text-color-secondary'
     );
+    const maxYValue = 19000;
+    const minYValue = -9500;
+    const startValues = [
+      -6800, 0, 0, -5800, 0, 0, 10000, 7000, -4500, 6000, 10000, -3000,
+    ];
+
+    const endValues = [
+      11800, 13000, 14000, 11800, 14000, 15000, 2000, 5000, 9500, 9000, 2000,
+      6000,
+    ];
+
     this.basicData = {
       labels: [
         'Jan',
@@ -54,14 +65,33 @@ export class ClientComponent implements OnInit {
       ],
       datasets: [
         {
-          label: 'Net Income',
-          data: [
-            -9500, 11330, 0, 9000, 12000, 13000, 10000, 7000, -4500, 6000,
-            10000, -3000,
-          ],
-          backgroundColor: 'rgba(51, 96, 211, 1)',
-          borderColor: 'rgba(51, 96, 211, 1)',
-          borderWidth: 1,
+          label: '',
+          data: startValues,
+          backgroundColor: 'rgb(51, 96, 211)',
+          borderWidth: 0,
+          barPercentage: .3,
+          categoryPercentage: 1,
+        },
+        {
+          label: '',
+          data: endValues,
+          backgroundColor: 'rgb(51, 96, 211)',
+          borderWidth: 0,
+          barPercentage: .3,
+          categoryPercentage: 1,
+        },
+        {
+          label: '',
+          data: Array(12).fill(minYValue),
+          backgroundColor: 'rgba(247, 247, 247, 1)',
+          borderWidth: 0,
+          barPercentage: 0.3,
+        },
+        {
+          label: '',
+          data: Array(12).fill(maxYValue),
+          backgroundColor: 'rgba(247, 247, 247, 1)',
+          borderWidth: 0,
           barPercentage: 0.3,
         },
       ],
@@ -69,26 +99,33 @@ export class ClientComponent implements OnInit {
 
     this.basicOptions = {
       plugins: {
+        tooltip: {
+          enabled: false,
+        },
         legend: {
           labels: {
             color: textColor,
+            filter: (legendItem: any) => legendItem.text !== '',
           },
         },
       },
       scales: {
         y: {
+          stacked: true,
           beginAtZero: false,
-          suggestedMin: -4600,
-          max: 19000,
+          min: minYValue,
+          max: maxYValue,
           ticks: {
             color: textColorSecondary,
             callback: (value: number) => `${value / 1000}K`,
           },
           grid: {
-            display: false,
+            display: false, // Disable grid lines on y-axis
           },
         },
         x: {
+          stacked: true,
+          beginAtZero: false,
           ticks: {
             color: textColorSecondary,
           },
@@ -96,6 +133,9 @@ export class ClientComponent implements OnInit {
             display: false,
           },
         },
+      },
+      interaction: {
+        mode: '',
       },
     };
   }
