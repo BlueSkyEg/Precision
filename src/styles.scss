@@ -23,35 +23,7 @@ body {
   height: 100%;
   margin: 0;
 }
-.mat-mdc-form-field-focus-overlay,
-.mdc-text-field__input {
-  opacity: 1 !important;
-  background-color: #f8fafc !important;
-}
-.ng-tns-c508571215-0 {
-  color: #64748b;
-}
-.mdc-line-ripple::before {
-  z-index: 0 !important;
-  border-bottom-width: 0px !important;
-}
-.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label {
-  color: #64748b !important;
-}
-.mdc-checkbox__background {
-  border: 1px solid #cbd5e1 !important;
-}
-.mdc-text-field--filled {
-  border: 1px solid #cbd5e1;
-  border-radius: 8px !important;
-}
-.mat-mdc-unelevated-button,
-.mat-mdc-unelevated-button .mdc-button__ripple {
-  border-radius: 6px !important;
-}
-.mat-typography p {
-  margin: 0 0 0 0 !important;
-}
+
 .p-dropdown {
   @apply border border-gray-300 rounded-md w-full text-start;
 }

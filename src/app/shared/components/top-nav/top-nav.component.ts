@@ -11,7 +11,6 @@ import { NavigationIconComponent } from "../../../core/icons/navigation-icons/na
     BreadCrumbComponent,
     UserComponent,
     FilterDropdownMenueComponent,
-    NavigationIconComponent,
   ],
   templateUrl: './top-nav.component.html',
 })

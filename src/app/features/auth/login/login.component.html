@@ -4,67 +4,74 @@
       src="/assets/images/Login.webp"
       alt="Login Image"
       loading="lazy"
-      class="w-full h-svh"
+      class="w-full h-full object-cover"
     />
   </picture>
   <div
-    class="col-span-4 lg:col-span-3 flex justify-center items-center flex-col h-svh"
+    class="col-span-4 lg:col-span-3 flex justify-center items-center flex-col h-svh w-full"
   >
-    <picture class="mb-5">
+    <picture class="mb-2">
       <img src="/assets/images/logo.webp" alt="Login Image" loading="lazy" />
     </picture>
-    <p class="text-[32px] font-semibold text-primary mb-2">
+    <p class="text-[32px] font-bold text-primary mb-2">
       Precision Accounting Work Flow
     </p>
-    <p class="text-sub-text text-lg">
+    <p class="text-sub-text text-[20px]">
       We kindly request you to provide your details.
     </p>
-    <div class="px-8 mt-8">
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-        <mat-form-field class="w-full mb-4">
-          <mat-label>Email or Phone number</mat-label>
-          <input formControlName="email" matInput class="w-full" />
-          @if (loginForm.get('email')?.invalid&&
-          loginForm.get('email')?.touched) {
-          <mat-error>{{ emailErrorMessage() }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field class="w-full">
-          <mat-label>Password</mat-label>
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onLogin()"
+      class="w-full px-8 mx-auto mt-8 lg:w-[40%] lg:px-0"
+    >
+      <div class="mb-6">
+        <input
+          formControlName="email"
+          type="email"
+          id="email"
+          class="bg-[#F8FAFC] w-full border border-[#CBD5E1] rounded-lg px-5 py-4 placeholder:text-[#64748B] focus-visible:border-[#CBD5E1] focus-visible:outline-none block"
+          placeholder="Email or Phone number"
+          required
+        />
+        @if(emailControl?.touched && emailControl?.invalid) {
+        <p class="text-red-600 text-xs p-2">You must enter an email.</p>
+        }
+      </div>
+      <div class="mb-6">
+        <input
+          formControlName="password"
+          type="password"
+          id="password"
+          class="bg-[#F8FAFC] w-full border border-[#CBD5E1] rounded-lg px-5 py-4 placeholder:text-[#64748B] focus-visible:border-[#CBD5E1] focus-visible:outline-none block"
+          placeholder="Password"
+          required
+        />
+        @if(passwordControl?.touched && passwordControl?.invalid) {
+        <p class="text-red-600 text-xs p-2">You must enter a password.</p>
+        }
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
           <input
-            formControlName="password"
-            matInput
-            [type]="hide() ? 'password' : 'text'"
-            class="w-full"
+            id="remember"
+            formControlName="rememberMe"
+            type="checkbox"
+            value=""
+            class="w-4 h-4 border border-gray-300 rounded-sm focus:ring-3 focus:ring-blue-300"
           />
-          @if (loginForm.get('password')?.invalid&&
-          loginForm.get('password')?.touched) {
-          <mat-error>{{ passwordErrorMessage() }}</mat-error>
-          }
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            (click)="clickEvent($event)"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hide()"
+          <label for="remember" class="ms-2 text-sm text-[#465866]"
+            >Remember me</label
           >
-            <mat-icon>{{ hide() ? "visibility_off" : "visibility" }}</mat-icon>
-          </button>
-        </mat-form-field>
-        <div class="flex justify-between items-center">
-          <mat-checkbox formControlName="rememberMe">Remember me</mat-checkbox>
-          <a class="text-primary">Forgot password?</a>
         </div>
-
-        <button
-          [disabled]="loginForm.invalid"
-          mat-flat-button
-          class="rounded-none w-full my-20 text-xl font-medium"
-        >
-          Login
-        </button>
-      </form>
-    </div>
+        <a class="text-primary text-sm block">Forgot password?</a>
+      </div>
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        class="rounded-md w-full mt-20 text-xl bg-primary py-3 text-white disabled:bg-gray-300"
+      >
+        Sign In
+      </button>
+    </form>
   </div>
 </div>
