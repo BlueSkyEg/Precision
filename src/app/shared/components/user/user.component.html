@@ -1,8 +1,14 @@
 <div class="flex gap-2 items-center">
-<div class="flex items-center gap-1">
-  <app-navigation-icon [iconName]="userIconName"  iconType="search"/>
-    <p class="text-gray-400 font-bold">{{ userName }}</p></div>
-<div class="flex items-center gap-1">
-  <app-navigation-icon [iconName]="pcIconName"  iconType="search"/>
-    <p class="text-gray-400 font-bold">{{ pcName }}</p></div>
+  <div class="flex gap-1 items-center">
+    <app-navigation-icon [iconName]="userIconName" iconType="search" />
+    <span class="text-gray-400 font-bold">{{ userName }}</span>
+  </div>
+  <div class="flex gap-1">
+    <app-navigation-icon
+      [iconName]="pcIconName"
+      class="self-center"
+      iconType="search"
+    />
+    <span class="text-gray-400 font-bold">{{ pcName }}</span>
+  </div>
 </div>

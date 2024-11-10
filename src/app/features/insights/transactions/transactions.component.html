@@ -1,1 +1,83 @@
-<p>transactions works!</p>
+<app-top-nav
+  [items]="breadcrumbItems"
+  pcName="computer"
+  userName="miral sobhy"
+  [user]="true"
+/>
+<div class="sm:hidden">
+  <label for="tabs" class="sr-only">Select your country</label>
+  <select
+    id="tabs"
+    class="bg-gray-50 border border-gray-300 text-gray-400 text-sm rounded-sm"
+  >
+    <option>Profile</option>
+    <option>Dashboard</option>
+    <option>setting</option>
+  </select>
+</div>
+<ul
+  class="font-semibold text-center text-gray-400 hidden border w-fit border-gray-300 sm:flex mt-12 rounded-md"
+>
+  <li
+    (click)="selectTab('Pending')"
+    class="select-none bg-gray-100 inline-block px-4 py-2 border-r border-gray-300 rounded-l-md focus:ring-4 active focus:outline-none cursor-pointer"
+    [ngClass]="{
+         'text-primary': selectedTab === 'Pending',
+         'bg-white': selectedTab === 'Pending',
+       }"
+  >
+    Pending
+  </li>
+  <li
+    (click)="selectTab('Updated')"
+    class="select-none inline-block px-4 py-2 bg-gray-100 border-r border-gray-300 focus:outline-none cursor-pointer"
+    [ngClass]="{
+         'text-primary': selectedTab === 'Updated',
+         'bg-white': selectedTab === 'Updated',
+       }"
+  >
+    Updated
+  </li>
+  <li
+    [ngClass]="{
+         'text-primary': selectedTab === 'History',
+         'bg-white': selectedTab === 'History',
+       }"
+    (click)="selectTab('History')"
+    class="select-none inline-block px-4 py-2 bg-gray-100 rounded-r-md focus:outline-none cursor-pointer"
+  >
+    History
+  </li>
+</ul>
+<div *ngIf="selectedTab === 'Pending'" class="mt-4"><div class="relative overflow-x-auto">
+<div class="border border-gray-300 rounded-md overflow-hidden">
+  <table class="w-full text-sm text-left text-black font-semibold">
+    <thead class="uppercase bg-gray-100 border-b border-gray-300">
+      <tr>
+        <th scope="col" class="px-6 py-3">Product name</th>
+        <th scope="col" class="px-6 py-3">Color</th>
+        <th scope="col" class="px-6 py-3">Category</th>
+        <th scope="col" class="px-6 py-3">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-gray-300">
+        <th scope="row" class="px-6 py-4 whitespace-nowrap">Apple MacBook Pro 17"</th>
+        <td class="px-6 py-4">Silver</td>
+        <td class="px-6 py-4">Laptop</td>
+        <td class="px-6 py-4">$2999</td>
+      </tr>
+      <tr class="">
+        <th scope="row" class="px-6 py-4 whitespace-nowrap">Microsoft Surface Pro</th>
+        <td class="px-6 py-4">White</td>
+        <td class="px-6 py-4">Laptop PC</td>
+        <td class="px-6 py-4">$1999</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</div>
+<div *ngIf="selectedTab === 'Updated'" class="mt-4">Content for Updated</div>
+<div *ngIf="selectedTab === 'History'" class="mt-4">Content for History</div>

@@ -10,6 +10,10 @@ module.exports = {
       },
     },
     extend: {
+            cursor: {
+        default: 'pointer', // Default for most elements
+        text: 'text',        // Only for text fields
+      },
       colors: {
         primary: "#3360D3",
         "secondary": "#164573",
