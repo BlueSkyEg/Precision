@@ -49,35 +49,112 @@
     History
   </li>
 </ul>
-<div *ngIf="selectedTab === 'Pending'" class="mt-4"><div class="relative overflow-x-auto">
-<div class="border border-gray-300 rounded-md overflow-hidden">
-  <table class="w-full text-sm text-left text-black font-semibold">
-    <thead class="uppercase bg-gray-100 border-b border-gray-300">
-      <tr>
-        <th scope="col" class="px-6 py-3">Product name</th>
-        <th scope="col" class="px-6 py-3">Color</th>
-        <th scope="col" class="px-6 py-3">Category</th>
-        <th scope="col" class="px-6 py-3">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b border-gray-300">
-        <th scope="row" class="px-6 py-4 whitespace-nowrap">Apple MacBook Pro 17"</th>
-        <td class="px-6 py-4">Silver</td>
-        <td class="px-6 py-4">Laptop</td>
-        <td class="px-6 py-4">$2999</td>
-      </tr>
-      <tr class="">
-        <th scope="row" class="px-6 py-4 whitespace-nowrap">Microsoft Surface Pro</th>
-        <td class="px-6 py-4">White</td>
-        <td class="px-6 py-4">Laptop PC</td>
-        <td class="px-6 py-4">$1999</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div *ngIf="selectedTab === 'Pending'" class="">
+  <div class="max-w-sm my-6 flex gap-2 items-center">
+    <div class="relative flex-1">
+      <div
+        class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+      >
+        <app-navigation-icon
+          iconType="search"
+          iconName="search-icon"
+          class="text-white"
+        />
+      </div>
+      <input
+        type="search"
+        id="default-search"
+        class="block w-full max-w-full ps-10 pe-4 py-3 text-sm text-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-primary focus:border-primary focus:border-2 placeholder:text-gray-400 placeholder:font-semibold"
+        placeholder="Search transactions"
+      />
+    </div>
+    <div class="border border-gray-300 p-3 rounded-md cursor-pointer">
+      <app-navigation-icon iconType="common" iconName="filter" />
+    </div>
+  </div>
 
-</div>
+  <div class="relative overflow-x-auto">
+    <div class="border border-gray-300 rounded-md overflow-hidden">
+      <table class="w-full text-sm text-left text-black font-semibold ">
+        <thead class="bg-gray-100 border-b border-gray-300">
+          <tr>
+            <th scope="col" class="p-4">
+              <div class="flex items-center">
+                <input
+                  id="checkbox-all-search"
+                  type="checkbox"
+                  class="w-4 h-4 text-primary border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-primary"
+                />
+                <label for="checkbox-all-search" class="sr-only"
+                  >checkbox</label
+                >
+              </div>
+            </th>
+            <th scope="col" class="pe-4">Name</th>
+            <th scope="col" class="pe-4">Date</th>
+            <th scope="col" class="pe-4">CHK</th>
+            <th scope="col" class="pe-4">Type</th>
+            <th scope="col" class="pe-4">Amount</th>
+            <th scope="col" class="pe-4">Source</th>
+            <th scope="col" class="pe-4">Comment</th>
+            <th scope="col" class="pe-4">Classification/Account</th>
+            <th scope="col" class="pe-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for(item of transactions ; track $index){
+          <tr class="border-b border-gray-300 last:border-0">
+            <td class="w-4 px-4 py-5">
+              <div class="flex items-center">
+                <input
+                  id="checkbox-table-search-2"
+                  type="checkbox"
+                  class="w-4 h-4 text-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <label for="checkbox-table-search-2" class="sr-only"
+                  >checkbox</label
+                >
+              </div>
+            </td>
+            <td class="pe-4 py-5">{{ item.name }}</td>
+            <td class="pe-4 py-5">{{ item.date }}</td>
+
+            <td class="pe-4 py-5  text-center">{{ item.chk }}</td>
+            <td class="pe-4 py-5">{{ item.type }}</td>
+            <td class="text-[#FF0000] pe-4 py-5">$({{ item.amount }})</td>
+
+            <td class="pe-4 py-5">PNC CHK - 3775</td>
+            <td class="truncate max-w-custom pe-4 py-5">
+              {{ item.comment }}
+            </td>
+            <td class="pe-4 py-5">
+              <select
+                id="countries"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              >
+                <option selected>Suspense</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+            </td>
+            <td class="pe-4">
+              <button
+                class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md"
+              >
+                Update
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 <div *ngIf="selectedTab === 'Updated'" class="mt-4">Content for Updated</div>
 <div *ngIf="selectedTab === 'History'" class="mt-4">Content for History</div>
+<div class="fixed top-1 end-0 bottom-0 p-96 bg-red-600">
+jfffff
+</div>

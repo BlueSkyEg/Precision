@@ -10,13 +10,16 @@ module.exports = {
       },
     },
     extend: {
-            cursor: {
-        default: 'pointer', // Default for most elements
-        text: 'text',        // Only for text fields
+      maxWidth: {
+        custom: "6rem",
+      },
+      cursor: {
+        default: "pointer",
+        text: "text",
       },
       colors: {
         primary: "#3360D3",
-        "secondary": "#164573",
+        secondary: "#164573",
         "gray-400": "#4B5563",
         "gray-200": "#EDEFF2",
         "gray-100": "#F7F7F7",
