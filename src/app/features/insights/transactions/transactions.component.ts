@@ -6,7 +6,12 @@ import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [TopNavComponent, CommonModule, NavigationIconComponent,CommonModule],
+  imports: [
+    TopNavComponent,
+    CommonModule,
+    NavigationIconComponent,
+    CommonModule,
+  ],
   templateUrl: './transactions.component.html',
 })
 export class TransactionsComponent {
@@ -15,7 +20,7 @@ export class TransactionsComponent {
     { label: 'Transactions', routerLink: '/insights/transactions' },
   ];
   selectedTab: string = 'Pending';
-
+  filterVisible: boolean = false;
   selectTab(tab: string) {
     this.selectedTab = tab;
   }
@@ -237,4 +242,10 @@ export class TransactionsComponent {
       country: 'Germany',
     },
   ];
+  openFilter() {
+    this.filterVisible = true;
+  }
+  closeFilter() {
+    this.filterVisible = false;
+  }
 }
