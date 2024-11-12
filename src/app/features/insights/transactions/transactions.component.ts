@@ -21,13 +21,20 @@ export class TransactionsComponent {
   ];
   selectedTab: string = 'Pending';
   filterVisible: boolean = false;
-  selectTab(tab: string) {
-    this.selectedTab = tab;
-  }
+  // Pagination variables
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  //options
+  options = [5, 10, 15];
+  selectedOption = '5';
+  dropdownVisible = false;
+  //choose account
+  selectedAccountsCount: number = 0;
   transactions: any[] = [
     {
       name: 'Diallo Restaurant Hub LLC',
       date: '01/22/2023',
+      selected: false,
       chk: '-',
       type: 'Withdrawal',
       amount: '$(19,115.45)',
@@ -38,6 +45,7 @@ export class TransactionsComponent {
       name: 'Green Valley Market',
       date: '02/14/2023',
       amount: '$(2,540.00)',
+      selected: false,
       chk: '-',
       type: 'Deposit',
       account: 'Wells Fargo - 8765',
@@ -47,8 +55,8 @@ export class TransactionsComponent {
       name: 'Urban Eats',
       date: '03/05/2023',
       amount: '$(1,200.75)',
+      selected: false,
       chk: '-',
-
       type: 'Withdrawal',
       account: 'Bank of America - 1234',
       comment: 'Monthly operational expenses.',
@@ -59,6 +67,7 @@ export class TransactionsComponent {
       date: '03/20/2023',
       amount: '$(750.50)',
 
+      selected: false,
       chk: '-',
       type: 'Deposit',
       account: 'Chase Bank - 9876',
@@ -69,6 +78,7 @@ export class TransactionsComponent {
       name: 'Tech Solutions Inc.',
       date: '04/01/2023',
       amount: '$(5,500.00)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -80,6 +90,7 @@ export class TransactionsComponent {
       name: 'Fashion Forward',
       date: '04/15/2023',
       amount: '$(3,150.25)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -91,6 +102,7 @@ export class TransactionsComponent {
       name: 'Global Supplies Ltd.',
       date: '05/02/2023',
       amount: '$(8,300.50)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -102,6 +114,7 @@ export class TransactionsComponent {
       name: 'Foodies Corner',
       date: '05/18/2023',
       amount: '$(1,050.75)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -113,6 +126,7 @@ export class TransactionsComponent {
       name: 'Wellness Clinic',
       date: '06/07/2023',
       amount: '$(2,780.60)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -124,6 +138,7 @@ export class TransactionsComponent {
       name: 'Eco Living',
       date: '06/25/2023',
       amount: '$(3,925.00)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -135,6 +150,7 @@ export class TransactionsComponent {
       name: 'Education First',
       date: '07/10/2023',
       amount: '$(4,500.00)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -146,6 +162,7 @@ export class TransactionsComponent {
       name: 'Sports Hub',
       date: '07/21/2023',
       amount: '$(1,275.40)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -157,6 +174,7 @@ export class TransactionsComponent {
       name: 'Health Plus',
       date: '08/05/2023',
       amount: '$(2,850.75)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -169,6 +187,7 @@ export class TransactionsComponent {
       date: '08/19/2023',
       amount: '$(920.50)',
 
+      selected: false,
       chk: '-',
       type: 'Deposit',
       account: 'Bank of America - 3333',
@@ -179,6 +198,7 @@ export class TransactionsComponent {
       name: 'Build It',
       date: '09/01/2023',
       amount: '$(6,150.30)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -190,6 +210,7 @@ export class TransactionsComponent {
       name: 'Gourmet Meals',
       date: '09/14/2023',
       amount: '$(1,340.25)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -201,6 +222,7 @@ export class TransactionsComponent {
       name: 'Tech Innovators',
       date: '10/03/2023',
       amount: '$(7,850.00)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -212,6 +234,7 @@ export class TransactionsComponent {
       name: 'The Green Thumb',
       date: '10/21/2023',
       amount: '$(1,150.75)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -223,6 +246,7 @@ export class TransactionsComponent {
       name: 'Mindful Medics',
       date: '11/04/2023',
       amount: '$(3,450.80)',
+      selected: false,
       chk: '-',
 
       type: 'Withdrawal',
@@ -234,6 +258,243 @@ export class TransactionsComponent {
       name: 'Blue Skies Travels',
       date: '11/20/2023',
       amount: '$(2,750.60)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'HSBC - 9999',
+      comment: 'Client payment for packages.',
+      country: 'Germany',
+    },
+    {
+      name: 'Diallo Restaurant Hub LLC',
+      date: '01/22/2023',
+      selected: false,
+      chk: '-',
+      type: 'Withdrawal',
+      amount: '$(19,115.45)',
+      source: 'PNC CHK - 3775',
+      comment: 'Lorem ipsum dolor sit amet.',
+    },
+    {
+      name: 'Green Valley Market',
+      date: '02/14/2023',
+      amount: '$(2,540.00)',
+      selected: false,
+      chk: '-',
+      type: 'Deposit',
+      account: 'Wells Fargo - 8765',
+      comment: 'Business payment received.',
+    },
+    {
+      name: 'Urban Eats',
+      date: '03/05/2023',
+      amount: '$(1,200.75)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Bank of America - 1234',
+      comment: 'Monthly operational expenses.',
+      country: 'France',
+    },
+    {
+      name: 'Sunshine Bakery',
+      date: '03/20/2023',
+      amount: '$(750.50)',
+
+      selected: false,
+      chk: '-',
+      type: 'Deposit',
+      account: 'Chase Bank - 9876',
+      comment: 'Client payment for catering.',
+      country: 'Germany',
+    },
+    {
+      name: 'Tech Solutions Inc.',
+      date: '04/01/2023',
+      amount: '$(5,500.00)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'HSBC - 3333',
+      comment: 'Technology services and support.',
+      country: 'United States',
+    },
+    {
+      name: 'Fashion Forward',
+      date: '04/15/2023',
+      amount: '$(3,150.25)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'Citi Bank - 4444',
+      comment: 'Client payment for merchandise.',
+      country: 'Canada',
+    },
+    {
+      name: 'Global Supplies Ltd.',
+      date: '05/02/2023',
+      amount: '$(8,300.50)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Standard Chartered - 5555',
+      comment: 'Bulk purchase of materials.',
+      country: 'France',
+    },
+    {
+      name: 'Foodies Corner',
+      date: '05/18/2023',
+      amount: '$(1,050.75)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'Bank of America - 6666',
+      comment: 'Monthly subscription fees.',
+      country: 'Germany',
+    },
+    {
+      name: 'Wellness Clinic',
+      date: '06/07/2023',
+      amount: '$(2,780.60)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'US Bank - 7777',
+      comment: 'Medical supplies restocking.',
+      country: 'United States',
+    },
+    {
+      name: 'Eco Living',
+      date: '06/25/2023',
+      amount: '$(3,925.00)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'Chase Bank - 8888',
+      comment: 'Sale of eco-friendly products.',
+      country: 'Canada',
+    },
+    {
+      name: 'Education First',
+      date: '07/10/2023',
+      amount: '$(4,500.00)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Wells Fargo - 9999',
+      comment: 'Education supplies purchase.',
+      country: 'France',
+    },
+    {
+      name: 'Sports Hub',
+      date: '07/21/2023',
+      amount: '$(1,275.40)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'HSBC - 1111',
+      comment: 'Client payment for equipment.',
+      country: 'Germany',
+    },
+    {
+      name: 'Health Plus',
+      date: '08/05/2023',
+      amount: '$(2,850.75)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Citi Bank - 2222',
+      comment: 'Monthly medical supplies.',
+      country: 'United States',
+    },
+    {
+      name: 'Cafe Delights',
+      date: '08/19/2023',
+      amount: '$(920.50)',
+
+      selected: false,
+      chk: '-',
+      type: 'Deposit',
+      account: 'Bank of America - 3333',
+      comment: 'Catering services payment.',
+      country: 'Canada',
+    },
+    {
+      name: 'Build It',
+      date: '09/01/2023',
+      amount: '$(6,150.30)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Standard Chartered - 4444',
+      comment: 'Construction material purchase.',
+      country: 'France',
+    },
+    {
+      name: 'Gourmet Meals',
+      date: '09/14/2023',
+      amount: '$(1,340.25)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'US Bank - 5555',
+      comment: 'Monthly subscription fees.',
+      country: 'Germany',
+    },
+    {
+      name: 'Tech Innovators',
+      date: '10/03/2023',
+      amount: '$(7,850.00)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Chase Bank - 6666',
+      comment: 'New software purchase.',
+      country: 'United States',
+    },
+    {
+      name: 'The Green Thumb',
+      date: '10/21/2023',
+      amount: '$(1,150.75)',
+      selected: false,
+      chk: '-',
+
+      type: 'Deposit',
+      account: 'Wells Fargo - 7777',
+      comment: 'Client payment for services.',
+      country: 'Canada',
+    },
+    {
+      name: 'Mindful Medics',
+      date: '11/04/2023',
+      amount: '$(3,450.80)',
+      selected: false,
+      chk: '-',
+
+      type: 'Withdrawal',
+      account: 'Bank of America - 8888',
+      comment: 'Medical equipment purchase.',
+      country: 'France',
+    },
+    {
+      name: 'Blue Skies Travels',
+      date: '11/20/2023',
+      amount: '$(2,750.60)',
+      selected: false,
       chk: '-',
 
       type: 'Deposit',
@@ -242,10 +503,94 @@ export class TransactionsComponent {
       country: 'Germany',
     },
   ];
+
+  selectTab(tab: string) {
+    this.selectedTab = tab;
+  }
+  get PaginatedData() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.transactions.slice(startIndex, endIndex);
+  }
+  changePage(page: any) {
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
   openFilter() {
     this.filterVisible = true;
   }
-  closeFilter() {
+  closeFilter(event?: Event) {
     this.filterVisible = false;
+    event?.preventDefault();
+  }
+  //options
+  toggleDropdown() {
+    this.dropdownVisible = !this.dropdownVisible;
+  }
+
+  selectOption(option: number) {
+    this.selectedOption = option.toString();
+    this.dropdownVisible = false;
+    this.itemsPerPage = option;
+    this.currentPage = 1;
+  }
+  get totalPages(): number {
+    return Math.ceil(this.transactions.length / this.itemsPerPage);
+  }
+  get pages(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+  get visiblePages(): (number | string)[] {
+    const maxVisiblePages = 5;
+    const pages: (number | string)[] = [];
+    if (this.totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (this.currentPage <= 3) {
+        pages.push(1, 2, 3, 4, 5, '...', this.totalPages);
+      } else if (this.currentPage >= this.totalPages - 2) {
+        pages.push(
+          1,
+          '...',
+          this.totalPages - 3,
+          this.totalPages - 2,
+          this.totalPages - 1,
+          this.totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          '...',
+          this.currentPage - 1,
+          this.currentPage,
+          this.currentPage + 1,
+          '...',
+          this.totalPages
+        );
+      }
+    }
+
+    return pages;
+  }
+  // Count the number of selected items
+  get Accounts(): number {
+    return this.transactions.filter((transaction) => transaction.selected)
+      .length;
+  }
+
+  toggleSelection(transaction: any) {
+    transaction.selected = !transaction.selected;
+    this.updateSelectedCount();
+  }
+  toggleSelectAll(isChecked?: boolean): void {
+    this.transactions.forEach((tx) => (tx.selected = isChecked));
+    this.updateSelectedCount();
+  }
+  updateSelectedCount(): void {
+    this.selectedAccountsCount = this.transactions.filter((tx) => tx.selected).length;
   }
 }

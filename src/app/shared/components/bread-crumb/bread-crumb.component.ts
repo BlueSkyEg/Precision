@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 @Component({
   selector: 'app-bread-crumb',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, RouterLink, RouterLinkActive],
+  imports: [ RouterLink, RouterLinkActive],
   templateUrl: './bread-crumb.component.html',
 })
 export class BreadCrumbComponent {
