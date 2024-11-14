@@ -600,4 +600,16 @@ export class TransactionsComponent {
       (tx) => tx.selected
     ).length;
   }
+
+  //date picker
+  // Define minDate and maxDate as getters
+  get minDate(): Date {
+    const currentYear = new Date().getFullYear();
+    return new Date(currentYear - 1, 0, 1); // January 1st of the previous year
+  }
+
+  get maxDate(): Date {
+    const currentYear = new Date().getFullYear();
+    return new Date(currentYear, 11, 31); // December 31st of the current year
+  }
 }
