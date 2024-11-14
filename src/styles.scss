@@ -23,7 +23,32 @@ body {
   height: 100%;
   margin: 0;
 }
-
+.mat-mdc-form-field-focus-overlay,
+.mdc-text-field__input {
+  background-color: #fff !important;
+      @apply focus:outline-none focus:ring-primary focus:border-primary
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled)
+ {
+  background-color: white !important;
+    @apply border text-gray-400 border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary
+}
+.mdc-line-ripple::before {
+  z-index: 0 !important;
+  border-bottom-width: 0px !important;
+}
+.mdc-line-ripple{
+  display: none !important;
+}
+.cdk-overlay-pane {
+@apply mt-2
+}
+.cdk-overlay-pane .mat-calendar{
+  @apply  bg-white border border-gray-300 rounded-md 
+}
+.mat-datepicker-content .mat-calendar{
+  width: 352px !important;
+}
 .p-dropdown {
   @apply border border-gray-300 rounded-md w-full text-start;
 }

@@ -48,17 +48,15 @@
       </div>
     </div>
     @if(selectedAccountsCount>0){
-      <div class="flex gap-2 items-center">
-    <span class="text-gray-400 font-semibold text-sm"> {{selectedAccountsCount}} Selected</span>
-    <button
-      class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"(click)="openFilter()">
-      Choose Account
-
-    </button>
-      </div>
-
+    <div class="flex gap-2 items-center">
+      <span class="text-gray-400 font-semibold text-sm"> {{selectedAccountsCount}} Selected</span>
+      <button
+        class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
+        (click)="openFilter()">
+        Choose Account
+      </button>
+    </div>
     }
-
   </div>
 
   <div class="relative overflow-x-auto">
@@ -148,18 +146,22 @@
       <div class="mb-4">
         <label for="name" class="block mb-2 font-medium text-black">Name</label>
         <input type="text" placeholder="Type name" id="name"
-          class="border text-gray-400 placeholder:text-gray-400 placeholder:font-semibold border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-      </div>
-      <div class="mb-4">
-        <label for="date" class="block mb-2 font-medium text-black">Date Range</label>
-        <div class="max-w-sm">
-          <input datepicker id="default-datepicker" type="text"
-            class="border text-gray-400 placeholder:text-gray-400 placeholder:font-semibold border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Select time range" />
-        </div>
+          class="border text-gray-400 placeholder:text-gray-400 placeholder:font-semibold border-gray-300 rounded-md focus:outline-none block w-full p-2.5" />
       </div>
       <div class="mb-4">
         <label for="amount" class="block mb-2 font-medium text-black">Amount</label>
+      </div>
+      <div class="mb-4">
+        <label for="date" class="block mb-2 font-medium text-black">Date Range</label>
+        <mat-form-field class="w-full !bg-white border-0">
+          <mat-date-range-input [rangePicker]="picker" class=" bg-white border-0">
+            <input matStartDate placeholder="From" class="placeholder:text-gray-400 placeholder:font-semibold">
+            <input matEndDate placeholder=" To" class="placeholder:text-gray-400 placeholder:font-semibold">
+          </mat-date-range-input>
+          <mat-datepicker-toggle class="w-full"  matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
       </div>
     </div>
     <div class="flex justify-between items-center">

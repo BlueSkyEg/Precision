@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -11,7 +13,10 @@ import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component
     CommonModule,
     NavigationIconComponent,
     CommonModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
   ],
+  providers: [provideNativeDateAdapter()],
   templateUrl: './transactions.component.html',
 })
 export class TransactionsComponent {
@@ -591,6 +596,8 @@ export class TransactionsComponent {
     this.updateSelectedCount();
   }
   updateSelectedCount(): void {
-    this.selectedAccountsCount = this.transactions.filter((tx) => tx.selected).length;
+    this.selectedAccountsCount = this.transactions.filter(
+      (tx) => tx.selected
+    ).length;
   }
 }
