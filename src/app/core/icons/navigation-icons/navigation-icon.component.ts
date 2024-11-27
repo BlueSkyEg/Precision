@@ -8,7 +8,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   imports: [NgStyle],
   template: ` <div
     [innerHTML]="sanitizedSvgContent"
-    [ngStyle]="{ color: iconColor }"
+    [ngStyle]="{
+      color: iconColor,
+      transform: isRotated ? 'rotate(180deg)' : 'none'
+    }"
   ></div>`,
   styles: [
     `
@@ -22,7 +25,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class NavigationIconComponent {
   @Input() iconName!: string;
   @Input() iconColor: string = 'currentColor';
-  @Input() iconType: 'navigation' | 'search'|'common' = 'navigation';
+  @Input() iconType: 'navigation' | 'search' | 'common' = 'navigation';
+  @Input() isRotated: boolean = false;
   sanitizedSvgContent!: SafeHtml;
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
   ngOnInit(): void {

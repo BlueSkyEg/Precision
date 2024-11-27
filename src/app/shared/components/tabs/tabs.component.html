@@ -1,0 +1,17 @@
+<ul
+  class="font-semibold text-center  text-gray-400 hidden border  border-gray-300 sm:flex mt-12 rounded-md" [class.w-full]="widthClass === 'full'" [class.w-fit]="widthClass === 'fit'" >
+  @for(tab of tabs ; track $index){
+  <li
+    (click)="selectTab(tab)"
+    class="select-none w-full bg-gray-100 inline-block px-4 py-2 border-r border-gray-300 rounded-l-md focus:ring-4 active focus:outline-none cursor-pointer"
+    [ngClass]="{
+      'text-primary': selectedTab === tab,
+      'bg-white': selectedTab === tab,
+      'rounded-s-md': isFirst(tab),
+      'rounded-e-md border-r-0': isLast(tab)
+    }"
+  >
+    {{ tab }}
+  </li>
+  }
+</ul>

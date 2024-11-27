@@ -1,0 +1,153 @@
+<!--Search and Filter Results-->
+<div class="flex justify-between items-center w-full">
+  <div class="w-1/4 my-6 flex gap-2 items-center">
+    <app-search-input
+      class="flex-1"
+      [searchQuery]="searchQuery"
+      (searchQueryChange)="onSearch($event)"
+      placeholder="Search Transactions"
+    />
+    <div
+      class="border border-gray-300 p-3 rounded-md cursor-pointer hover:bg-gray-100"
+      (click)="openFilter()"
+    >
+      <app-navigation-icon iconType="common" iconName="filter" />
+    </div>
+  </div>
+  @if(selectedAccountsCount>0){
+  <div class="flex gap-2 items-center">
+    <span class="text-gray-400 font-semibold text-sm">
+      {{ selectedAccountsCount }} Selected</span
+    >
+    <button
+      class="bg-primary text-white text-sm font-semibold p-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
+      (click)="openFilter()"
+    >
+      Choose Account
+    </button>
+  </div>
+  }
+</div>
+<div class="border border-gray-300 rounded-md overflow-t">
+  <table class="w-full text-sm text-left text-black font-semibold">
+    <thead class="bg-gray-100 border-b border-gray-300">
+      <tr>
+        <th scope="col" class="p-4">
+          <div class="flex items-center">
+            <input
+              #selectAllCheckbox
+              id="checkbox-all-search"
+              type="checkbox"
+              class="text-primary border border-gray-300 rounded w-4 h-4"
+              (change)="toggleSelectAll(selectAllCheckbox.checked)"
+            />
+            <label for="checkbox-all-search" class="sr-only">checkbox</label>
+          </div>
+        </th>
+        @for( header of tableHeader;track $index ) {
+        <th scope="col">
+          <div
+            class="flex headers-center gap-2 text-gray-400 max-w-fit"
+            [ngStyle]="{ width: header.width }"
+          >
+            <span class="text-black">{{ header.Name }}</span>
+            @if(header.isSorted) { @if(header.sortOrder === 'asc' ||
+            header.sortOrder === 'desc') {
+            <app-navigation-icon
+              iconType="common"
+              iconName="arrow_upward"
+              [class.rotate-90]="header.sortOrder === 'desc'"
+              [class.-rotate-90]="header.sortOrder === 'asc'"
+              class="cursor-pointer"
+              (click)="toggleSort(header.Name)"
+            ></app-navigation-icon
+            >} @if(header.sortOrder == '') {
+            <app-navigation-icon
+              iconType="common"
+              iconName="sort arrow"
+              class="rotate-90 cursor-pointer"
+              (click)="toggleSort(header.Name)"
+            />}}
+          </div>
+        </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for(item of PaginatedData ; track $index){
+      <tr
+        class="border-b border-gray-300 last:border-0 cursor-pointer"
+        (click)="openEditModal(item)"
+      >
+        <td class="w-4 px-4 py-3">
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              [checked]="item.selected"
+              (click)="$event.stopPropagation()"
+              (change)="toggleSelection(item)"
+              class="w-4 h-4 text-blue-600 border border-gray-300 rounded cursor-pointer"
+            />
+            <label class="sr-only">Select {{ item.name }}</label>
+          </div>
+        </td>
+        <td class="w-[15%] max-w-fit">
+          <span>{{ item.name }}</span>
+        </td>
+        <td class="py-3 text-gray-400 w-[10%] max-w-fit">
+          {{ formatDate(item.date) }}
+        </td>
+        <td class="w-[5%] max-w-fit py-3">chk</td>
+        <td class="py-3 w-[10%] max-w-fit">{{ item.type }}</td>
+        <td class="text-[#FF0000] py-3 w-[10%] max-w-fit">
+          $({{ item.amount }})
+        </td>
+        <td class="py-3 text-gray-400 w-[10%] max-w-fit">PNC CHK - 3775</td>
+        <td class="truncate max-w-custom py-3 text-gray-400 w-[8%] pe-8">
+          {{ item.comment }}
+        </td>
+        <td class="py-3 w-[20%] max-w-fit pe-5">
+          <div class="border border-gray-300 rounded-md">
+            <app-dropdown
+              (click)="$event.stopPropagation()"
+              [options]="options"
+              [isSearchBoxVisible]="true"
+              [selectedOption]="item.option"
+            />
+          </div>
+        </td>
+        <td class="py-3 pe-1">
+          <button
+            (click)="$event.stopPropagation()"
+            class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
+          >
+            Update
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<!-- paginator -->
+@if(filteredTransactions.length>itemsPerPage) {
+<app-paginator
+  [items]="filteredTransactions"
+  [currentPage]="currentPage"
+  [itemsPerPage]="itemsPerPage"
+  (pageChanged)="changePage($event)"
+  (optionSelected)="selectOption($event)"
+>
+</app-paginator>
+}
+
+<!-- modal -->
+<div [ngClass]="{ 'opacity-0': !editModalVisible }">
+  <app-modal
+    [modalVisible]="editModalVisible"
+    (ModalClosed)="closeEditModal($event)"
+    [data]="data"
+  />
+</div>
+
+<app-overlay [modalVisible]="editModalVisible" />

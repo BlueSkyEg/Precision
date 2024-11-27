@@ -1,0 +1,56 @@
+<nav class="mt-6">
+  <div class="flex items-center justify-between">
+    <ul class="flex items-center -space-x-px h-10 text-base">
+      @if(currentPage>1){
+      <li (click)="changePage(1)" class="cursor-pointer">
+        <a
+          class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-400 font-semibold text-sm bg-white border border-e-0 border-gray-300 rounded-s-md hover:bg-gray-100 hover:text-primary">
+          <span class="sr-only">firstPage</span>
+          <app-navigation-icon class="rotate-180" iconType="common" iconName="double-prev-next" />
+        </a>
+      </li>
+      <li (click)="changePage(currentPage - 1)" class="cursor-pointer">
+        <a
+          class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 font-semibold text-sm bg-white border border-gray-300 hover:bg-gray-100 hover:text-primary">
+          <span class="sr-only">Previous</span>
+          <app-navigation-icon class="rotate-180" iconType="common" iconName="prev-next" />
+        </a>
+      </li>
+      }
+      @for( page of visiblePages;track $index){
+      <li (click)="changePage(page)" class="cursor-pointer">
+        <a [ngClass]="{
+      '!bg-gray-100 !text-primary': currentPage == page,
+        'rounded-s-md': page === 1&& currentPage == page,
+        'rounded-e-md':page === totalPages&& currentPage == totalPages
+            }"
+          class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 font-semibold text-sm bg-white border border-gray-300 hover:bg-gray-100 hover:text-primary">
+          {{ page }}
+        </a>
+      </li>
+      }
+      @if(currentPage<totalPages){ <li (click)="changePage(currentPage + 1)" class="cursor-pointer">
+        <a
+          class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 font-semibold text-sm bg-white border border-gray-300 hover:bg-gray-100 hover:text-primary">
+          <span class="sr-only">Next</span>
+          <app-navigation-icon iconType="common" iconName="prev-next" />
+        </a>
+        </li>
+        <li (click)="changePage(totalPages)" class="cursor-pointer">
+          <a
+            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-400 font-semibold text-sm bg-white border border-gray-300 rounded-e-md hover:bg-gray-100 hover:text-primary">
+            <span class="sr-only">LastPage</span>
+            <app-navigation-icon iconType="common" iconName="double-prev-next" />
+          </a>
+        </li>
+        }
+    </ul>
+    <div class="border border-gray-300 rounded-md font-semibold flex">
+      <div class="p-3  border-r border-gray-300">{{itemsPerPage}} <span class="text-gray-400 pe-3">of
+          {{items.length}}</span>
+      </div>
+      <app-dropdown
+       (optionSelected)="selectOption($event)"  [options]="options" [selectedOption]="itemsPerPage" />
+    </div>
+  </div>
+</nav>
