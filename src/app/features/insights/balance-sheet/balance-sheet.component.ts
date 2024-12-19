@@ -41,6 +41,7 @@ interface BalanceSheet {
 export class BalanceSheetComponent {
   isDropdownOpen = false;
   isCompare = false;
+  isShowResults = false;
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
     { label: 'Balance Sheet', routerLink: '/insights/balance-sheet' },
@@ -110,7 +111,8 @@ export class BalanceSheetComponent {
     this.isCompare = !this.isCompare;
   }
 
-  years: number[] = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]; // Array of all years
+  years: number[] = []; // Array of all years
+
   visibleYears: number[] = []; // Currently visible 9 years
   selectedYear: number | null = null; // Selected year
   maxVisibleYears: number = 9; // Number of years visible at once
@@ -158,5 +160,15 @@ export class BalanceSheetComponent {
       this.currentStartIndex += this.maxVisibleYears;
       this.updateVisibleYears();
     }
+  }
+
+  showResults(): void {
+    this.isShowResults = true;
+    this.isCompare = false;
+  }
+  clearAll(): void {
+    this.isShowResults = false;
+    this.selectedYear = null;
+    this.isCompare = false;
   }
 }

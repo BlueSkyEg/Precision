@@ -12,6 +12,9 @@
     >
       <app-navigation-icon iconType="common" iconName="compare" />
       <span>Compare</span>
+      @if(isShowResults) {
+      <div class="bg-primary text-white rounded-full px-2">2</div>
+      }
     </button>
     @if(isCompare) {
     <div
@@ -97,11 +100,13 @@
       </div>
       <!--Buttons-->
       <div class="py-3 flex items-center justify-center gap-2 p-3">
-        <button class="text-sm rounded-md hover:bg-gray-100 p-3">
+        <button class="text-sm rounded-md hover:bg-gray-100 p-3"
+        (click)="clearAll()">
           Clear All
         </button>
         <button
           class="text-sm border border-gray-300 rounded-md hover:bg-gray-100 p-3"
+          (click)="showResults()"
         >
           Show Results
         </button>
@@ -118,122 +123,6 @@
 </div>
 
 <!-- Account -->
-<!-- <div>
-  <p class="font-semibold text-base mb-3 px-5">Accounts</p>
-  <div
-    class="w-[257px] text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] mb-1"
-  >
-    Assets
-  </div>
-  <div
-    class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] mb-1"
-  >
-    Assets
-  </div>
-  <div class="w-[257px]">
-    <div
-      (click)="toggleDropdown()"
-      class="cursor-pointer text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] mb-1 flex items-center justify-between"
-      [ngClass]="{ 'text-white bg-secondary': isDropdownOpen }"
-    >
-      <div>The Parent</div>
-      <app-navigation-icon
-        iconType="common"
-        iconName="expand_more"
-        [ngClass]="{ 'rotate-180': isDropdownOpen,}"
-      />
-    </div>
-
-    @if(isDropdownOpen) {
-    <div class="space-y-1">
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-    </div>
-    }
-  </div>
-  <div class="w-[257px]">
-    <div
-      (click)="toggleDropdown()"
-      class="cursor-pointer text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] mb-1 flex items-center justify-between"
-      [ngClass]="{ 'text-white bg-secondary': isDropdownOpen }"
-    >
-      <div>The Parent</div>
-      <app-navigation-icon
-        iconType="common"
-        iconName="expand_more"
-        [ngClass]="{ 'rotate-180': isDropdownOpen,}"
-      />
-    </div>
-
-    @if(isDropdownOpen) {
-    <div class="space-y-1">
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-    </div>
-    }
-  </div>
-  <div class="w-[257px]">
-    <div
-      (click)="toggleDropdown()"
-      class="cursor-pointer text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] mb-1 flex items-center justify-between"
-      [ngClass]="{ 'text-white bg-secondary': isDropdownOpen }"
-    >
-      <div>The Parent</div>
-      <app-navigation-icon
-        iconType="common"
-        iconName="expand_more"
-        [ngClass]="{ 'rotate-180': isDropdownOpen,}"
-      />
-    </div>
-
-    @if(isDropdownOpen) {
-    <div class="space-y-1">
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-      <div
-        class="text-xs font-semibold text-black bg-gray-200 px-5 py-3 rounded-[4px]"
-      >
-        Assets
-      </div>
-    </div>
-    }
-  </div>
-</div> -->
-
 <div class="overflow-x-auto">
   <div class="flex flex-col">
     <div class="flex font-semibold text-base">
@@ -249,22 +138,23 @@
       <!-- Assets Row -->
       <div class="flex">
         <div
-          class="w-[257px] text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] me-1 mb-1"
+          class="w-[257px] text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
         >
           Assets
         </div>
         <div
           *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-          class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
-        >
+          class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]">
           {{ category.Accounts.Assets.Total[year.toString()] | currency }}
         </div>
       </div>
-
       <!-- Current Assets Section Row -->
       <div class="flex cursor-pointer" (click)="toggleSection('currentAssets')">
         <div
-          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-1 mb-1"
+          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
+          [ngClass]="{
+            'bg-secondary text-white': expandedSections['currentAssets']
+          }"
         >
           <span>Current Assets</span>
           <app-navigation-icon
@@ -276,7 +166,10 @@
         </div>
         <div
           *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
+          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
+          [ngClass]="{
+            'bg-secondary text-white': expandedSections['currentAssets']
+          }"
         >
           {{
             category.Accounts.Assets.CurrentAssets.Total[year.toString()]
@@ -284,7 +177,6 @@
           }}
         </div>
       </div>
-
       <!-- Loop through current assets details if the section is expanded -->
       <ng-container *ngIf="expandedSections['currentAssets']">
         <div
@@ -292,7 +184,7 @@
           class="flex"
         >
           <div
-            class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] me-1 mb-1"
+            class="w-[257px] text-xs font-semibold text-secondary bg-[#EDEFF2] px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
           >
             {{ detail.name }}
           </div>
@@ -300,7 +192,7 @@
             *ngFor="
               let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
             "
-            class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
+            class="text-xs font-semibold text-secondary bg-[#EDEFF2] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
           >
             {{ detail.values[year.toString()] | currency }}
           </div>
@@ -315,13 +207,13 @@
     <!-- Assets Row -->
     <div class="flex">
       <div
-        class="w-[257px] text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] me-1 mb-1"
+        class="w-[257px] text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
       >
         Assets
       </div>
       <div
         *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-        class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
+        class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
       >
         {{ category.Accounts.Assets.Total[year.toString()] | currency }}
       </div>
@@ -330,7 +222,7 @@
     <!-- Current Assets Section Row -->
     <div class="flex cursor-pointer" (click)="toggleSection('currentAssets')">
       <div
-        class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-1 mb-1"
+        class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
       >
         <span>Current Assets</span>
         <app-navigation-icon
@@ -342,7 +234,7 @@
       </div>
       <div
         *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-        class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
+        class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
       >
         {{
           category.Accounts.Assets.CurrentAssets.Total[year.toString()]
@@ -358,13 +250,13 @@
         class="flex"
       >
         <div
-          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] me-1 mb-1"
+          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
         >
           {{ detail.name }}
         </div>
         <div
           *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-1 mb-1"
+          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
         >
           {{ detail.values[year.toString()] | currency }}
         </div>
