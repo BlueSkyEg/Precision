@@ -1,0 +1,9 @@
+<!-- Country Code Dropdown -->
+<div class="flex items-center ">
+  <div class="border border-gray-300 rounded-s-md border-e-0">
+    <app-dropdown (click)="$event.stopPropagation()" [options]="countryCodes" [selectedOption]="countryCodes[0]" />
+  </div>
+  <!-- Phone Number Input -->
+  <input type="text" formControlName="phoneNumber" placeholder="Enter phone number"
+    class="flex-grow border rounded-e-md px-3 py-[10px] text-gray-700 focus:outline-none " />
+</div>

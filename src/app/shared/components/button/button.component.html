@@ -1,0 +1,12 @@
+<button [ngClass]="{'border border-secondary ':isBordered}" [class]="class" class="px-4">
+  @if(isIcon){
+  <div class="flex items-center gap-2">
+    <ng-content></ng-content>
+    {{buttonContent}}
+  </div>
+  }
+  @else {
+        {{buttonContent}}
+  }
+
+</button>

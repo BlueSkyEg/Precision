@@ -6,7 +6,6 @@ module.exports = {
       center: true,
       padding: "16px",
       screens: {
-        "2xl": "1248px",
       },
     },
     extend: {
@@ -25,6 +24,7 @@ module.exports = {
         "gray-100": "#F7F7F7",
         "gray-300": "#DCDEE1",
         "sub-text": "#465866",
+        "light-gray": "#EBEFFB",
         "state-fail-100": "#FFE0E0",
         "state-fail-300": "#C33F2A",
         "state-success-100": "#CCFAD1",

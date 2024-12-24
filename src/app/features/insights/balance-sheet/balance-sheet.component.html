@@ -4,117 +4,8 @@
   userName="Miral sobhy"
   [user]="true"
 />
-<div class="flex items-center justify-end gap-2 mt-7 mb-5">
-  <div class="relative">
-    <button
-      (click)="toggleIsCompare()"
-      class="flex items-center gap-2 border border-gray-300 rounded-md px-3 py-2 text-gray-400 hover:bg-gray-100"
-    >
-      <app-navigation-icon iconType="common" iconName="compare" />
-      <span>Compare</span>
-      @if(isShowResults) {
-      <div class="bg-primary text-white rounded-full px-2">2</div>
-      }
-    </button>
-    @if(isCompare) {
-    <div
-      class="border end-0 mt-1 text-gray-400 font-semibold border-gray-300 rounded-md w-[253px] absolute bg-white"
-    >
-      <div class="text-center border-b border-gray-300 p-3">
-        <!-- Navigation Arrows -->
-        <div class="flex justify-between items-center">
-          <button
-            (click)="previousYears()"
-            class="disabled:opacity-50"
-            [disabled]="currentStartIndex === 0"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              class="h-5 w-5 text-gray-400"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          @if(selectedYear !== null) {
-
-          <span>{{ selectedYear - 1 }} to {{ selectedYear }}</span>
-          } @else {
-          <span>Select year/s</span>
-          }
-
-          <button
-            (click)="nextYears()"
-            class="disabled:opacity-50"
-            [disabled]="currentStartIndex + maxVisibleYears >= years.length"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              class="h-5 w-5 text-gray-400"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <!-- Year Grid -->
-      <div class="grid grid-cols-3 gap-4 border-b border-gray-300 p-3">
-        <div
-          *ngFor="let year of visibleYears"
-          (click)="selectYear(year)"
-          [class.border]="
-            year === selectedYear ||
-            year === (selectedYear ? selectedYear - 1 : null)
-          "
-          [class.border-primary]="
-            year === selectedYear ||
-            year === (selectedYear ? selectedYear - 1 : null)
-          "
-          [class.rounded-full]="
-            year === selectedYear ||
-            year === (selectedYear ? selectedYear - 1 : null)
-          "
-          [class.text-primary]="
-            year === selectedYear ||
-            year === (selectedYear ? selectedYear - 1 : null)
-          "
-          class="cursor-pointer py-1 text-center hover:rounded-full"
-        >
-          {{ year }}
-        </div>
-      </div>
-      <!--Buttons-->
-      <div class="py-3 flex items-center justify-center gap-2 p-3">
-        <button class="text-sm rounded-md hover:bg-gray-100 p-3"
-        (click)="clearAll()">
-          Clear All
-        </button>
-        <button
-          class="text-sm border border-gray-300 rounded-md hover:bg-gray-100 p-3"
-          (click)="showResults()"
-        >
-          Show Results
-        </button>
-      </div>
-    </div>
-    }
-  </div>
-
+<div class="flex items-center  justify-end gap-2 mt-7 mb-5">
+<app-compare/>
   <app-dropdown
     (click)="$event.stopPropagation()"
     [options]="options"
@@ -128,7 +19,7 @@
     <div class="flex font-semibold text-base">
       <div class="w-[257px] text-start px-5">Accounts</div>
       <div
-        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
+        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
         class="text-center w-[148px] px-5 me-1"
       >
         {{ year }}
@@ -143,7 +34,7 @@
           Assets
         </div>
         <div
-          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
+          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
           class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]">
           {{ category.Accounts.Assets.Total[year.toString()] | currency }}
         </div>
@@ -151,7 +42,7 @@
       <!-- Current Assets Section Row -->
       <div class="flex cursor-pointer" (click)="toggleSection('currentAssets')">
         <div
-          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
+          class="w-[257px] text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
           [ngClass]="{
             'bg-secondary text-white': expandedSections['currentAssets']
           }"
@@ -165,8 +56,8 @@
           />
         </div>
         <div
-          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
+          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
+          class="text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
           [ngClass]="{
             'bg-secondary text-white': expandedSections['currentAssets']
           }"
@@ -190,7 +81,7 @@
           </div>
           <div
             *ngFor="
-              let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
+              let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]
             "
             class="text-xs font-semibold text-secondary bg-[#EDEFF2] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
           >
@@ -212,7 +103,7 @@
         Assets
       </div>
       <div
-        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
+        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
         class="text-xs font-semibold text-white bg-primary px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
       >
         {{ category.Accounts.Assets.Total[year.toString()] | currency }}
@@ -222,7 +113,7 @@
     <!-- Current Assets Section Row -->
     <div class="flex cursor-pointer" (click)="toggleSection('currentAssets')">
       <div
-        class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
+        class="w-[257px] text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] flex justify-between items-center me-[2px] mb-[2px]"
       >
         <span>Current Assets</span>
         <app-navigation-icon
@@ -233,8 +124,8 @@
         />
       </div>
       <div
-        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-        class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
+        *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
+        class="text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
       >
         {{
           category.Accounts.Assets.CurrentAssets.Total[year.toString()]
@@ -250,13 +141,13 @@
         class="flex"
       >
         <div
-          class="w-[257px] text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
+          class="w-[257px] text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] me-[2px] mb-[2px]"
         >
           {{ detail.name }}
         </div>
         <div
-          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]"
-          class="text-xs font-semibold text-secondary bg-[#EBEFFB] px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
+          *ngFor="let year of [2025, 2024, 2023, 2022, 2021, 2020, 2019]"
+          class="text-xs font-semibold text-secondary bg-light-gray px-5 py-3 rounded-[4px] w-[148px] me-[2px] mb-[2px]"
         >
           {{ detail.values[year.toString()] | currency }}
         </div>

@@ -6,7 +6,7 @@ import { OverlayComponent } from 'app/shared/components/transactions/overlay/ove
 import { ModalComponent } from 'app/shared/components/modal/modal.component';
 import { TabsComponent } from 'app/shared/components/tabs/tabs.component';
 import { FormsModule } from '@angular/forms';
-import { CustomeTableComponent } from 'app/shared/components/custome-table/custome-table.component';
+import { CustomTableComponent } from 'app/shared/components/custome-table/custom-table.component';
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -18,7 +18,7 @@ import { CustomeTableComponent } from 'app/shared/components/custome-table/custo
     ModalComponent,
     TabsComponent,
     FormsModule,
-    CustomeTableComponent,
+    CustomTableComponent,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './transactions.component.html',

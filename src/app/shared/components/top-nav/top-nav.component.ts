@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BreadCrumbComponent } from '../bread-crumb/bread-crumb.component';
 import { UserComponent } from '../user/user.component';
-import { FilterDropdownMenueComponent } from '../filter-dropdown-menue/filter-dropdown-menue.component';
-import { NavigationIconComponent } from "../../../core/icons/navigation-icons/navigation-icon.component";
+import { FilterDropdownMenuComponent } from '../filter-dropdown-menu/filter-dropdown-menue.component';
 
 @Component({
   selector: 'app-top-nav',
@@ -10,8 +9,8 @@ import { NavigationIconComponent } from "../../../core/icons/navigation-icons/na
   imports: [
     BreadCrumbComponent,
     UserComponent,
-    FilterDropdownMenueComponent,
-  ],
+    FilterDropdownMenuComponent,
+],
   templateUrl: './top-nav.component.html',
 })
 export class TopNavComponent {

@@ -1,0 +1,109 @@
+  <div class="relative">
+    <button
+      (click)="toggleIsCompare()"
+      class="flex items-center gap-2 border border-gray-300 rounded-md px-3 py-2 text-gray-400 hover:bg-gray-100"
+    >
+      <app-navigation-icon iconType="common" iconName="compare" />
+      <span>Compare</span>
+      @if(isShowResults) {
+      <div class="bg-primary text-white rounded-full px-2">2</div>
+      }
+    </button>
+    @if(isCompare) {
+    <div
+      class="border end-0 mt-1 text-gray-400 font-semibold border-gray-300 rounded-md w-[253px] absolute bg-white"
+    >
+      <div class="text-center border-b border-gray-300 p-3">
+        <!-- Navigation Arrows -->
+        <div class="flex justify-between items-center">
+          <button
+            (click)="previousYears()"
+            class="disabled:opacity-50"
+            [disabled]="currentStartIndex === 0"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="h-5 w-5 text-gray-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          @if(selectedYear !== null) {
+
+          <span>{{ selectedYear - 1 }} to {{ selectedYear }}</span>
+          } @else {
+          <span>Select year/s</span>
+          }
+
+          <button
+            (click)="nextYears()"
+            class="disabled:opacity-50"
+            [disabled]="currentStartIndex + maxVisibleYears >= years.length"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="h-5 w-5 text-gray-400"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Year Grid -->
+      <div class="grid grid-cols-3 gap-4 border-b border-gray-300 p-3">
+        <div
+          *ngFor="let year of visibleYears"
+          (click)="selectYear(year)"
+          [class.border]="
+            year === selectedYear ||
+            year === (selectedYear ? selectedYear - 1 : null)
+          "
+          [class.border-primary]="
+            year === selectedYear ||
+            year === (selectedYear ? selectedYear - 1 : null)
+          "
+          [class.rounded-full]="
+            year === selectedYear ||
+            year === (selectedYear ? selectedYear - 1 : null)
+          "
+          [class.text-primary]="
+            year === selectedYear ||
+            year === (selectedYear ? selectedYear - 1 : null)
+          "
+          class="cursor-pointer py-1 text-center hover:rounded-full"
+        >
+          {{ year }}
+        </div>
+      </div>
+      <!--Buttons-->
+      <div class="py-3 flex items-center justify-center gap-2 p-3">
+        <button class="text-sm rounded-md hover:bg-gray-100 p-3"
+        (click)="clearAll()">
+          Clear All
+        </button>
+        <button
+          class="text-sm border border-gray-300 rounded-md hover:bg-gray-100 p-3"
+          (click)="showResults()"
+        >
+          Show Results
+        </button>
+      </div>
+    </div>
+    }
+  </div>

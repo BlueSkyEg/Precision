@@ -1,14 +1,16 @@
 <div
-  class="flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-0 border-b border-gray-300 pb-7 !px-0"
->
-  <app-bread-crumb [items]="items" />
-  <div class="flex items-center gap-3">
+  class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-0 border-b border-gray-300 pb-7 !px-0">
+ <app-bread-crumb [items]="items" />
+  <div class="flex flex-col items-start lg:flex-row lg:items-center gap-2 lg:w-8/12">
     @if(user){
-    <div class="border-e border-gray-300 pe-3">
+    <div class="lg:border-e border-gray-300 pe-3  lg:ms-auto">
       <app-user [userName]="userName" [pcName]="pcName" />
     </div>
     } @if(filter){
-    <app-filter-dropdown-menue />
+      <div class="lg:w-5/12 w-60">
+    <app-filter-dropdown-menu/>
+
+      </div>
     }
   </div>
 </div>

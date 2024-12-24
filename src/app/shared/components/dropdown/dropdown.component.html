@@ -1,12 +1,12 @@
-<div class="relative">
+<div class="relative  " >
   <div
     id="dropdownButton"
-    class="relative flex justify-between items-center cursor-pointer"
-    [ngClass]="{ 'p-3': isSelectedOption }"
+    class="relative flex justify-between items-center cursor-pointer "
+    [ngClass]="{ 'px-3 py-[10px]': isSelectedOption }"
     (click)="toggleDropdown()"
   >
     @if(isSelectedOption) {
-    <div>
+    <div class="text-gray-400 font-semibold">
       {{ selectedOption }}
     </div>
     } @if(!isSelectedOption){
@@ -24,7 +24,7 @@
       }"
     >
       <app-navigation-icon
-        class="inline-block"
+      class="inline-block"
         iconType="common"
         iconName="expand_more"
         [ngClass]="{ 'ml-2': isSelectedOption ,'rotate-180': dropdownVisible,}"
@@ -43,7 +43,8 @@
       [isBordered]="false"
       [searchQuery]="searchQuery"
     />
-    } @for( option of filteredOptions ;track $index ; let first =$first) {
+    }
+    @for( option of filteredOptions ;track $index ; let first =$first) {
     <div
       class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
       (click)="selectOption(option, $event)"
@@ -51,6 +52,9 @@
     >
       {{ option }}
     </div>
+    }
+    @empty {
+      <p class="text-gray-400 px-6 ">no results found</p>
     }
   </div>
   }

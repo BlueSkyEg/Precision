@@ -15,6 +15,12 @@ import { RequestDocumentsComponent } from './features/insights/documents/request
 import { DocumentsDashboardComponent } from './features/insights/documents/documents-dashboard/documents-dashboard.component';
 import { SubcontractorsComponent } from './features/insights/subcontractors/subcontractors.component';
 import { TaxReturnHistoryComponent } from './features/insights/tax-return-history/tax-return-history.component';
+import { SettingsComponent } from './features/settings/settings.component';
+import { ProfileComponent } from './features/insights/profile/profile.component';
+import { ProfileSettingsComponent } from './features/insights/profile/profile-settings/profile-settings.component';
+import { SubProfilesComponent } from './features/insights/profile/sub-profiles/sub-profiles.component';
+import { EditProfileComponent } from './features/insights/profile/profile-settings/edit-profile/edit-profile.component';
+import { ChangePasswordComponent } from './features/insights/profile/profile-settings/change-password/change-password.component';
 
 
 export const routes: Routes = [
@@ -64,6 +70,22 @@ export const routes: Routes = [
           },
           { path: 'subcontractors', component: SubcontractorsComponent },
           { path: 'tax-return-history', component: TaxReturnHistoryComponent },
+          { path: 'settings', component: SettingsComponent },
+          {
+            path: 'profile', component: ProfileComponent, children: [
+              {
+                path: 'profile-settings', component: ProfileSettingsComponent,
+                 children: [
+                  { path: 'profile-edits', component: EditProfileComponent },
+                  { path: 'change-password', component: ChangePasswordComponent },
+                  { path: '', redirectTo: 'profile-edits', pathMatch: 'full' },
+                ]
+              },
+              { path: 'sub-profiles', component: SubProfilesComponent },
+              { path: '', redirectTo: 'profile-settings', pathMatch: 'full' },
+
+            ]
+          },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],
       },

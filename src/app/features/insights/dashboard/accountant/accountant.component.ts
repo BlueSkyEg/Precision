@@ -10,7 +10,7 @@ import { IUser } from 'app/shared/interfaces/insights/iuser';
 @Component({
   selector: 'app-accountant',
   standalone: true,
-  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent,NavigationIconComponent],
+  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent, NavigationIconComponent],
   templateUrl: './accountant.component.html',
 })
 export class AccountantComponent {
@@ -29,7 +29,7 @@ export class AccountantComponent {
     },
   ];
   tabs: ITab[] = [
-    { title: 'My Profiles', searchTitle: 'Accountant', count: 0, users: []},
+    { title: 'My Profiles', searchTitle: 'Accountant', count: 0, users: [] },
   ];
 
   ngOnInit() {

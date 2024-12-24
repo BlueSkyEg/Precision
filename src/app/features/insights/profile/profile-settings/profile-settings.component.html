@@ -1,0 +1,26 @@
+<div class="my-[60px] flex gap-[134px]">
+  <div class="flex gap-2  text-white">
+    <div class="flex flex-col items-center ms-28 gap-[18px]">
+      <picture class="flex gap-[49px]">
+        <img src="assets/images/personal-image.jpg" width="160px" height="160px" class="rounded-full" />
+      </picture>
+      <div class="text-gray-400 font-semibold flex flex-col items-center gap-2">
+        <span class="text-[32px]">Mark Miller </span>
+        <span class="text-[18px]">Admin</span>
+        <span class="text-sm">ID: 009DRF</span>
+      </div>
+      <div class="flex flex-col ">
+        <app-button buttonContent="Personal Info." [isIcon]="true"
+          class="bg-primary rounded-md w-[306px] h-[60px]"><app-navigation-icon iconType="common"
+            iconName="user-01" /></app-button>
+        <app-button buttonContent="Change Password" [isIcon]="true"
+          class="border-b  text-gray-400 w-[306px]  h-[60px]"><app-navigation-icon iconType="common"
+            iconName="lock" /></app-button>
+      </div>
+    </div>
+    <app-navigation-icon iconType="common" iconName="edit-05" />
+  </div>
+  <div>
+    <router-outlet />
+  </div>
+</div>

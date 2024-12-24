@@ -2,13 +2,13 @@ import { NgClass } from '@angular/common';
 import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { SideBarComponent } from 'app/shared/components/side-bar/side-bar.component';
+import { SideBarComponent } from 'app/shared/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, SideBarComponent, NgClass],
-  templateUrl: './admin-layout.component.html',
+  imports: [RouterOutlet, NgClass ,SideBarComponent],
+templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent {
