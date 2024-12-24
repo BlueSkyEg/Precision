@@ -14,7 +14,7 @@ import { OverlayComponent } from '../transactions/overlay/overlay.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-custome-table',
+  selector: 'app-custom-table',
   standalone: true,
   imports: [
     DropdownComponent,
@@ -25,9 +25,9 @@ import { CommonModule } from '@angular/common';
     OverlayComponent,
     CommonModule,
   ],
-  templateUrl: './custome-table.component.html',
+  templateUrl: './custom-table.component.html',
 })
-export class CustomeTableComponent {
+export class CustomTableComponent {
   @Input() AllData: any[] = [];
   @Output() openFilterModal = new EventEmitter<void>();
 

@@ -1,6 +1,63 @@
-<app-top-nav
-  [items]="breadcrumbItems"
-  pcName="Computer"
-  userName="Miral sobhy"
-  [user]="true"
-/>
+<app-top-nav [items]="breadcrumbItems" pcName="Computer" userName="Miral " [user]="true" />
+<div class="flex lg:justify-between items-center mt-12">
+  <div class=" ">
+    <div class="flex items-center  gap-6">
+      <app-tabs [tabs]="profitAndLossTabs" (tabsChanged)="selectTab($event)" [selectedTab]="selectedTab" />
+      <div class="h-7 w-[1px] bg-gray-300"></div>
+      <div class="border border-gray-300 rounded-md ">
+        <app-dropdown [options]="toggleOptions" [isSearchBoxVisible]="false" [selectedOption]="toggleOptions[0]" />
+      </div>
+    </div>
+
+  </div>
+  <div class="flex items-center gap-2 ">
+    <app-compare />
+    <app-dropdown (click)="$event.stopPropagation()" [options]="options" [isSelectedOption]="false" />
+  </div>
+</div>
+<div *ngIf="selectedTab === 'Monthly'">
+
+  <table class="hidden md:block w-full text-base text-left font-semibold mt-4 overflow-x-auto">
+    <thead>
+      <tr>
+        <th class="p-3">Name</th>
+        <th class="p-3">Total</th>
+        @for (month of months; track $index) {
+        <th class="p-3">{{month}}</th>
+
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for(month of months ; track $index)
+      {
+      <tr class="border-2 border-white">
+        <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white"> item.month </td>
+        <td class="p-3 bg-[#FBF1EB] rounded border-e-2 border-white text-[#331304]"> 77777 </td>
+        @for(month of months ; track $index)
+        {
+        <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white">33445</td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+    <!-- Mobile Stacked View -->
+  <div class="block md:hidden">
+    <ng-container *ngFor="let item of months">
+      <div class="border rounded-lg p-4 mb-4 bg-white shadow">
+        <div class="mb-2">
+          <strong>Name:</strong> item.name
+        </div>
+        <div class="mb-2">
+          <strong>Total:</strong> item.total
+        </div>
+        <ng-container *ngFor="let month of months; let i = index">
+          <div class="mb-2">
+            <strong>{{ month }}:</strong> 33445
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>

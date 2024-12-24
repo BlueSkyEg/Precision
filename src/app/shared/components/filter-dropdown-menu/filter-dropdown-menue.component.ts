@@ -5,15 +5,16 @@ import { DropdownFilterOptions } from 'primeng/dropdown';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
+import { DropdownComponent } from "../dropdown/dropdown.component";
 
 @Component({
-  selector: 'app-filter-dropdown-menue',
+  selector: 'app-filter-dropdown-menu',
   standalone: true,
-  imports: [FormsModule, DropdownModule, NavigationIconComponent],
-  templateUrl: './filter-dropdown-menue.component.html',
+  imports: [FormsModule, DropdownModule, DropdownComponent],
+  templateUrl: './filter-dropdown-menu.component.html',
 })
-export class FilterDropdownMenueComponent implements OnInit {
-  bussiness: IBusinesses[] | undefined;
+export class FilterDropdownMenuComponent implements OnInit {
+  business: any[] | undefined;
   selectedbussiness: IBusinesses | null = null;
   filterValue: string | undefined = '';
   _DashboardService = inject(DashboardService);
@@ -24,7 +25,7 @@ ngOnInit(): void {
   getBusinesses() {
     this._DashboardService.getbusinesses().subscribe({
       next: (response) => {
-        this.bussiness = response.data.items;
+        this.business = response.data.items;
       },
     });
   }

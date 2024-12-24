@@ -1,0 +1,42 @@
+<p class="text-primary text-[32px] font-semibold leading-[48px] tracking-[1.6px]">Profile Settings</p>
+
+<form class="max-w-sm mx-auto">
+  <div class="flex items-center gap-2 mb-5">
+    <div>
+      <label for="fname" class="block mb-2 text-sm font-semibold ">First Name</label>
+      <input type="text" id="fname"
+        class=" bg-white border border-gray-300  text-sm rounded-md focus:outline-none block w-full p-2.5" />
+    </div>
+    <div>
+      <label for="lname" class="block mb-2 text-sm font-semibold ">Last Name</label>
+      <input type="text" id="lname"
+        class=" bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block w-full p-2.5 " />
+    </div>
+  </div>
+  <div class="mb-5">
+    <label for="email" class="block mb-2 text-sm font-semibold ">Email Address</label>
+    <input type="email" id="email"
+      class=" bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block w-full p-2.5 " />
+  </div>
+  <div class="mb-5 ">
+    <label for="tel" class="block mb-2 text-sm font-semibold ">City</label>
+    <div class="bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block ">
+      <app-dropdown (click)="$event.stopPropagation()" [options]="countries" [selectedOption]="countries[0]" />
+    </div>
+  </div>
+  <div class="mb-5">
+    <label for="zipcode" class="block mb-2 text-sm font-semibold ">Zip Code</label>
+    <input type="text" id="zipcode"
+      class=" bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block w-full p-2.5 " />
+  </div>
+  <div class="mb-5">
+    <label for="tel" class="block mb-2 text-sm font-semibold ">Phone Number</label>
+    <app-phone-input />
+  </div>
+  <div class="flex items-center gap-3.5">
+
+    <app-button buttonContent="Cancel" class="border border-gray-300 py-1 w-[150px] rounded-md " />
+    <app-button buttonContent="Save changes" class="flex-1 text-center bg-primary py-1 rounded-md text-white" />
+
+  </div>
+</form>

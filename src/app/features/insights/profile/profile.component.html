@@ -1,0 +1,10 @@
+<app-top-nav [items]="breadcrumbItems" [filter]="false" />
+<div class="mt-3">
+  <div class="flex items-center gap-2 ">
+    <button class=" px-4 bg-light-gray text-secondary rounded-md w-[166px] h-[42px] text-center"
+      routerLink="profile-settings" routerLinkActive="bg-white border border-secondary ">Profile Settings</button>
+    <button class="px-4 bg-light-gray text-secondary rounded-md w-[206px] h-[42px] text-center"
+      routerLink="sub-profiles" routerLinkActive="bg-white border border-secondary ">Sub profiles</button>
+  </div>
+  <router-outlet />
+</div>

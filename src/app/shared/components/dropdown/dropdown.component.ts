@@ -11,14 +11,15 @@ import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigat
 @Component({
   selector: 'app-dropdown',
   standalone: true,
-  imports: [SearchInputComponent, NgClass,NavigationIconComponent],
+  imports: [SearchInputComponent, NgClass, NavigationIconComponent],
   templateUrl: './dropdown.component.html',
 })
 export class DropdownComponent {
-  @Input() options: any[] = [5, 10, 15];
+  @Input() options: any[] | undefined = [5, 10, 15];
   @Input() isSearchBoxVisible: boolean = false;
+  @Input() isWLg: boolean = false;
   @Output() optionSelected: EventEmitter<number> = new EventEmitter<number>();
-  @Input() isSelectedOption:boolean=true;
+  @Input() isSelectedOption: boolean = true;
   @Input() selectedOption: any = this.options?.[0] || '';
   dropdownVisible: boolean = false;
   searchQuery: string = '';
@@ -39,11 +40,11 @@ export class DropdownComponent {
     this.searchQuery = query;
   }
   get filteredOptions(): any[] {
-    if (!this.searchQuery) {
+    if (!this.searchQuery && this.options) {
       return this.options;
     }
-    return this.options.filter((option) =>
+    return this.options ? this.options.filter((option) =>
       option.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    ) : [];
   }
 }

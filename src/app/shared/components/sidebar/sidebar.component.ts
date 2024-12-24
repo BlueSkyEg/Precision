@@ -20,14 +20,14 @@ import { SideNavElements } from 'app/core/interfaces/side-nav/side-nav-elements'
     MatIcon,
     CommonModule,
   ],
-  templateUrl: './side-bar.component.html',
+  templateUrl: './sidebar.component.html',
 })
 export class SideBarComponent implements OnInit {
   collapsed: boolean = false;
   navData = navBarData;
   @Output() collapseStateChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const storedCollapsedState = sessionStorage.getItem('sidebar-collapsed');
@@ -42,7 +42,7 @@ export class SideBarComponent implements OnInit {
     }
   }
   @HostListener('window:resize', ['$event'])
-  onResize( ): void {
+  onResize(): void {
     if (window.innerWidth < 768) {
       this.collapsed = true;
     } else {
