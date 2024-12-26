@@ -1,3 +1,5 @@
 <div class="bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block w-full ">
-  <app-dropdown (click)="$event.stopPropagation()" [options]="business" selectedOption="selectedbussiness" [isSearchBoxVisible]="true" [isWLg]="true"/>
+  <app-dropdown (click)="$event.stopPropagation()" [options]="business"
+    [selectedOption]="selectedBusiness?.companyName || ''" [isSearchBoxVisible]="true" [isWLg]="true"
+    (optionSelected)="handleBusinessSelection($event)" />
 </div>

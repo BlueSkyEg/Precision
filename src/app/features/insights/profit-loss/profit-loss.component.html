@@ -1,12 +1,23 @@
-<app-top-nav [items]="breadcrumbItems" pcName="Computer" userName="Miral " [user]="true" />
-<div class="flex lg:justify-between items-center mt-12">
+<app-top-nav [items]="breadcrumbItems" [user]="true" />
+
+@if(isBusinessSelected){
+<div class="flex lg:justify-between items-center mt-12 z-0">
   <div class=" ">
     <div class="flex items-center  gap-6">
       <app-tabs [tabs]="profitAndLossTabs" (tabsChanged)="selectTab($event)" [selectedTab]="selectedTab" />
+      @if(selectedTab=='Monthly')
+      {
       <div class="h-7 w-[1px] bg-gray-300"></div>
       <div class="border border-gray-300 rounded-md ">
-        <app-dropdown [options]="toggleOptions" [isSearchBoxVisible]="false" [selectedOption]="toggleOptions[0]" />
+        <app-dropdown [options]="yearOptions" [isSearchBoxVisible]="false" [selectedOption]="selectedYear" (optionSelected)="onYearChange($event)"/>
       </div>
+    }
+    @else {
+      <div class="border px-3 py-2.5 rounded-md border-gray-300 cursor-pointer" (click)="togglePercentage()">
+      <app-navigation-icon iconType="common" iconName="Percentage"/>
+
+      </div>
+    }
     </div>
 
   </div>
@@ -15,49 +26,21 @@
     <app-dropdown (click)="$event.stopPropagation()" [options]="options" [isSelectedOption]="false" />
   </div>
 </div>
-<div *ngIf="selectedTab === 'Monthly'">
-
-  <table class="hidden md:block w-full text-base text-left font-semibold mt-4 overflow-x-auto">
-    <thead>
-      <tr>
-        <th class="p-3">Name</th>
-        <th class="p-3">Total</th>
-        @for (month of months; track $index) {
-        <th class="p-3">{{month}}</th>
-
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @for(month of months ; track $index)
-      {
-      <tr class="border-2 border-white">
-        <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white"> item.month </td>
-        <td class="p-3 bg-[#FBF1EB] rounded border-e-2 border-white text-[#331304]"> 77777 </td>
-        @for(month of months ; track $index)
-        {
-        <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white">33445</td>
-        }
-      </tr>
-      }
-    </tbody>
-  </table>
-    <!-- Mobile Stacked View -->
-  <div class="block md:hidden">
-    <ng-container *ngFor="let item of months">
-      <div class="border rounded-lg p-4 mb-4 bg-white shadow">
-        <div class="mb-2">
-          <strong>Name:</strong> item.name
-        </div>
-        <div class="mb-2">
-          <strong>Total:</strong> item.total
-        </div>
-        <ng-container *ngFor="let month of months; let i = index">
-          <div class="mb-2">
-            <strong>{{ month }}:</strong> 33445
-          </div>
-        </ng-container>
-      </div>
-    </ng-container>
-  </div>
+<div *ngIf="selectedTab === 'Monthly'" class="overflow-x-auto w-full relative">
+  <app-report-table [columns]="['Name','Total']" [periods]="months" [reportData]="monthlyReport" />
 </div>
+<div *ngIf="selectedTab === 'Yearly'" class="overflow-x-auto w-full relative">
+  <app-report-table [columns]="['Name']" [periods]="yearOptions" [reportData]="yearlyReport" />
+</div>
+}
+@else {
+<div class="flex flex-col items-center justify-center h-screen gap-4">
+  <div class="text-2xl font-medium text-center">
+    <span class="block ">You haven’t selected a business yet!</span>
+    <span class=" block text-sm">Please select a Business to display its
+      information.</span>
+  </div>
+  <img src="/assets/images/empty-state.webp" alt="Empty State" loading="lazy" />
+</div>
+
+}

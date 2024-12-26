@@ -1,14 +1,15 @@
+@if(business)
+{
 <div class="flex gap-2 items-center">
   <div class="flex gap-1 items-center">
     <app-navigation-icon [iconName]="userIconName" iconType="search" />
-    <span class="text-gray-400 text-base font-semibold leading-6 tracking-[0.8px]">{{ userName }}</span>
+    <span class="text-gray-400 text-base font-semibold leading-6 tracking-[0.8px]">{{business.qbMemberName}}</span>
   </div>
   <div class="flex gap-1">
-    <app-navigation-icon
-      [iconName]="pcIconName"
-      class="self-center"
-      iconType="search"
-    />
-    <span class="text-gray-400 text-base font-semibold leading-6 tracking-[0.8px]">{{ pcName }}</span>
+    <app-navigation-icon [iconName]="pcIconName" class="self-center" iconType="search" />
+    <span class="text-gray-400 text-base font-semibold leading-6 tracking-[0.8px]">PC-{{
+      business.pendingTrxCount}}</span>
+    <span></span>
   </div>
 </div>
+}

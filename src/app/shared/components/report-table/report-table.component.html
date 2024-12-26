@@ -1,0 +1,78 @@
+<table class=" w-full text-base text-left font-semibold mt-4 ">
+  <thead>
+    <tr>
+      @for(column of columns;track $index)
+      {<th scope="col" class="p-3">{{ column }}</th>}
+      @for(period of periods; track $index) {
+      <th scope="col" class="p-3">{{ period }}</th>
+
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for(report of reportData ;let idx = $index; track idx )
+    {
+    <tr class="border-2 border-white">
+      <td class="p-3 bg-[#EBEFFB] rounded-md border-e-2 border-white text-primary "
+        [ngClass]="{'bg-primary text-white':isDropdownVisible(idx),'bg-[#D6DFF6] !text-black':report.accounts.length==0}">
+        <div class="flex items-center justify-between gap-3  min-w-48">
+          <span>{{report.typeName}} </span>
+          @if(report.accounts.length > 0){
+          <app-navigation-icon class="inline-block cursor-pointer" iconType="common" iconName="expand_more"
+            [ngClass]="{ 'rotate-180': isDropdownVisible(idx)}" (click)="toggleDropDown(idx)" />
+          }
+        </div>
+      </td>
+      @if(report.typeSums[12])
+      {
+      <td class="p-3 bg-[#FBF1EB] rounded border-e-2 border-white text-[#331304]"
+        [ngClass]="{'text-center':report.typeSums[12]==0,'bg-[#E65613] text-white':isDropdownVisible(idx) ,'text-[#C33F2A]':report.typeSums[12] < 0 }">
+        {{
+        report.typeSums[12] >= 0 ?
+        (report.typeSums[12] | currency: 'USD': 'symbol') : (report.typeSums[12]==0?'-':'('+(-report.typeSums[12]
+        |currency: 'USD': 'symbol')+')') }}
+      </td>
+      }
+      @for(amount of report.typeSums ; track $index; let last = $last)
+      {
+      @if(! (last && report.typeSums[12])|| !last)
+      {<td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white text-primary"
+        [ngClass]="{'text-center':amount==0,'bg-primary text-white':isDropdownVisible(idx),'!text-[#C33F2A]':amount < 0 }">
+        {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>}
+      }
+    </tr>
+    @if(report.accounts.length>0){
+    @for(account of report.accounts ; track $index)
+    {
+    @if(isDropdownVisible(idx))
+    {<tr class="border-2 border-white">
+      <td class="p-3 bg-gray-200 rounded-md border-e-2 border-white text-gray-400">
+        {{account.accountName}}
+      </td>
+      <td class="p-3 bg-[#FFDFD0] text-[#331304] rounded border-e-2 border-white"
+        [ngClass]="{'text-center':account.accountSums[12]==0,'text-[#C33F2A]':account.accountSums[12] < 0 }">{{
+        account.accountSums[12] >= 0 ?
+        (account.accountSums[12] | currency: 'USD': 'symbol') :
+        (account.accountSums[12]==0?'-':'('+(-account.accountSums[12] |
+        currency: 'USD': 'symbol')+')') }}
+      </td>
+      @for(amount of account.accountSums ; track $index; let last = $last)
+      {
+      @if(!last){
+      <td class="p-3 bg-gray-200 rounded border-e-2 border-white text-gray-400"
+        [ngClass]="{'text-center':amount==0,'text-[#C33F2A]':amount < 0 }"> {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+      }
+
+      }
+    </tr>}
+    }
+    }
+    }
+  </tbody>
+</table>

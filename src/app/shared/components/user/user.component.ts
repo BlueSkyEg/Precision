@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
+import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
 
 @Component({
   selector: 'app-user',
@@ -12,4 +14,11 @@ export class UserComponent {
   @Input() pcName!: string;
   @Input() userIconName:string= 'user';
   @Input() pcIconName: string = 'monitor';
+  dropdownStateService = inject(DropdownStateService);
+  ngOnInit() {
+    console.log(this.business)
+  }
+  get business() {
+    return this.dropdownStateService.getSelectedBusiness();
+  }
 }
