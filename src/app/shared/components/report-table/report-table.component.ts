@@ -12,9 +12,7 @@ export class ReportTableComponent {
   @Input() periods:string[]|number[] =[];
   @Input() columns:string[] =[];
   @Input() reportData: any[]|null = [];
-  @Input() isPercentage:boolean = true;
- // months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  tableHeader = ['Name', 'Total', this.periods]
+  @Input() isPercentage:boolean = false;
   dropdownVisibility: { [key: string]: boolean } = {};  //exportdropdown
 
   toggleDropDown(reportId: number): void {

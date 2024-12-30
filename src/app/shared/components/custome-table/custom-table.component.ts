@@ -12,6 +12,7 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 import { ModalComponent } from '../modal/modal.component';
 import { OverlayComponent } from '../transactions/overlay/overlay.component';
 import { CommonModule } from '@angular/common';
+import { ITransactions } from 'app/shared/interfaces/insights/itransactions';
 
 @Component({
   selector: 'app-custom-table',
@@ -168,7 +169,7 @@ export class CustomTableComponent {
 
   get filteredTransactions() {
     return this.AllData.filter((transaction) =>
-      transaction.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      transaction.txnName.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
 
@@ -177,7 +178,7 @@ export class CustomTableComponent {
     this.updateSortedData();
   }
 
-  get PaginatedData() {
+  get PaginatedData():ITransactions[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
 

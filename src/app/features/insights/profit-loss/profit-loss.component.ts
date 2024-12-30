@@ -80,7 +80,7 @@ export class ProfitLossComponent implements OnInit {
         next: (data) => {
           if (data.statusCode == 200) {
             console.log(data.data);
-            this.yearOptions = data.data;
+            this.yearOptions = data.data.slice(0, 5);
             this.selectedYear = this.yearOptions[0];
 
           }
@@ -123,7 +123,7 @@ export class ProfitLossComponent implements OnInit {
   }
   getYearlyReport(): void {
     if (this.businessId) {
-      this.reportsService.getYearlyReports(this.businessId, this.yearOptions.length).subscribe({
+      this.reportsService.getYearlyReports(this.businessId).subscribe({
         next: (data) => {
           if (data.statusCode == 200) {
             console.log(data)

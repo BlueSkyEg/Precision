@@ -30,7 +30,7 @@
   <app-report-table [columns]="['Name','Total']" [periods]="months" [reportData]="monthlyReport" />
 </div>
 <div *ngIf="selectedTab === 'Yearly'" class="overflow-x-auto w-full relative">
-  <app-report-table [columns]="['Name']" [periods]="yearOptions" [reportData]="yearlyReport" />
+  <app-report-table [columns]="['Name']" [periods]="yearOptions" [reportData]="yearlyReport" [isPercentage]="isPercentage" />
 </div>
 }
 @else {
