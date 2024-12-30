@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}dashboard/`;
+  private readonly apiUrl = `${environment.apiUrl}/dashbords`;
 
   getProfiles(): Observable<any> {
     return this._HttpClient.get(`${this.apiUrl}profiles`);
@@ -18,7 +18,7 @@ export class DashboardService {
     return this._HttpClient.get(`${this.apiUrl}clients`);
   }
   getbusinesses(): Observable<any> {
-    return this._HttpClient.get(`${this.apiUrl}businesses`);
+    return this._HttpClient.get(`${this.apiUrl}/businesses`);
   }
   getProfileById(id: string): Observable<any> {
     return this._HttpClient.get(`${this.apiUrl}profiles/${id}`);

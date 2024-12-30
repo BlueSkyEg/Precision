@@ -1,0 +1,171 @@
+<table class=" w-full text-sm text-left font-semibold mt-4 ">
+  <thead>
+    <tr>
+      @for(column of columns;track $index)
+      {<th scope="col" class="p-3">{{ column }}</th>}
+      @if(isPercentage )
+      {<div
+        class="border border-b-0 rounded-md border-gray-300 rounded-b-none shadow-gray-300 flex items-center  mx-2 p-2">
+        <td scope="col" class=" w-full text-center">Percentage%</td>
+        @for(period of periods.slice(0,2); track $index) {
+        <td scope="col" class=" w-full text-center text-primary">{{ period }}</td>
+        }
+      </div>
+      @for(period of periods.slice(2,5); track $index) {
+      <td scope="col" class="p-3 ">{{ period }}</td>
+      }}
+      @else {
+      @for(period of periods; track $index) {
+      <th scope="col" class="p-3">{{ period }}</th>
+      }
+      }
+
+    </tr>
+  </thead>
+  <tbody>
+    @for(report of reportData ;let idx = $index; track idx;let last =$last )
+    {
+    <tr class="border-b border-white">
+      <td class="p-3 bg-[#EBEFFB] rounded-md border-e-2 border-white text-secondary "
+        [ngClass]="{'bg-primary text-white':isDropdownVisible(idx),'bg-[#D6DFF6] !text-black':report.accounts.length==0}">
+        <div class="flex items-center justify-between gap-3  min-w-48">
+          <span>{{report.typeName}} </span>
+          @if(report.accounts.length > 0){
+          <app-navigation-icon class="inline-block cursor-pointer" iconType="common" iconName="expand_more"
+            [ngClass]="{ 'rotate-180': isDropdownVisible(idx)}" (click)="toggleDropDown(idx)" />
+          }
+        </div>
+      </td>
+      @if(report.typeSums[12])
+      {
+      <td class="p-3  bg-[#FBF1EB] rounded border-e-2 border-white text-[#331304]"
+        [ngClass]="{'text-center':report.typeSums[12]==0,'bg-[#e65613] text-white':isDropdownVisible(idx) ,'text-[#C33F2A]':report.typeSums[12] < 0 }">
+        {{
+        report.typeSums[12] >= 0 ?
+        (report.typeSums[12] | currency: 'USD': 'symbol') : (report.typeSums[12]==0?'-':'('+(-report.typeSums[12]
+        |currency: 'USD': 'symbol')+')') }}
+      </td>
+
+      @for(amount of report.typeSums ; track $index; let last = $last)
+      {
+      @if( !last)
+      {<td class="p-3  bg-[#EBEFFB] rounded border-e-2 border-white text-secondary"
+        [ngClass]="{'text-center':amount==0,'bg-primary text-white':isDropdownVisible(idx),'!text-[#C33F2A]':amount < 0 }">
+        {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>}
+      }
+      }
+      @else {
+      @if(isPercentage)
+      {
+      <div class="border border-t-0 border-b border-gray-300  shadow-gray-300 mx-2 flex px-3"
+        [ngClass]="{'rounded-b-md pb-2':last ,'border-b-0':!last}">
+        <td class="p-3 w-full bg-[#FBF1EB] text-[#331304]p-3 text-[#331304] rounded border-e-2 border-white "
+          [ngClass]="{'text-center':((report.typeSums[0]>0 &&report.typeSums[1])*100)<=0}">{{((report.typeSums[0]>0)
+          &&(report.typeSums[1]>0)) ?((report.typeSums[0]/report.typeSums[1])*100| percent: '1.0-2'):'-'}}</td>
+        @for(amount of report.typeSums.slice(0,2) ; track $index; let last = $last)
+        {
+        <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white text-secondary w-full"
+          [ngClass]="{'text-center':amount==0,'bg-primary text-white':isDropdownVisible(idx),'!text-[#C33F2A]':amount < 0 }">
+          {{ amount
+          >0
+          ? (amount | currency: 'USD':
+          'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>}
+      </div>
+      @for(amount of report.typeSums.slice(2,5) ; track $index; let last = $last)
+      { <td class="p-3 bg-[#EBEFFB] rounded border-e-2 border-white text-secondary"
+        [ngClass]="{'text-center':amount==0,'bg-primary text-white':isDropdownVisible(idx),'!text-[#C33F2A]':amount < 0 }">
+        {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>}
+      }
+      @else{
+      @for(amount of report.typeSums.slice(0,5) ; track $index; let last = $last)
+      {
+
+      <td class="p-3  bg-[#EBEFFB] rounded border-e-2 border-white text-secondary"
+        [ngClass]="{'text-center':amount==0,'bg-primary text-white':isDropdownVisible(idx),'!text-[#C33F2A]':amount < 0 }">
+        {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+      }
+      }}
+
+    </tr>
+    @if(report.accounts.length>0){
+    @for(account of report.accounts ; track $index)
+    {
+    @if(isDropdownVisible(idx))
+    {<tr class="border-b border-white">
+      <td class="p-3  bg-gray-200 rounded-md border-e-2 border-white text-gray-400">
+        {{account.accountName}}
+      </td>
+      @if(report.typeSums[12])
+      {<td class="p-3  bg-[#FFDFD0] text-[#331304] rounded border-e-2 border-white"
+        [ngClass]="{'text-center':account.accountSums[12]==0,'text-[#C33F2A]':account.accountSums[12] < 0 }">{{
+        account.accountSums[12] >= 0 ?
+        (account.accountSums[12] | currency: 'USD': 'symbol') :
+        (account.accountSums[12]==0?'-':'('+(-account.accountSums[12] |
+        currency: 'USD': 'symbol')+')') }}
+      </td>
+      @for(amount of account.accountSums ; track $index; let last = $last)
+      {
+      @if(!last){
+      <td class="p-3  bg-gray-200 rounded border-e-2 border-white text-gray-400"
+        [ngClass]="{'text-center':amount==0,'text-[#C33F2A]':amount < 0 }"> {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+      }
+
+      }}
+      @else {
+      @if(isPercentage){
+      <div class="border border-t-0 border-b-0 border-gray-300  shadow-gray-300 mx-2 flex px-3">
+        <td class="p-3 w-full bg-[#FBF1EB] text-[#331304] rounded border-e-2 border-white "
+          [ngClass]="{'text-center':((account.accountSums[0]>0 &&account.accountSums[1])*100)<=0}">
+          {{((account.accountSums[0]>0) &&(account.accountSums[1]>0))
+          ?((account.accountSums[0]/account.accountSums[1])*100| percent: '1.0-2'):'-'}}</td>
+        @for(amount of account.accountSums.slice(0,2) ; track $index; let last = $last)
+        {
+
+        <td class="p-3 w-full bg-gray-200 rounded border-e-2 border-white text-gray-400"
+          [ngClass]="{'text-center':amount==0,'text-[#C33F2A]':amount < 0 }"> {{ amount
+          >0
+          ? (amount | currency: 'USD':
+          'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+        }
+
+      </div>
+
+      @for(amount of account.accountSums.slice(2,5) ; track $index; let last = $last)
+      {
+
+      <td class="p-3 bg-gray-200 rounded border-e-2 border-white text-gray-400"
+        [ngClass]="{'text-center':amount==0,'text-[#C33F2A]':amount < 0 }"> {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+      }
+      }
+      @else{ @for(amount of account.accountSums.slice(0,5) ; track $index; let last = $last)
+      {
+
+      <td class="p-3  bg-gray-200 rounded border-e-2 border-white text-gray-400"
+        [ngClass]="{'text-center':amount==0,'text-[#C33F2A]':amount < 0 }"> {{ amount
+        >0
+        ? (amount | currency: 'USD':
+        'symbol') :(amount==0?'-': '('+(-amount | currency: 'USD': 'symbol')+')') }}</td>
+      }}
+      }
+
+    </tr>}
+    }
+    }
+    }
+  </tbody>
+</table>

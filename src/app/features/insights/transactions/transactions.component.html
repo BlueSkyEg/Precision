@@ -1,7 +1,5 @@
 <app-top-nav
   [items]="breadcrumbItems"
-  pcName="Computer"
-  userName="Miral sobhy"
   [user]="true"
 />
 <div class="mt-12">
@@ -14,7 +12,7 @@
 
 <div *ngIf="selectedTab === 'Pending'">
   <!--Table-->
-  <app-custom-table [AllData]="transactions" (openFilterModal)="openFilter()" />
+  <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter()" />
 </div>
 <div *ngIf="selectedTab === 'Updated'">Content for Updated</div>
 <div *ngIf="selectedTab === 'History'">Content for History</div>

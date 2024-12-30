@@ -1,60 +1,41 @@
-<div class="relative  " >
-  <div
-    id="dropdownButton"
-    class="relative flex justify-between items-center cursor-pointer "
-    [ngClass]="{ 'px-3 py-[10px]': isSelectedOption }"
-    (click)="toggleDropdown()"
-  >
+<div class="relative  ">
+  <div id="dropdownButton" class="relative flex justify-between items-center cursor-pointer "
+    [ngClass]="{ 'px-3 py-[10px]': isSelectedOption }" (click)="toggleDropdown()">
     @if(isSelectedOption) {
     <div class="text-gray-400 font-semibold">
       {{ selectedOption }}
     </div>
     } @if(!isSelectedOption){
-    <button
-      class="border-e rounded-s-md px-3 py-2 text-white bg-primary hover:bg-[#2B51B2]"
-    >
+    <button class="border-e rounded-s-md px-3 py-2 text-white bg-primary hover:bg-[#2B51B2]">
       Export as
     </button>
     }
 
-    <div
-      [ngClass]="{
+    <div [ngClass]="{
         'rounded-e-md px-3 py-2 text-white bg-primary hover:bg-[#2B51B2]':
           !isSelectedOption
-      }"
-    >
-      <app-navigation-icon
-      class="inline-block"
-        iconType="common"
-        iconName="expand_more"
-        [ngClass]="{ 'ml-2': isSelectedOption ,'rotate-180': dropdownVisible,}"
-      />
+      }">
+      <app-navigation-icon class="inline-block" iconType="common" iconName="expand_more"
+        [ngClass]="{ 'ml-2': isSelectedOption ,'rotate-180': dropdownVisible,}" />
     </div>
   </div>
   @if(dropdownVisible) {
 
-  <div
-    class="absolute mt-1 start-0 w-full bg-white border border-gray-300 rounded-md shadow-sm z-30"
-  >
+  <div class="absolute mt-1 start-0 w-full bg-white border border-gray-300 rounded-md shadow-sm z-30">
     @if(isSearchBoxVisible){
-    <app-search-input
-      [searchQuery]="searchQuery"
-      (searchQueryChange)="onSearch($event)"
-      [isBordered]="false"
-      [searchQuery]="searchQuery"
-    />
+    <app-search-input [searchQuery]="searchQuery" (searchQueryChange)="onSearch($event)" [isBordered]="false"
+      [searchQuery]="searchQuery" />
     }
     @for( option of filteredOptions ;track $index ; let first =$first) {
-    <div
-      class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
-      (click)="selectOption(option, $event)"
-      [ngClass]="{ 'mt-4': first }"
-    >
-      {{ option }}
+    <div class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
+      (click)="selectOption(option, $event)" [ngClass]="{ 'mt-4': first }">
+      {{ option.companyName?option.companyName:option }}
+      <span class="text-gray-400 text-sm block">{{option.ownerName?option.ownerName:''}}</span>
+
     </div>
     }
     @empty {
-      <p class="text-gray-400 px-6 ">no results found</p>
+    <p class="text-gray-400 px-6 ">no results found</p>
     }
   </div>
   }
