@@ -1,112 +1,100 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { NavigationIconComponent } from '../../../core/icons/navigation-icons/navigation-icon.component';
 import { DropdownComponent } from 'app/shared/components/dropdown/dropdown.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule, NgClass } from '@angular/common';
 import { CompareComponent } from 'app/shared/components/compare/compare.component';
-interface YearlyData {
-  [year: string]: number;
-}
+import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { InsightsReportsService } from 'app/core/services/InsightsReports/insights-reports.service';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
+import { PsYear } from 'app/shared/interfaces/insights/ps-year';
+import { BalanceSheetTableComponent } from "./balance-sheet-table/balance-sheet-table.component";
+import { ChooseBusinessComponent } from "../choose-business/choose-business.component";
 
-interface AccountDetails {
-  name: string;
-  values: YearlyData;
-}
-
-interface Assets {
-  Total: YearlyData;
-  CurrentAssets: {
-    Total: YearlyData;
-    Details: AccountDetails[];
-  };
-}
-
-interface BalanceSheet {
-  Accounts: {
-    Assets: Assets;
-  };
-}
 @Component({
   selector: 'app-balance-sheet',
   standalone: true,
   imports: [
     TopNavComponent,
-    NavigationIconComponent,
     DropdownComponent,
     MatNativeDateModule,
     CommonModule,
-    CompareComponent
+    CompareComponent,
+    BalanceSheetTableComponent,
+    ChooseBusinessComponent
   ],
   templateUrl: './balance-sheet.component.html',
 })
 export class BalanceSheetComponent {
-  isDropdownOpen = false;
+  options: any[] = ['export as pdf', 'export as svg ', 'option 4444444444'];
+
+  //table data
+  yearlyPsReport: PsYear[] | null = null;
+  selectedBusiness: IBusinesses | null = null;
+  isBusinessSelected: boolean = false;
 
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
     { label: 'Balance Sheet', routerLink: '/insights/balance-sheet' },
   ];
-  options: any[] = ['export as pdf', 'export as svg ', 'option 4444444444'];
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
+  //Injected services
+  private dropdownStateService: DropdownStateService = inject(DropdownStateService);
+  private reportsService: InsightsReportsService = inject(InsightsReportsService);
+
+  ngOnInit(): void {
+    // Subscribe to the selected business state
+    this.dropdownStateService.selectedBusiness$.subscribe((business) => {
+      this.selectedBusiness = business;
+      this.isBusinessSelected = business !== null;
+
+      if (this.isBusinessSelected) {
+        this.getYearlyPsReport();
+        this.getYears()
+      }
+    });
+
   }
-  expandedSections: { [key: string]: boolean } = {};
 
-  toggleSection(section: string): void {
-    this.expandedSections[section] = !this.expandedSections[section];
-  }
+  //get yearsOption
+  yearOptions: number[] = [];
+  getYears() {
+    if (this.businessId) {
+      this.dropdownStateService.getYears(this.businessId).subscribe({
+        next: (data) => {
+          if (data.statusCode == 200) {
+            console.log(data.data);
+            this.yearOptions = data.data.slice(0, 5);
 
-  balanceSheet: BalanceSheet[] = [
-    {
-      Accounts: {
-        Assets: {
-          Total: {
-            '2020': 300000,
-            '2021': 350000,
-            '2022': 400000,
-            '2023': 450000,
-            '2024': 500000,
-            '2025': 550000,
-          },
-          CurrentAssets: {
-            Total: {
-              '2020': 150000,
-              '2021': 175000,
-              '2022': 200000,
-              '2023': 225000,
-              '2024': 250000,
-              '2025': 275000,
-            },
-            Details: [
-              {
-                name: 'Cash',
-                values: {
-                  '2020': 50000,
-                  '2021': 60000,
-                  '2022': 70000,
-                  '2023': 80000,
-                  '2024': 90000,
-                  '2025': 100000,
-                },
-              },
-              {
-                name: 'Receivables',
-                values: {
-                  '2020': 100000,
-                  '2021': 115000,
-                  '2022': 130000,
-                  '2023': 145000,
-                  '2024': 160000,
-                  '2025': 175000,
-                },
-              },
-            ],
-          },
+          }
+
         },
-      },
-    },
-  ];
+        error: (err) => console.error('Error:', err),
+      });
+    }
+  }
 
+
+  get businessId() {
+    if (this.selectedBusiness) {
+      return this.selectedBusiness.companyId;
+    }
+    return null;
+  }
+
+  getYearlyPsReport(): void {
+    if (this.businessId) {
+      this.reportsService.getYearlyPsReports(this.businessId).subscribe({
+        next: (data) => {
+          if (data.statusCode == 200) {
+            console.log(data.data)
+            this.yearlyPsReport = data.data;
+
+          }
+
+        },
+        error: (err) => console.error('Error:', err),
+      });
+    }
+  }
 }

@@ -1,0 +1,65 @@
+<table class=" w-full text-sm text-left font-semibold mt-4 ">
+  <thead>
+    <tr>
+      @for(column of columns;track $index)
+      {<th scope="col" class="p-3 ">{{ column }}</th>}
+
+      @for(period of periods; track $index) {
+      <th scope="col" class="p-3 text-center">{{ period }}</th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for(report of reportData ;track $index;let last =$last )
+    {
+    <tr class="border-b-2 border-white">
+      <td class=" bg-primary p-3 rounded-md text-white  leading-5 border-e-2 border-white text-xs">
+        {{report.wrapperName}}
+      </td>
+      @for(total of report.totals; track $index){
+      <td class=" bg-primary p-3 rounded-md text-white text-center leading-5 border-e-2  border-white text-xs"
+        [ngClass]="{'text-[#C33F2A]':total < 0 }"> {{total==0?'-':total>0?(total| currency:
+        'USD':'symbol'):'('+(-total|currency: 'USD': 'symbol')+')'}}</td>
+      }
+
+    </tr>
+    @for(category of report.categories.slice(0, periods.length) ;let idx = $index; track idx; )
+    {
+    <tr class="border-b-2 border-white">
+      <td class=" bg-[#EBEFFB] p-3 rounded-md text-secondary  leading-5 border-e-2 border-white text-xs"
+        [ngClass]="{'text-white bg-secondary': isDropdownVisible(category.typeName + '-' + idx)}">
+        <div class="flex items-center justify-between gap-3  min-w-48">
+          <span>{{category.typeName}}</span>
+          @if(category.accounts.length > 0){
+          <app-navigation-icon class="inline-block cursor-pointer" iconType="common" iconName="expand_more"
+            [ngClass]="{ 'rotate-180': isDropdownVisible(category.typeName + '-' + idx)}"
+            (click)="toggleDropDown(category.typeName + '-' + idx)" />
+          }
+        </div>
+
+      </td>
+      @for(amount of category.typeSums.slice(0, periods.length); track $index)
+      {<td class="text-center  bg-[#EBEFFB] p-3 rounded-md text-secondary  leading-5 border-e-2 border-white text-xs"
+        [ngClass]="{'text-white bg-secondary': isDropdownVisible(category.typeName + '-' + idx)}"
+        [ngClass]="{'text-[#C33F2A]':amount < 0 }">
+        {{amount==0?'-':amount>0?(amount| currency: 'USD':'symbol'):'('+(-amount|currency: 'USD': 'symbol')+')'}}</td>}
+
+    </tr>
+    @if(isDropdownVisible(category.typeName + '-' + idx))
+    {
+    @for(account of category.accounts .slice(0, periods.length); track $index)
+    {<tr class="border-b-2 border-white">
+      <td class=" bg-gray-200 p-3 rounded-md text-black  leading-5 border-e-2 border-white text-xs">
+        {{account.accountName}}
+      </td>
+      @for(amount of account.accountSums.slice(0, periods.length); track $index)
+      {<td class="text-center  bg-gray-200  text-black   p-3 rounded-md  leading-5 border-e-2 border-white text-xs"
+        [ngClass]="{'text-[#C33F2A]':amount < 0 }">
+        {{amount==0?'-':amount>0?(amount| currency: 'USD':'symbol'):'('+(-amount|currency: 'USD': 'symbol')+')'}}</td>}
+
+    </tr>}
+    }
+    }
+    }
+  </tbody>
+</table>
