@@ -12,7 +12,8 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 import { ModalComponent } from '../modal/modal.component';
 import { OverlayComponent } from '../transactions/overlay/overlay.component';
 import { CommonModule } from '@angular/common';
-import { ITransactions } from 'app/shared/interfaces/insights/itransactions';
+import { ITransactions } from 'app/shared/interfaces/insights/transaction-model';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 
 @Component({
   selector: 'app-custom-table',
@@ -30,13 +31,15 @@ import { ITransactions } from 'app/shared/interfaces/insights/itransactions';
 })
 export class CustomTableComponent {
   @Input() AllData: any[] = [];
-  @Output() openFilterModal = new EventEmitter<void>();
-
+  @Input() isTransaction: boolean = false;
+  @Input() isBusiness: boolean = false;
+  @Input() placeholderText: string = '';
   data: any = null;
-  @Input() tableHeader = [
-    { Name: 'Name', isSorted: false, width: '15%' },
+  @Input() tableHeader: any[] = [
+    { Name: 'Name', colName: 'txnName', isSorted: false, width: '15%' },
     {
       Name: 'date',
+      colName: 'txnDate',
       isSorted: true,
       sortOrder: '' as '' | 'asc' | 'desc',
       width: '10%',
@@ -45,6 +48,7 @@ export class CustomTableComponent {
     { Name: 'Type', isSorted: false, width: '10%' },
     {
       Name: 'amount',
+      colName: 'txnAmount',
       isSorted: true,
       sortOrder: '' as '' | 'asc' | 'desc',
       width: '10%',
@@ -54,6 +58,10 @@ export class CustomTableComponent {
     { Name: 'Classification/Account', isSorted: false, width: '20%' },
     { Name: 'Actions', isSorted: false },
   ];
+  @Output() openFilterModal = new EventEmitter<void>();
+  @Output() getUserId = new EventEmitter<{ userId: string; type: string }>();
+  @Output() getCompanyId = new EventEmitter<string>();
+
   currentPage: number = 1;
   itemsPerPage: number = 5;
   selectedAccountsCount: number = 0;
@@ -80,7 +88,7 @@ export class CustomTableComponent {
 
   toggleSort(columnName: string): void {
     this.tableHeader = this.tableHeader.map((header) => {
-      if (header.Name === columnName) {
+      if (header.colName === columnName) {
         header.sortOrder = header.sortOrder === 'asc' ? 'desc' : 'asc';
         this.sortKey = columnName;
         this.sortOrder = header.sortOrder;
@@ -167,10 +175,22 @@ export class CustomTableComponent {
     }
   }
 
-  get filteredTransactions() {
-    return this.AllData.filter((transaction) =>
-      transaction.txnName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  get filteredItems() {
+    if (this.isTransaction) {
+      return this.AllData.filter((transaction) =>
+        transaction.txnName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+    else if (this.isBusiness) {
+      return this.AllData.filter((business) =>
+        business.companyName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
+    else {
+      return this.AllData.filter((user) =>
+        user.profileName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   }
 
   onSearch(query: string): void {
@@ -178,13 +198,13 @@ export class CustomTableComponent {
     this.updateSortedData();
   }
 
-  get PaginatedData():ITransactions[] {
+  get PaginatedData(): any[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
 
     let data = this.sortedData;
     if (this.searchQuery) {
-      data = this.filteredTransactions;
+      data = this.filteredItems;
     }
 
     if (this.sortKey && this.sortOrder) {
@@ -241,5 +261,14 @@ export class CustomTableComponent {
   closeEditModal(event?: Event) {
     this.editModalVisible = false;
     event?.preventDefault();
+  }
+
+
+  // send Profile Id to Parent
+  getProfileInfo(userId: string, type: string) {
+    this.getUserId.emit({ userId, type });
+  }
+  getBusinessItem(companyId: string) {
+    this.getCompanyId.emit(companyId);
   }
 }

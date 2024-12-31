@@ -1,0 +1,201 @@
+<!--Search and Filter Results-->
+@if(isTransaction)
+{<div class="flex justify-between items-center w-full">
+  <div class="lg:w-96 my-6 flex gap-2 items-center">
+    <app-search-input class="flex-1" [searchQuery]="searchQuery" (searchQueryChange)="onSearch($event)"
+      placeholder="Search Transactions" />
+    <div class="border border-gray-300 p-3 rounded-md cursor-pointer hover:bg-gray-100" (click)="openFilter()">
+      <app-navigation-icon iconType="common" iconName="filter" />
+    </div>
+  </div>
+  @if(selectedAccountsCount>0){
+  <div class="flex gap-2 items-center">
+    <span class="text-gray-400 font-semibold text-sm">
+      {{ selectedAccountsCount }} Selected</span>
+    <button
+      class="bg-primary text-white text-sm font-semibold p-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
+      (click)="openFilter()">
+      Choose Account
+    </button>
+  </div>
+  }
+</div>}
+<!--Table-->
+<div class=" w-full border border-gray-300 border-t-0 overflow-x-auto overflow-y-visible rounded-b-md"
+  [ngClass]="{'rounded-md border-t':isTransaction}">
+  @if(!isTransaction){<app-search-input [isBordered]="false" [searchQuery]="searchQuery"
+    (searchQueryChange)="onSearch($event) " [placeholder]="placeholderText" />}
+  <table class=" w-full text-sm text-left text-black font-semibold">
+    <thead class="bg-gray-100 border-b border-gray-300 w-full">
+      <tr>
+        @if(isTransaction){
+        <th scope="col" class="p-4 ">
+          <div class="flex items-center">
+            <input #selectAllCheckbox id="checkbox-all-search" type="checkbox"
+              class="text-primary border border-gray-300 rounded w-4 h-4 cursor-pointer"
+              (change)="toggleSelectAll(selectAllCheckbox.checked)" />
+          </div>
+        </th>
+        }
+        @for( header of tableHeader;track $index ) {
+        <th scope="col" class="p-4 text-center">
+          <div class="flex gap-2 text-gray-400 items-center "
+            [ngClass]="{'justify-center':(!isTransaction && header.Name!='Name' && header.Name!='Owner' && header.Name!='Accountant'&& header.Name!='Last update'&& header.Name!='-')}">
+            <span class="text-black">{{ header.Name }}</span>
+            @if(header.isSorted) { @if(header.sortOrder === 'asc' ||
+            header.sortOrder === 'desc') {
+            <app-navigation-icon iconType="common" iconName="arrow_upward"
+              [class.rotate-90]="header.sortOrder === 'desc'" [class.-rotate-90]="header.sortOrder === 'asc'"
+              class="cursor-pointer" (click)="toggleSort(header.colName)"></app-navigation-icon>} @if(header.sortOrder
+            ==
+            '') {
+            <app-navigation-icon iconType="common" iconName="sort arrow" class="rotate-90 cursor-pointer"
+              (click)="toggleSort(header.colName)" />}}
+          </div>
+        </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for(item of PaginatedData ; track $index){
+      @if(isTransaction)
+      { <tr class="border-b border-gray-300 last:border-0 cursor-pointer" (click)="openEditModal(item)">
+        <td class="w-4 px-4 py-3">
+          <div class="flex items-center">
+            <input type="checkbox" (click)="$event.stopPropagation()" (change)="toggleSelection(item)"
+              class="w-4 h-4 text-blue-600 border border-gray-300 rounded cursor-pointer" />
+            <label class="sr-only">Select {{ item.txnName }}</label>
+          </div>
+        </td>
+        <td class=" max-w-fit">
+          <span>{{ item.txnName }}</span>
+        </td>
+        <td class="py-3 text-gray-400 max-w-fit">
+          {{ formatDate(item.txnDate) }}
+        </td>
+        <td class=" max-w-fit py-3">chk</td>
+        <td class="py-3 max-w-fit">{{ item.txnType }}</td>
+        <td class="text-[#FF0000] py-3 max-w-fit">
+          $({{ item.txnAmount }})
+        </td>
+        <td class="py-3 text-gray-400 max-w-fit">{{item.txnSource}}</td>
+        <td class="truncate max-w-custom py-3 text-gray-400  pe-8">
+          {{ item.txnMemo }}
+        </td>
+        <td class="py-3  max-w-fit pe-5">
+          <div class="border border-gray-300 rounded-md">
+            <app-dropdown (click)="$event.stopPropagation()" [options]="options" [isSearchBoxVisible]="true"
+              [selectedOption]="item.txnName" />
+          </div>
+        </td>
+        <td class="py-3 pe-1">
+          <button (click)="$event.stopPropagation()"
+            class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]">
+            Update
+          </button>
+        </td>
+      </tr>}
+      @else {
+      <tr class="border-b border-gray-300 last:border-0 cursor-pointer">
+        <td class="p-4 text-gray-400 ">{{$index+1}}</td>
+        @if(!isBusiness)
+        {<td class="p-4 text-gray-400 " (click)="getProfileInfo(item.profileId ,item.profileType)">
+          {{ item.profileName?item.profileName:'-' }}
+        </td>
+        <td class="p-4 text-gray-400 text-center">
+          {{ item.companiesCount?item.companiesCount:'-' }}
+        </td>
+        <td class="p-4 text-center ">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-fail-100 text-state-fail-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA] border border-[#BFBFBF]':!item.pendingTrxCount}">
+              {{ item.pendingTrxCount ?item.pendingTrxCount:'-' }}
+            </div>
+          </div>
+
+        </td>
+        <td class="p-4 text-center ">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-warning-200  text-state-warning-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA]  border border-[#BFBFBF]':!item.awaitingTrxCount}">
+              {{ item.awaitingTrxCount ?item.awaitingTrxCount:'-' }}
+            </div>
+          </div>
+        </td>
+        <td class="p-4 text-center">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-success-100 text-state-success-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA] border border-[#BFBFBF]':!item.reviewedTrxCount}">
+              {{ item.reviewedTrxCount?item.reviewedTrxCount:'-' }}
+            </div>
+          </div>
+
+
+        </td>}
+        @else {
+        <td class="p-4 text-gray-400 ">
+          {{ item.companyName?item.companyName:'-' }}
+        </td>
+        <td class="p-4 text-gray-400 ">
+          {{ item.ownerName?item.ownerName:'-' }}
+        </td>
+        <td class="p-4 text-gray-400 ">
+          {{ item.qbMemberName?item.qbMemberName:'-' }}
+        </td>
+        <td class="p-4 text-gray-400 " [ngClass]="{'text-center':!item.lastQBUpdate}">
+          {{ item.lastQBUpdate?item.lastQBUpdate:'-' }}
+        </td>
+        <td class="p-4 text-center ">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-fail-100 text-state-fail-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA] border border-[#BFBFBF]':!item.pendingTrxCount}">
+              {{ item.pendingTrxCount ?item.pendingTrxCount:'-' }}
+            </div>
+          </div>
+
+        </td>
+        <td class="p-4 text-center ">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-warning-200  text-state-warning-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA]  border border-[#BFBFBF]':!item.awaitingTrxCount}">
+              {{ item.awaitingTrxCount ?item.awaitingTrxCount:'-' }}
+            </div>
+          </div>
+        </td>
+        <td class="p-4 text-center" (click)="getBusinessItem(item)">
+          <div class="flex justify-center items-center">
+            <div
+              class="bg-state-success-100 text-state-success-300 flex items-center justify-center  text-center rounded-full h-6 min-w-6 px-2 py-1"
+              [ngClass]="{'!text-[#282929] !bg-[#EAEAEA] border border-[#BFBFBF]':!item.reviewedTrxCount}">
+              {{ item.reviewedTrxCount?item.reviewedTrxCount:'-' }}
+            </div>
+          </div>
+
+
+        </td>
+        }
+      </tr>
+      }
+
+      }
+    </tbody>
+  </table>
+</div>
+<!-- paginator -->
+@if(filteredItems.length>itemsPerPage) {
+<app-paginator [items]="filteredItems" [currentPage]="currentPage" [itemsPerPage]="itemsPerPage"
+  (pageChanged)="changePage($event)" (optionSelected)="selectOption($event)">
+</app-paginator>
+}
+
+<!-- modal -->
+<div [ngClass]="{ 'opacity-0': !editModalVisible }">
+  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" />
+</div>
+
+<app-overlay [modalVisible]="editModalVisible" />

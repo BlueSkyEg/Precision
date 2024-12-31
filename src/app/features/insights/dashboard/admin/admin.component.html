@@ -1,31 +1,41 @@
 <app-top-nav [items]="breadcrumbItems" />
-<div class="flex mt-6 text-gray-400">
-  <app-total-transactions-card
-    [totalNumber]="pending"
-    iconName="pending-transactions"
-    cardName="Total Pending Transactions"
-    numberColor="text-black"
-    [isBordered]="true"
-  />
-  <app-total-transactions-card
-    [totalNumber]="awaiting"
-    iconName="awaiting-transaction"
-    cardName="Total Awaiting Transactions"
-    numberColor="text-black"
-    [isBordered]="true"
-  />
-  <app-total-transactions-card
-    [totalNumber]="reviewed"
-    iconName="reviewed-transactions"
-    cardName="Total Reviewed Transactions"
-    numberColor="text-black"
-    class="ps-9"
-  />
+<div class="flex my-8 text-gray-400">
+  <div class="flex flex-col ps-7 pe-20 border-e border-gray-300">
+    <span class="text-black text-[32px] font-medium leading-[48px]">{{totalPendingTransactions}}</span>
+    <div class=" flex items-center gap-2">
+      <div class=" text-white">
+        <app-navigation-icon iconType="common" iconName="pending-transactions" />
+      </div>
+      <span class="text-gray-400 text-xl font-medium leading-7 tracking-[1px] ">Total Pending Transactions </span>
+    </div>
+  </div>
+    <div class="flex flex-col ps-7 pe-20 border-e border-gray-300">
+    <span class="text-black text-[32px] font-medium leading-[48px]">{{totalAwaitingTransactions}}</span>
+    <div class=" flex items-center gap-2">
+      <div class=" text-white">
+        <app-navigation-icon iconType="common" iconName="pending-transactions" />
+      </div>
+      <span class="text-gray-400 text-xl font-medium leading-7 tracking-[1px] ">Total Awaiting Transactions </span>
+    </div>
+  </div>
+    <div class="flex flex-col ps-7 pe-20 ">
+    <span class="text-black text-[32px] font-medium leading-[48px]">{{totalReviewedTransactions}}</span>
+    <div class=" flex items-center gap-2">
+      <div class=" text-white">
+        <app-navigation-icon iconType="common" iconName="pending-transactions" />
+      </div>
+      <span class="text-gray-400 text-xl font-medium leading-7 tracking-[1px] ">Total Reviewed Transactions</span>
+    </div>
+  </div>
 </div>
-
-<app-table
-  [isLoading]="isLoading"
-  [tabs]="tabs"
-  (userClick)="getBusinessById($event.id, $event.type)"
-  (tabChange)="selectTab($event)"
-/>
+<div class="border rounded-xl border-gray-300  rounded-b-none border-b-0 ps-2 py-2">
+  <app-tabs [tabs]="adminTabs" (tabsChanged)="selectTabAdmin($event)" [selectedTab]="selectedTab" [isBoarded]="false" [amount]="totalAmounts"/>
+</div>
+@if(selectedTab=='Accountants')
+{<app-custom-table [tableHeader]="tableHeader" [AllData]="accountants" placeholderText="Search Accountant"  (getUserId)="handleUserId($event)" />}
+@if(selectedTab=='Clients')
+{<app-custom-table [tableHeader]="tableHeader" [AllData]="clients" placeholderText="Search Clients"  (getUserId)="handleUserId($event)" />}
+@if(selectedTab=='Businesses')
+{<app-custom-table [tableHeader]="businessesTableHeader" [AllData]="businesses" placeholderText="Search Businesses"
+  [isBusiness]="true" (getCompanyId)="handlecompany($event)"/>
+}

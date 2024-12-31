@@ -1,15 +1,25 @@
 <ul class="font-semibold text-center  text-gray-400  border  border-gray-300 flex  rounded-md"
-  [class.w-full]="widthClass === 'full'" [class.w-fit]="widthClass === 'fit'">
+  [class.w-full]="widthClass === 'full'" [class.w-fit]="widthClass === 'fit'"
+  [ngClass]="{'border-0 border-b w-full rounded-none':!isBoarded}">
   @for(tab of tabs ; track $index){
   <li (click)="selectTab(tab)"
-    class="select-none w-full bg-gray-100 inline-block px-4 py-[10px] border-r border-gray-300  focus:ring-4 active focus:outline-none cursor-pointer"
+    class="select-none  inline-block px-4 py-[10px] border-r border-gray-300  focus:ring-4 active focus:outline-none cursor-pointer"
     [ngClass]="{
-      'text-primary': selectedTab === tab,
-      'bg-white': selectedTab === tab,
+      'bg-gray-100 ':isBoarded,
+      'text-primary bg-white': selectedTab === tab,
       'rounded-s-md': isFirst(tab),
-      'rounded-e-md border-r-0': isLast(tab)
+      'rounded-e-md !border-r-0': isLast(tab),
+      'border-r-0 rounded-s-none rounded-e-none !bg-white':!isBoarded,
+      'border-b-2 border-b-primary  !bg-white': selectedTab === tab &&!isBoarded,
+
     }">
-    {{ tab }}
+    <div class="flex items-center gap-2">
+      <span>{{ tab }}</span>
+      @if(amount > 0){
+      <span class="py-1 px-2 rounded-full border bg-gray-200" [ngClass]="{'border-0': selectedTab === tab &&!isBoarded}">{{amount}}</span>
+      }
+    </div>
+
   </li>
   }
 </ul>

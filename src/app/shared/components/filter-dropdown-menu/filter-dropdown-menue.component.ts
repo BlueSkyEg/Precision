@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
 import { DropdownComponent } from "../dropdown/dropdown.component";
 import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';

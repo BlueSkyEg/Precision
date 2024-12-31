@@ -1,0 +1,16 @@
+    <div class="flex gap-3 items-center text-gray-400 mb-2">
+      <app-navigation-icon class="text-white" iconType="common" [iconName]="mainIconName" />
+      <span class="font-medium text-2xl">{{mainHeadTitle}}</span>
+    </div>
+    <div class="flex gap-2 text-gray-400">
+      <div
+        class="flex h-28 w-full flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md">
+        <span class="text-[32px] font-semibold leading-[48px] tracking-[1.6px] block">{{firstAmount}}</span>
+        <span class=" text-sm font-semibold leading-6 tracking-[0.8px] block">{{firstTitle}} </span>
+      </div>
+      <div
+        class="flex h-28 w-full flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md">
+        <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px] block">{{secondAmount}}</span>
+        <span class=" text-sm  font-semibold leading-6 tracking-[0.8px] block">{{secondTitle}}</span>
+      </div>
+    </div>

@@ -5,16 +5,17 @@ import { CompareComponent } from 'app/shared/components/compare/compare.componen
 import { DropdownComponent } from 'app/shared/components/dropdown/dropdown.component';
 import { TabsComponent } from 'app/shared/components/tabs/tabs.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { InsightsReportsService } from 'app/core/services/InsightsReports/insights-reports.service';
 import { PlYear } from 'app/shared/interfaces/insights/pl-year';
 import { ReportTableComponent } from "../../../shared/components/report-table/report-table.component";
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
+import { ChooseBusinessComponent } from "../choose-business/choose-business.component";
 
 @Component({
   selector: 'app-profit-loss',
   standalone: true,
-  imports: [TopNavComponent, TabsComponent, DropdownComponent, CompareComponent, CommonModule, ReportTableComponent, NavigationIconComponent],
+  imports: [TopNavComponent, TabsComponent, DropdownComponent, CompareComponent, CommonModule, ReportTableComponent, NavigationIconComponent, ChooseBusinessComponent],
   templateUrl: './profit-loss.component.html',
 })
 export class ProfitLossComponent implements OnInit {

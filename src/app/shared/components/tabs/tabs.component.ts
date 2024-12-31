@@ -12,7 +12,8 @@ export class TabsComponent {
   @Input() tabs: string[] = ['Pending', 'Updated', 'History'];
   @Output() tabsChanged = new EventEmitter();
   @Input() widthClass: 'full' | 'fit' = 'fit';
-
+  @Input() isBoarded: boolean = true;
+  @Input() amount:number=0;
   selectTab(tab: string) {
     this.tabsChanged.emit(tab);
   }

@@ -1,5 +1,5 @@
 <header
-  class="border  border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm"
+  class="border  border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm z-40"
   [ngClass]="!collapsed ? 'w-[248px]' : ''"
 >
   <!-- logo and label -->
@@ -11,9 +11,10 @@
         @if(collapsed){
         <div
           class="close-open-btn"
-          (click)="toggleCollapse()"
+
         >
           <app-navigation-icon
+            (click)="toggleCollapse()"
             iconName="Icon Button Open"
             iconColor="text-gray-400"
           ></app-navigation-icon>
@@ -37,9 +38,10 @@
       } @if(!collapsed){
       <div
         class=" bg-white w-10 h-10 flex justify-center items-center rounded-full cursor-pointer text-gray-400 border absolute end-[-34px]  z-50"
-        (click)="toggleCollapse()"
+
       >
         <app-navigation-icon
+        (click)="toggleCollapse()"
           iconName="Icon Button Close"
           class="w-3 cursor-pointer ps-[2px]"
           iconColor="text-gray-400"

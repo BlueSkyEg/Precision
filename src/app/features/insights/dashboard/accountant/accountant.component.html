@@ -1,56 +1,22 @@
 <app-top-nav [items]="breadcrumbItems" />
-<div class="flex gap-6 mt-6 w-full">
+<div class="flex gap-6 my-6 w-full">
   <div class="border-e border-gray-300 pe-6 w-full">
-    <div class="flex gap-3 items-center text-gray-400">
-      <app-navigation-icon
-        class="text-white"
-        iconType="common"
-        iconName="pending-transactions"
-      />
-      <p class="font-medium text-2xl">Pending Transactions</p>
-    </div>
-    <div class="flex gap-2 text-gray-400">
-      <app-total-transactions-card
-        [totalNumber]="pending"
-        cardName="Total Pending Transactions"
-        [isBg]="true"
-        textSize="text-sm"
-        class="w-full"
-      />
-      <app-total-transactions-card
-        [totalNumber]="awaiting"
-        cardName="Awaiting Your Review"
-        [isBg]="true"
-        textSize="text-sm"
-        class="w-full"
-      />
-    </div>
+    <app-card-amounts mainIconName="pending-transactions" mainHeadTitle="Pending Transactions"
+      [firstAmount]="totalPendingTransactions" firstTitle="Total Pending Transactions"
+      secondTitle="Awaiting Your Reviews" [secondAmount]="totalReviewedTransactions" />
   </div>
-  <div class="w-full">
-    <div class="flex gap-3 items-center text-gray-400 ">
-      <app-navigation-icon
-        class="text-white"
-        iconType="common"
-        iconName="businesses"
-      />
-      <p class="font-medium text-2xl">Businesses</p>
-    </div>
-    <div class="flex gap-2 text-gray-400 ">
-      <app-total-transactions-card
-        [totalNumber]="pending"
-        cardName="Total Businesses "
-        [isBg]="true"
-        textSize="text-sm"
-        class="w-full"
-      />
-      <app-total-transactions-card
-        [totalNumber]="awaiting"
-        cardName="Business with Pending Transactions"
-        [isBg]="true"
-        textSize="text-sm"
-        class="w-full"
-      />
-    </div>
+  <div class=" w-full">
+    <app-card-amounts mainIconName="businesses" mainHeadTitle="Businesses" [firstAmount]="totalBusiness"
+      firstTitle="Total Businesses" secondTitle="Business with Pending Transactions"
+      [secondAmount]="totalBusinessWithPendingTransactions" />
   </div>
+
 </div>
-<app-table [tabs]="tabs" />
+<div class="border rounded-xl border-gray-300  rounded-b-none border-b-0 ps-2 py-2">
+  <app-tabs [tabs]="tabs" [selectedTab]="selectedTab" (tabsChanged)="selectTab($event)" [isBoarded]="false" [amount]="totalBusiness"/>
+
+</div>
+@if(selectedTab=='My Profile')
+{
+<app-custom-table [tableHeader]="businessesTableHeader" [AllData]="businesses" placeholderText="Search Businesses"
+  [isBusiness]="true" />}

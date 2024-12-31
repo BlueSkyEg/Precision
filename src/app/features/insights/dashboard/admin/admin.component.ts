@@ -1,91 +1,71 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
-import { TableComponent } from 'app/shared/components/table/table.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { TotalTransactionsCardComponent } from 'app/shared/components/total-transactions-card/total-transactions-card.component';
-import { ITab } from 'app/shared/interfaces/insights/itab';
-import { IUser } from 'app/shared/interfaces/insights/iuser';
+import { ITab } from 'app/shared/interfaces/insights/tab-model';
+import { IUser } from 'app/shared/interfaces/insights/user-model';
 import { forkJoin } from 'rxjs';
+import { CustomTableComponent } from "../../../../shared/components/custom-table/custom-table.component";
+import { TabsComponent } from "../../../../shared/components/tabs/tabs.component";
+import { NavigationIconComponent } from "../../../../core/icons/navigation-icons/navigation-icon.component";
+import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent],
+  imports: [TopNavComponent, CustomTableComponent, TabsComponent, NavigationIconComponent],
   templateUrl: './admin.component.html',
 })
 export class AdminComponent implements OnInit {
-  _DashboardService = inject(DashboardService);
-  isBusinessFiltered: boolean = false;
-  selectedTabIndex = 0;
-  pending = 0;
-  awaiting = 0;
-  reviewed = 0;
-  userId: string = '';
+  //injected services
+  private _DashboardService: DashboardService = inject(DashboardService);
+  private dropdownStateService: DropdownStateService = inject(DropdownStateService);
+  private router: Router = inject(Router);
+  //data
+  accountants: any[] = [];
+  clients: any[] = [];
+  businesses: any[] = [];
+  totalPendingTransactions: number = 0;
+  totalAwaitingTransactions: number = 0;
+  totalReviewedTransactions: number = 0;
+  totalAmounts: number = 0;
   isLoading: boolean = true;
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
     { label: 'Dashboard', routerLink: '/insights/dashboard' },
     { label: 'Admin', routerLink: '/insights/dashboard/admin-dashboard' },
   ];
-
-  tabs: ITab[] = [
-    { title: 'Accountants', count: 0, users: [] },
-    { title: 'Clients', count: 0, users: [] },
-    { title: 'Businesses', count: 0, users: [] },
-  ];
+  //business
+  selectedBusiness: IBusinesses | null = null;
 
   ngOnInit() {
-    this.loadAllData();
+    // Subscribe to the selected business state
+
+    this.getProfiles();
+    this.getClients();
+    this.getBusinesses();
   }
-
-  loadAllData() {
-    this.isLoading = true;
-    forkJoin({
-      accountants: this._DashboardService.getProfiles(),
-      clients: this._DashboardService.getClients(),
-      businesses: this._DashboardService.getbusinesses(),
-    }).subscribe({
-      next: ({ accountants, clients, businesses }) => {
-        this.tabs[0].users = accountants.data.items;
-        this.tabs[1].users = clients.data.items;
-        this.tabs[2].users = businesses.data.items;
-
-        this.tabs[0].count = this.tabs[0].users.length;
-        this.tabs[1].count = this.tabs[1].users.length;
-        this.tabs[2].count = this.tabs[2].users.length;
-
-        this.updateTransactionCounts([
-          ...this.tabs[0].users,
-          ...this.tabs[1].users,
-          ...this.tabs[2].users,
-        ]);
-
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading data', err);
-        this.isLoading = false;
-      },
-    });
-  }
-
-  selectTab(index: number) {
-    if (index === 2 && !this.isBusinessFiltered) {
-      this.getBusinesses();
-    }
-    this.selectedTabIndex = index;
-    this.updateTransactionCounts(this.tabs[index].users);
-  }
-
-  getAccountants() {
+  getProfiles() {
     this._DashboardService.getProfiles().subscribe({
       next: (response) => {
-        this.tabs[0].users = response.data.items;
-        this.tabs[0].count = this.tabs[0].users.length;
-        if (this.selectedTabIndex === 0) {
-          this.updateTransactionCounts(this.tabs[0].users);
-          this.isLoading = true;
-        }
+        this.accountants = response.data;
+        this.totalAmounts = this.accountants.length;
+        this.totalPendingTransactions = this.accountants.reduce(
+          (sum, user) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalAwaitingTransactions = this.accountants.reduce(
+          (sum, user) => sum + (user.awaitingTrxCount || 0),
+          0
+        );
+        this.totalReviewedTransactions = this.accountants.reduce(
+          (sum, user) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
+
+
+        //this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching accountants', err);
@@ -94,76 +74,189 @@ export class AdminComponent implements OnInit {
       complete: () => (this.isLoading = false),
     });
   }
-
   getClients() {
     this._DashboardService.getClients().subscribe({
       next: (response) => {
-        this.tabs[1].users = response.data.items;
-        this.tabs[1].count = this.tabs[1].users.length;
-        if (this.selectedTabIndex === 1) {
-          this.updateTransactionCounts(this.tabs[1].users);
-          this.isLoading = false;
-        }
+        this.clients = response.data;
+        this.totalAmounts = this.clients.length;
+        this.totalPendingTransactions = this.clients.reduce(
+          (sum, user) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalAwaitingTransactions = this.clients.reduce(
+          (sum, user) => sum + (user.awaitingTrxCount || 0),
+          0
+        );
+        this.totalReviewedTransactions = this.clients.reduce(
+          (sum, user) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
+
+        //this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching clients', err), (this.isLoading = false);
+        console.error('Error fetching accountants', err);
+        this.isLoading = false;
       },
+      complete: () => (this.isLoading = false),
     });
   }
-
   getBusinesses() {
-    this.isLoading = true;
     this._DashboardService.getbusinesses().subscribe({
       next: (response) => {
-        this.tabs[2].users = response.data.items;
-        this.isLoading = false;
+        this.businesses = response.data;
+        this.totalAmounts = this.businesses.length;
+        this.totalPendingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalAwaitingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.awaitingTrxCount || 0),
+          0
+        );
+        this.totalReviewedTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
 
-        this.tabs[2].count = this.tabs[2].users.length;
-        if (this.selectedTabIndex === 2) {
-          this.updateTransactionCounts(this.tabs[2].users);
-        }
+        //this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching businesses', err);
+        console.error('Error fetching accountants', err);
         this.isLoading = false;
       },
+      complete: () => (this.isLoading = false),
     });
   }
-
-  getBusinessById(userId: string, userType: string) {
-    this.isLoading = true;
-    this.isBusinessFiltered = true;
-    this.tabs[2].users = [];
-    this.tabs[2].count = 0;
-    const request$ =
-      userType === 'client'
-        ? this._DashboardService.getClientById(userId)
-        : this._DashboardService.getProfileById(userId);
-
-    request$.subscribe({
+  getBusinessesByProfileId(id: string) {
+    this._DashboardService.getProfileById(id).subscribe({
       next: (response) => {
-        this.tabs[2].users = response.data;
-        this.tabs[2].count = this.tabs[2].users.length;
-        this.updateTransactionCounts(this.tabs[2].users);
-        this.selectedTabIndex = 2;
-        this.isLoading = false;
+        this.businesses = response.data;
+        this.totalPendingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalAwaitingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.awaitingTrxCount || 0),
+          0
+        );
+        this.totalReviewedTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
+
+        //this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching business by ID', err);
+        console.error('Error fetching accountants', err);
         this.isLoading = false;
       },
+      complete: () => (this.isLoading = false),
     });
   }
+  getBusinessesByClientId(id: string) {
+    this._DashboardService.getClientById(id).subscribe({
+      next: (response) => {
+        this.businesses = response.data;
+        this.totalPendingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalAwaitingTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.awaitingTrxCount || 0),
+          0
+        );
+        this.totalReviewedTransactions = this.businesses.reduce(
+          (sum, user) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
 
-  updateTransactionCounts(users: IUser[]) {
-    this.pending = 0;
-    this.awaiting = 0;
-    this.reviewed = 0;
-
-    for (const user of users) {
-      this.pending += user.pendingTrxCount;
-      this.awaiting += user.awaitingTrxCount;
-      this.reviewed += user.reviewedTrxCount;
+        //this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching getBusinessesByClientId', err);
+        this.isLoading = false;
+      },
+      complete: () => (this.isLoading = false),
+    });
+  }
+  //user Id Received from Child
+  handleUserId(event: { userId: string, type: string }): void {
+    if (event.type === 'user') {
+      this.getBusinessesByProfileId(event.userId); this.selectedTab = 'Businesses';
     }
+    else if (event.type === 'client') {
+      this.getBusinessesByClientId(event.userId); this.selectedTab = 'Businesses';
+    }
+  }
+  //user Id Received from Child
+  handlecompany(item: any): void {
+    this.dropdownStateService.setSelectedBusiness(item);
+    this.router.navigate(['insights/transactions']);
+  }
+
+  tableHeader: any[] = [
+    { Name: '-' },
+    { Name: 'Name' },
+    {
+      Name: 'Companies', isSorted: true,
+      colName: 'companiesCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Pending', isSorted: true,
+      colName: 'pendingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Awaiting', isSorted: true,
+      colName: 'awaitingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Reviewed', isSorted: true,
+      colName: 'reviewedTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+
+  ];
+  businessesTableHeader: any[] = [
+    { Name: '-' },
+    { Name: 'Name' },
+    { Name: 'Owner' },
+    { Name: 'Accountant' },
+    { Name: 'Last update' },
+    {
+      Name: 'Pending', isSorted: true,
+      colName: 'pendingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Awaiting', isSorted: true,
+      colName: 'awaitingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Reviewed', isSorted: true,
+      colName: 'reviewedTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+
+  ];
+  //tabs
+  adminTabs: string[] = ['Accountants', 'Clients', 'Businesses'];
+  selectedTab: string = 'Accountants';
+  selectTabAdmin(tab: string) {
+    if (tab === 'Accountants') {
+      this.getProfiles();
+      console.log('Accountants')
+    }
+    else if (tab === 'Clients') {
+      this.getClients();
+    }
+    else {
+      this.getBusinesses();
+    }
+    this.selectedTab = tab;
   }
 }

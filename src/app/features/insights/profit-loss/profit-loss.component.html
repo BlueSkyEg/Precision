@@ -9,15 +9,16 @@
       {
       <div class="h-7 w-[1px] bg-gray-300"></div>
       <div class="border border-gray-300 rounded-md ">
-        <app-dropdown [options]="yearOptions" [isSearchBoxVisible]="false" [selectedOption]="selectedYear" (optionSelected)="onYearChange($event)"/>
+        <app-dropdown [options]="yearOptions" [isSearchBoxVisible]="false" [selectedOption]="selectedYear"
+          (optionSelected)="onYearChange($event)" />
       </div>
-    }
-    @else {
+      }
+      @else {
       <div class="border px-3 py-2.5 rounded-md border-gray-300 cursor-pointer" (click)="togglePercentage()">
-      <app-navigation-icon iconType="common" iconName="Percentage"/>
+        <app-navigation-icon iconType="common" iconName="Percentage" />
 
       </div>
-    }
+      }
     </div>
 
   </div>
@@ -30,17 +31,11 @@
   <app-report-table [columns]="['Name','Total']" [periods]="months" [reportData]="monthlyReport" />
 </div>
 <div *ngIf="selectedTab === 'Yearly'" class="overflow-x-auto w-full relative">
-  <app-report-table [columns]="['Name']" [periods]="yearOptions" [reportData]="yearlyReport" [isPercentage]="isPercentage" />
+  <app-report-table [columns]="['Name']" [periods]="yearOptions" [reportData]="yearlyReport"
+    [isPercentage]="isPercentage" />
 </div>
 }
 @else {
-<div class="flex flex-col items-center justify-center h-screen gap-4">
-  <div class="text-2xl font-medium text-center">
-    <span class="block ">You haven’t selected a business yet!</span>
-    <span class=" block text-sm">Please select a Business to display its
-      information.</span>
-  </div>
-  <img src="/assets/images/empty-state.webp" alt="Empty State" loading="lazy" />
-</div>
+<app-choose-business />
 
 }

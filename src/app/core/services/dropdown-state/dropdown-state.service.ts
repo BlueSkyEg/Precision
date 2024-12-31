@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { environment } from 'enviroments/environment.development';
 import { HttpClient } from '@angular/common/http';
 

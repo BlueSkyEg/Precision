@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { TotalTransactionsCardComponent } from 'app/shared/components/total-transactions-card/total-transactions-card.component';
 
 @Component({
   selector: 'app-documents-dashboard',
@@ -9,7 +8,6 @@ import { TotalTransactionsCardComponent } from 'app/shared/components/total-tran
   imports: [
     TopNavComponent,
     NavigationIconComponent,
-    TotalTransactionsCardComponent,
   ],
   templateUrl: './documents-dashboard.component.html',
 })

@@ -6,10 +6,10 @@ import { OverlayComponent } from 'app/shared/components/transactions/overlay/ove
 import { ModalComponent } from 'app/shared/components/modal/modal.component';
 import { TabsComponent } from 'app/shared/components/tabs/tabs.component';
 import { FormsModule } from '@angular/forms';
-import { CustomTableComponent } from 'app/shared/components/custome-table/custom-table.component';
-import { ITransactions } from 'app/shared/interfaces/insights/itransactions';
+import { CustomTableComponent } from 'app/shared/components/custom-table/custom-table.component';
+import { ITransactions } from 'app/shared/interfaces/insights/transaction-model';
 import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { TransactionsService } from 'app/core/services/transactions/transactions.service';
 @Component({
   selector: 'app-transactions',
@@ -65,7 +65,7 @@ export class TransactionsComponent {
     }
     return null;
   }
-  getPendingTransactions():void{
+  getPendingTransactions(): void {
     if (this.businessId) {
       this.transactionService.getPendingTransactions(this.businessId).subscribe({
         next: (data) => {

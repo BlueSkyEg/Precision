@@ -5,9 +5,9 @@ import { TableModule } from 'primeng/table';
 import { NavigationIconComponent } from '../../../core/icons/navigation-icons/navigation-icon.component';
 import { FormsModule } from '@angular/forms';
 import { PaginatorModule } from 'primeng/paginator';
-import { IUser } from 'app/shared/interfaces/insights/iuser';
-import { ITab } from 'app/shared/interfaces/insights/itab';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IUser } from 'app/shared/interfaces/insights/user-model';
+import { ITab } from 'app/shared/interfaces/insights/tab-model';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 
 @Component({
   selector: 'app-table',

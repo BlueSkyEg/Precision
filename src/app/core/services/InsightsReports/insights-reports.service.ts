@@ -33,5 +33,16 @@ export class InsightsReportsService {
     // Make the GET request
     return this._HttpClient.get<any>(url, { params });
   }
+  getYearlyPsReports(companyId: string, yearsLength: number = 5): Observable<any> {
+    // Construct the full URL with the path parameter
+    const url = `${this.apiUrl}/bs-years/${companyId}`;
+    // Construct the query parameters
+    let params = new HttpParams();
+    if (yearsLength !== undefined) {
+      params = params.set('year', yearsLength.toString());
+    }
+    // Make the GET request
+    return this._HttpClient.get<any>(url, { params });
+  }
 
 }

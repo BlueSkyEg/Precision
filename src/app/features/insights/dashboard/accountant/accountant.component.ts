@@ -1,25 +1,24 @@
 import { Component, inject } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
-import { TableComponent } from 'app/shared/components/table/table.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { TotalTransactionsCardComponent } from 'app/shared/components/total-transactions-card/total-transactions-card.component';
-import { ITab } from 'app/shared/interfaces/insights/itab';
-import { IUser } from 'app/shared/interfaces/insights/iuser';
+import { CardAmountsComponent } from '../card-amounts/card-amounts.component';
+import { TabsComponent } from 'app/shared/components/tabs/tabs.component';
+import { CustomTableComponent } from 'app/shared/components/custom-table/custom-table.component';
+
 
 @Component({
   selector: 'app-accountant',
   standalone: true,
-  imports: [TopNavComponent, TotalTransactionsCardComponent, TableComponent, NavigationIconComponent],
+  imports: [TopNavComponent, CardAmountsComponent, TabsComponent, CustomTableComponent],
   templateUrl: './accountant.component.html',
 })
 export class AccountantComponent {
+  ngOnInit() {
+    this.getAccountantById();
+  }
   _DashboardService = inject(DashboardService);
-
-  selectedTabIndex = 0;
-  pending = 0;
-  awaiting = 0;
-  reviewed = 0;
+  //breadcrumbs
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
     { label: 'Dashboard', routerLink: '/insights/dashboard' },
@@ -28,42 +27,61 @@ export class AccountantComponent {
       routerLink: '/insights/dashboard/accountant-dashboard',
     },
   ];
-  tabs: ITab[] = [
-    { title: 'My Profiles', searchTitle: 'Accountant', count: 0, users: [] },
-  ];
+  //tabs
+  tabs: string[] = ['My Profile'];
+  selectedTab: string = 'My Profile';
 
-  ngOnInit() {
-    this.getAccountants();
+  selectTab(tab: string) {
+    this.selectedTab = tab;
   }
+  //table Headers
+  businessesTableHeader: any[] = [
+    { Name: '-' },
+    { Name: 'Name' },
+    { Name: 'Owner' },
+    { Name: 'Accountant' },
+    { Name: 'Last update' },
+    {
+      Name: 'Pending', isSorted: true,
+      colName: 'pendingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Awaiting', isSorted: true,
+      colName: 'awaitingTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
+    {
+      Name: 'Reviewed', isSorted: true,
+      colName: 'reviewedTrxCount',
+      sortOrder: '' as '' | 'asc' | 'desc',
+    },
 
-  getAccountants() {
-    this._DashboardService.getProfiles().subscribe({
+  ];
+  businesses: any[] = [];
+  totalBusiness: number = 0;
+  totalPendingTransactions: number = 0;
+  totalReviewedTransactions: number = 0;
+  totalBusinessWithPendingTransactions: number = 0;
+  getAccountantById() {
+    this._DashboardService.getProfileById('c4a6b1ce-4224-460c-ad90-3eafddb32d9a').subscribe({
       next: (response) => {
-        this.tabs[0].users = response.data.items;
-        this.tabs[0].count = this.tabs[0].users.length;
-        if (this.selectedTabIndex === 0)
-          this.updateTransactionCounts(this.tabs[0].users);
+        console.log(response.data)
+        this.businesses = response.data;
+        this.totalBusiness = response.data.length;
+        this.totalReviewedTransactions = this.businesses.reduce(
+          (sum: any, user: any) => sum + (user.reviewedTrxCount || 0),
+          0
+        );
+        this.totalPendingTransactions = this.businesses.reduce(
+          (sum: any, user: any) => sum + (user.pendingTrxCount || 0),
+          0
+        );
+        this.totalBusinessWithPendingTransactions = this.businesses.reduce(
+          (count: any, user: any) => count + (user.pendingTrxCount > 0 ? 1 : 0), 0
+        )
+
       },
     });
-  }
-  updateTransactionCounts(users: IUser[]) {
-    this.pending = users.reduce(
-      (total, user) => total + user.pendingTrxCount,
-      0
-    );
-    this.awaiting = users.reduce(
-      (total, user) => total + user.awaitingTrxCount,
-      0
-    );
-    this.reviewed = users.reduce(
-      (total, user) => total + user.reviewedTrxCount,
-      0
-    );
-  }
-
-  onTabChange(index: number) {
-    this.selectedTabIndex = index;
-    const selectedUsers = this.tabs[index].users;
-    this.updateTransactionCounts(selectedUsers);
   }
 }
