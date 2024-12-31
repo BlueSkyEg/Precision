@@ -21,6 +21,7 @@ import { ProfileSettingsComponent } from './features/insights/profile/profile-se
 import { SubProfilesComponent } from './features/insights/profile/sub-profiles/sub-profiles.component';
 import { EditProfileComponent } from './features/insights/profile/profile-settings/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './features/insights/profile/profile-settings/change-password/change-password.component';
+import { DocumentsComponent } from './features/insights/documents/documents.component';
 
 
 export const routes: Routes = [
@@ -55,18 +56,15 @@ export const routes: Routes = [
           { path: 'profit-loos', component: ProfitLossComponent },
           {
             path: 'documents',
-            component: DashboardComponent,
-            children: [
-              {
-                path: 'request-document',
-                component: RequestDocumentsComponent,
-              },
-              {
-                path: 'document-dashboard',
-                component: DocumentsDashboardComponent,
-              },
-              { path: '', redirectTo: 'request-document', pathMatch: 'full' },
-            ],
+            component: DocumentsComponent,
+          },
+          {
+            path: 'documents/request-document',
+            component: RequestDocumentsComponent,
+          },
+          {
+            path: 'documents/document-dashboard',
+            component: DocumentsDashboardComponent,
           },
           { path: 'subcontractors', component: SubcontractorsComponent },
           { path: 'tax-return-history', component: TaxReturnHistoryComponent },
@@ -75,7 +73,7 @@ export const routes: Routes = [
             path: 'profile', component: ProfileComponent, children: [
               {
                 path: 'profile-settings', component: ProfileSettingsComponent,
-                 children: [
+                children: [
                   { path: 'profile-edits', component: EditProfileComponent },
                   { path: 'change-password', component: ChangePasswordComponent },
                   { path: '', redirectTo: 'profile-edits', pathMatch: 'full' },

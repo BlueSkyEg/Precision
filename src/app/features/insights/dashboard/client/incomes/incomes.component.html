@@ -1,0 +1,14 @@
+  <div class="flex gap-3 items-center text-gray-400 mb-2">
+    <app-navigation-icon class="text-white" iconType="common" [iconName]="labelIcon" />
+    <span class="font-medium text-2xl">{{label}}</span>
+  </div>
+  <div
+    class="flex h-28 flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md"   [ngClass]="themeColor">
+    <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px]">${{amount}}</span>
+    <div class="flex items-center">
+      <span class=" text-base font-semibold leading-6 tracking-[0.8px]">{{percentage}}%</span>
+      <div class="">
+        <app-navigation-icon iconType="common" [iconName]="percentageIcon" />
+      </div>
+    </div>
+  </div>

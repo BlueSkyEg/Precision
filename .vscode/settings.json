@@ -20,8 +20,10 @@
     },
     "peacock.color": "#3360D3",
     "cSpell.words": [
+        "admintabs",
         "exportdropdown",
         "getbusinesses",
+        "handlecompany",
         "selectedbussiness"
     ]
 }

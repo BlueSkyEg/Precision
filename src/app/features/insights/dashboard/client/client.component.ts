@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { TotalTransactionsCardComponent } from 'app/shared/components/total-transactions-card/total-transactions-card.component';
 import { ChartModule } from 'primeng/chart';
 import { TabViewModule } from 'primeng/tabview';
+import { IncomesComponent } from "./incomes/incomes.component";
+import { TabsComponent } from "../../../../shared/components/tabs/tabs.component";
+import { BarChartComponent } from "./bar-chart/bar-chart.component";
+import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
+import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
+import { ChooseBusinessComponent } from "../../choose-business/choose-business.component";
 
 @Component({
   selector: 'app-client',
@@ -11,132 +17,82 @@ import { TabViewModule } from 'primeng/tabview';
   imports: [
     TopNavComponent,
     NavigationIconComponent,
-    TotalTransactionsCardComponent,
     ChartModule,
     TabViewModule,
+    IncomesComponent,
+    TabsComponent,
+    BarChartComponent,
+    ChooseBusinessComponent
   ],
   templateUrl: './client.component.html',
 })
 export class ClientComponent implements OnInit {
+  //bread Crumbs
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
     { label: 'Dashboard', routerLink: '/insights/dashboard' },
     { label: 'Client', routerLink: '/insights/dashboard/client-dashboard' },
   ];
-  totalIncome: number = 20;
-  grossProfit: number = 30;
-  totalExpenses: number = 40;
-  pending: number = 400;
-  awaiting: number = 400;
-  basicData: any;
-  basicOptions: any;
+
+  //tabs
+  clientTabs: string[] = ['Net income', 'Expenses ', 'Gross profit'];
+  selectedTab: string = 'Net income';
+  selectTabClient(tab: string) {
+    this.selectedTab = tab;
+  }
+  //Injected Services
+  private _DashboardService: DashboardService = inject(DashboardService);
+  private _DropdownStateService: DropdownStateService = inject(DropdownStateService);
+
+  selectedBusiness: IBusinesses | null = null;
+  isBusinessSelected: boolean = false;
+
+  //business id getter
+  get businessId() {
+    if (this.selectedBusiness) {
+      return this.selectedBusiness.companyId;
+    }
+    return '';
+  }
+  //analysis number
+  awaitingTrx: number = 0;
+  expensesTotal: number = 0;
+  expensesRate: number = 0;
+  grossProfitTotal: number = 0;
+  grossProfitRate: number = 0;
+  netIncomeTotal: number = 0;
+  netIncomeRate: number = 0;
+  pendingTrx: number = 0;
+
 
   ngOnInit() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue(
-      '--text-color-secondary'
-    );
-    const maxYValue = 19000;
-    const minYValue = -9500;
-    const startValues = [
-      -6800, 0, 0, -5800, 0, 0, 10000, 7000, -4500, 6000, 10000, -3000,
-    ];
+    this._DropdownStateService.selectedBusiness$.subscribe((business) => {
+      this.selectedBusiness = business;
+      this.isBusinessSelected = business !== null;
 
-    const endValues = [
-      11800, 13000, 14000, 11800, 14000, 15000, 2000, 5000, 9500, 9000, 2000,
-      6000,
-    ];
+      if (this.isBusinessSelected) {
+        this.getBusinessAnalysis()
+      }
+    });
+  }
+  getBusinessAnalysis() {
+    this._DashboardService.getBusinessAnalysis(this.businessId).subscribe({
+      next: (response) => {
+        console.log(response.data);
+        this.grossProfitRate = response.data.grossProfitRate;
+        this.expensesRate = response.data.expensesRate;
+        this.netIncomeRate = response.data.netIncomeRate;
+        this.awaitingTrx = response.data.awaitingTrx;
+        this.pendingTrx = response.data.pendingTrx;
+        this.expensesTotal = response.data.expensesList[12];
+        this.grossProfitTotal = response.data.grossProfitList[12];
+        this.netIncomeTotal = response.data.netIncomeList[12];
+        //this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching business', err);
+      },
 
-    this.basicData = {
-      labels: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
-      datasets: [
-        {
-          label: '',
-          data: startValues,
-          backgroundColor: 'rgb(51, 96, 211)',
-          borderWidth: 0,
-          barPercentage: .3,
-          categoryPercentage: 1,
-        },
-        {
-          label: '',
-          data: endValues,
-          backgroundColor: 'rgb(51, 96, 211)',
-          borderWidth: 0,
-          barPercentage: .3,
-          categoryPercentage: 1,
-        },
-        {
-          label: '',
-          data: Array(12).fill(minYValue),
-          backgroundColor: 'rgba(247, 247, 247, 1)',
-          borderWidth: 0,
-          barPercentage: 0.3,
-        },
-        {
-          label: '',
-          data: Array(12).fill(maxYValue),
-          backgroundColor: 'rgba(247, 247, 247, 1)',
-          borderWidth: 0,
-          barPercentage: 0.3,
-        },
-      ],
-    };
-
-    this.basicOptions = {
-      plugins: {
-        tooltip: {
-          enabled: false,
-        },
-        legend: {
-          labels: {
-            color: textColor,
-            filter: (legendItem: any) => legendItem.text !== '',
-          },
-        },
-      },
-      scales: {
-        y: {
-          stacked: true,
-          beginAtZero: false,
-          min: minYValue,
-          max: maxYValue,
-          ticks: {
-            color: textColorSecondary,
-            callback: (value: number) => `${value / 1000}K`,
-          },
-          grid: {
-            display: false, // Disable grid lines on y-axis
-          },
-        },
-        x: {
-          stacked: true,
-          beginAtZero: false,
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            display: false,
-          },
-        },
-      },
-      interaction: {
-        mode: '',
-      },
-    };
+    });
   }
 }

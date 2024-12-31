@@ -20,6 +20,11 @@ export class PaginatorComponent {
   get totalPages(): number {
     return Math.ceil(this.items.length / this.itemsPerPage);
   }
+  get currentItems(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.items.slice(startIndex, endIndex);
+  }
 
   changePage(page: any) {
     if (page > 0 && page <= this.totalPages) {
@@ -29,7 +34,7 @@ export class PaginatorComponent {
   }
   selectOption(option: number) {
     this.optionSelected.emit(option);
-    
+
   }
   get visiblePages(): any[] {
     const maxVisiblePages = 5;

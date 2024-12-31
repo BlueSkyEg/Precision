@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
-import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
+import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 
 @Component({
   selector: 'app-user',
@@ -12,7 +12,7 @@ import { IBusinesses } from 'app/shared/interfaces/insights/ibusinesses';
 export class UserComponent {
   @Input() userName!: string;
   @Input() pcName!: string;
-  @Input() userIconName:string= 'user';
+  @Input() userIconName: string = 'user';
   @Input() pcIconName: string = 'monitor';
   dropdownStateService = inject(DropdownStateService);
   ngOnInit() {

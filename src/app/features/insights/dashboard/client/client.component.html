@@ -1,115 +1,50 @@
-<app-top-nav
-  [items]="breadcrumbItems"
-  [user]="true"
-/>
-<div class="mt-6 flex">
-  <div class="border-e border-gray-300 pe-6 w-full">
-    <div class="mb-4">
-      <div class="flex gap-3 items-center text-gray-400 mb-2">
-        <app-navigation-icon
-          class="text-white"
-          iconType="common"
-          iconName="net-income-main"
-        />
-        <p class="font-medium text-2xl">Net Income</p>
-      </div>
-      <div class="flex gap-2">
-        <app-total-transactions-card
-          [totalNumber]="totalIncome"
-          [percentage]="85"
-          [isBg]="true"
-          class="text-primary w-full"
-          textSize="text-sm"
-          textColor="text-primary"
-          iconName="net-income"
-          iconColor="text-primary"
-        />
-      </div>
-    </div>
-    <div>
-      <div class="flex gap-3 items-center text-gray-400 mb-2">
-        <app-navigation-icon
-          class="text-white"
-          iconType="common"
-          iconName="total-expense-main"
-        />
-        <p class="font-medium text-2xl">Total Expense</p>
-      </div>
-      <div class="flex gap-2">
-        <app-total-transactions-card
-          [totalNumber]="totalIncome"
-          [percentage]="90"
-          [isBg]="true"
-          class="text-[#ff0000] w-full"
-          textSize="text-sm"
-          textColor="text-[#FF0000]"
-          iconName="total-expense"
-          iconColor="text-[#FF0000]"
-        />
-      </div>
-    </div>
+<app-top-nav [items]="breadcrumbItems" [user]="true" />
+<!--Incomes-->
+@if(isBusinessSelected)
+{
+<div class="my-6 flex ">
+  <div class="border-e border-gray-300 pe-6 w-full flex flex-col gap-4">
+    <app-incomes label="Net Income" labelIcon="net-income-main" [amount]="netIncomeTotal" themeColor="text-primary"
+      [percentage]="netIncomeRate" percentageIcon="net-income" />
+    <app-incomes label="Total Expense" labelIcon="total-expense-main" [amount]="expensesTotal"
+      themeColor="text-[#FF0000]" [percentage]="expensesRate" percentageIcon="total-expense" />
   </div>
-  <div class="w-full ps-6">
-    <div class="mb-4">
-      <div class="flex gap-3 items-center text-gray-400 mb-2">
-        <app-navigation-icon
-          class="text-white"
-          iconType="common"
-          iconName="gross-profit-main"
-        />
-        <p class="font-medium text-2xl">Gross Profit</p>
-      </div>
-      <div class="flex gap-2">
-        <app-total-transactions-card
-          [totalNumber]="totalIncome"
-          [percentage]="85"
-          [isBg]="true"
-          class="text-[#20B62F] w-full"
-          textSize="text-sm"
-          textColor="text-[#20B62F]"
-          iconName="gross-profit"
-          iconColor="text-[#20B62F]"
-        />
-      </div>
-    </div>
+  <div class="w-full ps-4 flex flex-col gap-4">
+    <app-incomes label="Gross Profit" labelIcon="gross-profit-main" [amount]="grossProfitTotal "
+      themeColor="text-[#20B62F]" [percentage]="grossProfitRate" percentageIcon="gross-profit" />
     <div class="w-full">
       <div class="flex gap-3 items-center text-gray-400 mb-2">
-        <app-navigation-icon
-          class="text-white"
-          iconType="common"
-          iconName="pending-transactions"
-        />
-        <p class="font-medium text-2xl">Pending Transactions</p>
+        <app-navigation-icon class="text-white" iconType="common" iconName="pending-transactions" />
+        <span class="font-medium text-2xl">Pending Transactions</span>
       </div>
       <div class="flex gap-2 text-gray-400">
-        <app-total-transactions-card
-          [totalNumber]="pending"
-          cardName="Total Pending Transactions"
-          [isBg]="true"
-          textSize="text-sm"
-          class="w-full"
-        />
-        <app-total-transactions-card
-          [totalNumber]="awaiting"
-          cardName="Awaiting Your Review"
-          [isBg]="true"
-          textSize="text-sm"
-          class="w-full"
-        />
+        <div
+          class="flex h-28 w-full flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md">
+          <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px] block">{{pendingTrx}}</span>
+          <span class=" text-base font-semibold leading-6 tracking-[0.8px] block">Total Pending Transactions </span>
+        </div>
+        <div
+          class="flex h-28 w-full flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md">
+          <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px] block">{{awaitingTrx}}</span>
+          <span class=" text-base font-semibold leading-6 tracking-[0.8px] block">Waiting Accountant Approve </span>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div class="mt-9 border mb-6 !border-gray-300 rounded-2xl p-1 shadow-sm">
-  <p-tabView>
-    <p-tabPanel header="Net income">
-      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-    </p-tabPanel>
-    <p-tabPanel header="Expenses">
-      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-    </p-tabPanel>
-    <p-tabPanel header="Gross profit">
-      <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-    </p-tabPanel>
-  </p-tabView>
+
+<div class="border rounded-xl border-gray-300  rounded-b-none border-b-0 ps-2 py-2">
+  <app-tabs [tabs]="clientTabs" (tabsChanged)="selectTabClient($event)" [selectedTab]="selectedTab"
+    [isBoarded]="false" />
 </div>
+@if(selectedTab=='Net income')
+{<app-bar-chart></app-bar-chart>}
+@if(selectedTab=='Expenses ')
+{<h1>hhhhhhhhhh</h1>}
+@if(selectedTab=='Gross profit')
+{<h1>jjjjjjjjjjjjjj</h1>
+}
+}
+@else{
+<app-choose-business />
+}
