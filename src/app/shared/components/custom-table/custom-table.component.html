@@ -21,11 +21,11 @@
   }
 </div>}
 <!--Table-->
-<div class=" w-full border border-gray-300 border-t-0 overflow-x-auto overflow-y-visible rounded-b-md"
-  [ngClass]="{'rounded-md border-t':isTransaction}">
+<div class=" w-full border border-gray-300 border-t-0  overflow-y-visible rounded-b-md relative z-0"
+  [ngClass]="{'rounded-md border !border-t':isTransaction}">
   @if(!isTransaction){<app-search-input [isBordered]="false" [searchQuery]="searchQuery"
     (searchQueryChange)="onSearch($event) " [placeholder]="placeholderText" />}
-  <table class=" w-full text-sm text-left text-black font-semibold">
+  <table class=" w-full text-sm text-left text-black font-semibold  ">
     <thead class="bg-gray-100 border-b border-gray-300 w-full">
       <tr>
         @if(isTransaction){
@@ -59,7 +59,8 @@
     <tbody>
       @for(item of PaginatedData ; track $index){
       @if(isTransaction)
-      { <tr class="border-b border-gray-300 last:border-0 cursor-pointer" (click)="openEditModal(item)">
+      {
+      <tr class="border-b border-gray-300 last:border-0 cursor-pointer" (click)="openEditModal(item)">
         <td class="w-4 px-4 py-3">
           <div class="flex items-center">
             <input type="checkbox" (click)="$event.stopPropagation()" (change)="toggleSelection(item)"
@@ -82,14 +83,14 @@
         <td class="truncate max-w-custom py-3 text-gray-400  pe-8">
           {{ item.txnMemo }}
         </td>
-        <td class="py-3  max-w-fit pe-5">
+        <td class="py-3 z-50  pe-5 " >
           <div class="border border-gray-300 rounded-md">
             <app-dropdown (click)="$event.stopPropagation()" [options]="options" [isSearchBoxVisible]="true"
-              [selectedOption]="item.txnName" />
+              [selectedOption]="getAccountName(item.accountId)" [isAccount]="true"  />
           </div>
         </td>
         <td class="py-3 pe-1">
-          <button (click)="$event.stopPropagation()"
+          <button (click)="$event.stopPropagation() "
             class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]">
             Update
           </button>
@@ -181,7 +182,6 @@
         }
       </tr>
       }
-
       }
     </tbody>
   </table>
@@ -193,9 +193,12 @@
 </app-paginator>
 }
 
+<app-overlay [modalVisible]="editModalVisible" />
+
+
 <!-- modal -->
 <div [ngClass]="{ 'opacity-0': !editModalVisible }">
-  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" />
+  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"/>
 </div>
 
-<app-overlay [modalVisible]="editModalVisible" />
+

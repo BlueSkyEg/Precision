@@ -12,7 +12,7 @@
 
 <div *ngIf="selectedTab === 'Pending'">
   <!--Table-->
-  <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter()"  [isTransaction]="true"/>
+  <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter()"  [isTransaction]="true" [options]="options" />
 </div>
 <div *ngIf="selectedTab === 'Updated'">Content for Updated</div>
 <div *ngIf="selectedTab === 'History'">Content for History</div>
@@ -23,6 +23,7 @@
     [modalVisible]="filterVisible"
     (ModalClosed)="closeFilter($event)"
     [isFilter]="true"
+    [pendingTransactions]="pendingTransactions"
   />
 </div>
 
