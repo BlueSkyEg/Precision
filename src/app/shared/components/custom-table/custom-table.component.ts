@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
   SimpleChanges,
@@ -12,8 +13,8 @@ import { SearchInputComponent } from '../search-input/search-input.component';
 import { ModalComponent } from '../modal/modal.component';
 import { OverlayComponent } from '../transactions/overlay/overlay.component';
 import { CommonModule } from '@angular/common';
-import { ITransactions } from 'app/shared/interfaces/insights/transaction-model';
-import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
+
+import { InsightsCompanyService } from 'app/core/services/insights-company/insights-company.service';
 
 @Component({
   selector: 'app-custom-table',
@@ -34,6 +35,7 @@ export class CustomTableComponent {
   @Input() isTransaction: boolean = false;
   @Input() isBusiness: boolean = false;
   @Input() placeholderText: string = '';
+  @Input() options: any[] = [];
   data: any = null;
   @Input() tableHeader: any[] = [
     { Name: 'Name', colName: 'txnName', isSorted: false, width: '15%' },
@@ -69,7 +71,10 @@ export class CustomTableComponent {
   sortedData: any[] = [];
   sortKey: string = '';
   sortOrder: 'asc' | 'desc' | '' = '';
-  options: any[] = ['suspense', 'Option1', 'Option2', 'Option3'];
+
+  private _InsightsCompanyService: InsightsCompanyService = inject(InsightsCompanyService);
+
+
   //editModal
   editModalVisible: boolean = false;
   ngOnChanges(changes: SimpleChanges): void {
@@ -270,5 +275,12 @@ export class CustomTableComponent {
   }
   getBusinessItem(companyId: string) {
     this.getCompanyId.emit(companyId);
+
+  }
+
+
+  //get Account Id
+  getAccountName(accountId: string): string {
+    return this._InsightsCompanyService.getAccountNameById(accountId) || 'Unknown Account';
   }
 }

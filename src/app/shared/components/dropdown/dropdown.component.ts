@@ -22,10 +22,10 @@ export class DropdownComponent {
   @Input() isWLg: boolean = false;
   @Input() isSelectedOption: boolean = true;
   @Input() selectedOption: any = this.options?.[0] || '';
-
+  @Input() isAccount: boolean = false;
   @Output() optionSelected: EventEmitter<any> = new EventEmitter<any>();
 
-  dropdownStateService: DropdownStateService =inject(DropdownStateService);
+  dropdownStateService: DropdownStateService = inject(DropdownStateService);
 
   dropdownVisible: boolean = false;
   searchQuery: string = '';
@@ -34,19 +34,31 @@ export class DropdownComponent {
     if (!this.searchQuery && this.options) {
       return this.options;
     }
-    return this.options ? this.options.filter((option) =>
+    else if (this.isAccount){
+      return this.options ? this.options.filter((option) =>
+        option.fullName ? option.fullName.toString().toLowerCase().includes(this.searchQuery.toLowerCase()) : option.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
+      ) : [];
+    }
+    else{
+      return this.options ? this.options.filter((option) =>
       option.companyName ? option.companyName.toString().toLowerCase().includes(this.searchQuery.toLowerCase()) : option.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
-    ) : [];
+    ) : [];}
   }
   selectOption(option: any, event?: MouseEvent) {
     if (event) {
       event.stopPropagation();
     }
-    if (option.companyName){
+    if (option.companyName) {
       this.dropdownStateService.setSelectedBusiness(option);
     }
+    if(option.fullName){
+      this.optionSelected.emit({
+        id: option.id,
+      });
+    }
+
     this.optionSelected.emit(option);
-    this.selectedOption = option.companyName ? option.companyName.toString() : option.toString();
+    this.selectedOption = option.companyName ? option.companyName.toString() : option.fullName?option.fullName.toString():option.toString();
     this.dropdownVisible = false;
   }
   toggleDropdown(): void {
@@ -55,5 +67,7 @@ export class DropdownComponent {
   onSearch(query: string) {
     this.searchQuery = query;
   }
-
+  onOptionChange(selectedOption: string): void {
+    this.optionSelected.emit(selectedOption);  // Emit the selected option
+  }
 }

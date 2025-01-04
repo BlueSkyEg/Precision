@@ -9,7 +9,6 @@ import { SideBarComponent } from 'app/shared/components/sidebar/sidebar.componen
   standalone: true,
   imports: [RouterOutlet, NgClass ,SideBarComponent],
 templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent {
   collapsed: boolean = false;

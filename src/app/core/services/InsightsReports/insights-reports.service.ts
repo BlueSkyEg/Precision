@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from 'enviroments/environment.development';
+import { environment } from 'environments/environment.development';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class InsightsReportsService {
     // Make the GET request
     return this._HttpClient.get<any>(url, { params });
   }
-  getYearlyReports(companyId: string ,yearsLength:number=5): Observable<any> {
+  getYearlyReports(companyId: string, yearsLength: number = 5): Observable<any> {
     // Construct the full URL with the path parameter
     const url = `${this.apiUrl}/pl-years/${companyId}`;
     // Construct the query parameters
