@@ -54,7 +54,7 @@
         <label for="Classification/Account" class="font-semibold">Classification/Account</label>
         <div class="border border-gray-300 rounded-md">
           <app-dropdown [options]="options" [isSearchBoxVisible]="true"
-            [selectedOption]="getAccountName(data.accountId)" [isAccount]="true" (optionSelected)="getAccountId($event)"/>
+            [selectedOption]="selectedAccount" [isAccount]="true" (optionSelected)="getAccountId($event)"/>
         </div>
       </div>
       <div class="flex flex-col gap-2">

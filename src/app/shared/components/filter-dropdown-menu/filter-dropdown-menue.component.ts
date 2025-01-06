@@ -5,6 +5,7 @@ import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { DashboardService } from 'app/core/services/dashboard/dashboard.service';
 import { DropdownComponent } from "../dropdown/dropdown.component";
 import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { CompaniesService } from 'app/core/services/companies/companies.service';
 
 @Component({
   selector: 'app-filter-dropdown-menu',
@@ -16,7 +17,7 @@ export class FilterDropdownMenuComponent implements OnInit {
   selectedBusiness: IBusinesses | null = null;
   isBusinessSelected: boolean = false;
   business: IBusinesses[] | undefined;
-  _DashboardService = inject(DashboardService);
+  _CompaniesService = inject(CompaniesService);
   dropdownStateService = inject(DropdownStateService);
   ngOnInit(): void {
     this.getBusinesses();
@@ -25,8 +26,9 @@ export class FilterDropdownMenuComponent implements OnInit {
       this.isBusinessSelected = business !== null;
     });
   }
+  
   getBusinesses() {
-    this._DashboardService.getbusinesses().subscribe({
+    this._CompaniesService.getCompanyList().subscribe({
       next: (response) => {
         this.business = response.data;
       },

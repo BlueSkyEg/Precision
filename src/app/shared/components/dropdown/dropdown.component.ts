@@ -17,57 +17,55 @@ import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-
   templateUrl: './dropdown.component.html',
 })
 export class DropdownComponent {
+  // Inputs
   @Input() options: any[] | undefined = [5, 10, 15];
   @Input() isSearchBoxVisible: boolean = false;
   @Input() isWLg: boolean = false;
   @Input() isSelectedOption: boolean = true;
   @Input() selectedOption: any = this.options?.[0] || '';
   @Input() isAccount: boolean = false;
+
+  // Outputs
   @Output() optionSelected: EventEmitter<any> = new EventEmitter<any>();
 
+  // Services
   dropdownStateService: DropdownStateService = inject(DropdownStateService);
 
+  // Local state
   dropdownVisible: boolean = false;
   searchQuery: string = '';
 
   get filteredOptions(): any[] {
-    if (!this.searchQuery && this.options) {
-      return this.options;
-    }
-    else if (this.isAccount){
-      return this.options ? this.options.filter((option) =>
-        option.fullName ? option.fullName.toString().toLowerCase().includes(this.searchQuery.toLowerCase()) : option.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
-      ) : [];
-    }
-    else{
-      return this.options ? this.options.filter((option) =>
-      option.companyName ? option.companyName.toString().toLowerCase().includes(this.searchQuery.toLowerCase()) : option.toString().toLowerCase().includes(this.searchQuery.toLowerCase())
-    ) : [];}
+    return (
+      this.options?.filter((option) => {
+        const searchKey = this.isAccount
+          ? option.fullName
+          : option.companyName || option.toString();
+        return searchKey
+          ?.toLowerCase()
+          .includes(this.searchQuery.toLowerCase());
+      }) || []
+    );
   }
-  selectOption(option: any, event?: MouseEvent) {
-    if (event) {
-      event.stopPropagation();
-    }
-    if (option.companyName) {
-      this.dropdownStateService.setSelectedBusiness(option);
-    }
-    if(option.fullName){
-      this.optionSelected.emit({
-        id: option.id,
-      });
-    }
 
-    this.optionSelected.emit(option);
-    this.selectedOption = option.companyName ? option.companyName.toString() : option.fullName?option.fullName.toString():option.toString();
-    this.dropdownVisible = false;
-  }
+  // Toggles dropdown visibility
   toggleDropdown(): void {
     this.dropdownVisible = !this.dropdownVisible;
   }
-  onSearch(query: string) {
+
+  // Updates search query
+  onSearch(query: string): void {
     this.searchQuery = query;
   }
-  onOptionChange(selectedOption: string): void {
-    this.optionSelected.emit(selectedOption);  // Emit the selected option
+  selectOption(option: any, event?: MouseEvent): void {
+    if (event) event.stopPropagation();
+
+    const selectedKey = this.isAccount
+      ? option.fullName
+      : option.companyName || option.toString();
+    this.selectedOption = selectedKey;
+    this.dropdownVisible = false;
+
+    this.optionSelected.emit(option);
   }
 }

@@ -19,7 +19,7 @@ export class DropdownStateService {
     this.selectedBusinessSubject.next(business);
   }
 
-  getSelectedBusiness(): IBusinesses | null {
+  getSelectedBusiness(): any | null {
     return this.selectedBusinessSubject.value;
   }
   isBusinessSelected(): boolean {

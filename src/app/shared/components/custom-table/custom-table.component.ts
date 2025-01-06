@@ -72,14 +72,16 @@ export class CustomTableComponent {
   sortKey: string = '';
   sortOrder: 'asc' | 'desc' | '' = '';
 
-  private _InsightsCompanyService: InsightsCompanyService = inject(InsightsCompanyService);
-
+  private _InsightsCompanyService: InsightsCompanyService = inject(
+    InsightsCompanyService
+  );
 
   //editModal
   editModalVisible: boolean = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['AllData']) {
       this.updateSortedData();
+
     }
   }
 
@@ -90,7 +92,18 @@ export class CustomTableComponent {
   openFilter() {
     this.openFilterModal.emit();
   }
+  onTransactionsUpdated(updatedData: any[]) {
+    console.log("updatedData hoiiiiiiiiiiiiiiiiiii");
+    this.AllData = updatedData;
+    this.updateSortedData();
+    console.log(this.AllData);
+    this.filteredItems;
+        console.log(this.filteredItems);
+            this.PaginatedData;
 
+        console.log(this.PaginatedData);
+
+  }
   toggleSort(columnName: string): void {
     this.tableHeader = this.tableHeader.map((header) => {
       if (header.colName === columnName) {
@@ -183,15 +196,17 @@ export class CustomTableComponent {
   get filteredItems() {
     if (this.isTransaction) {
       return this.AllData.filter((transaction) =>
-        transaction.txnName.toLowerCase().includes(this.searchQuery.toLowerCase())
+        transaction.txnName
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase())
       );
-    }
-    else if (this.isBusiness) {
+    } else if (this.isBusiness) {
       return this.AllData.filter((business) =>
-        business.companyName.toLowerCase().includes(this.searchQuery.toLowerCase())
+        business.companyName
+          .toLowerCase()
+          .includes(this.searchQuery.toLowerCase())
       );
-    }
-    else {
+    } else {
       return this.AllData.filter((user) =>
         user.profileName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
@@ -268,19 +283,19 @@ export class CustomTableComponent {
     event?.preventDefault();
   }
 
-
   // send Profile Id to Parent
   getProfileInfo(userId: string, type: string) {
     this.getUserId.emit({ userId, type });
   }
   getBusinessItem(companyId: string) {
     this.getCompanyId.emit(companyId);
-
   }
-
 
   //get Account Id
   getAccountName(accountId: string): string {
-    return this._InsightsCompanyService.getAccountNameById(accountId) || 'Unknown Account';
+    return (
+      this._InsightsCompanyService.getAccountNameById(accountId) ||
+      'Unknown Account'
+    );
   }
 }

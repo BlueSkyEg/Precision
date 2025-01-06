@@ -198,7 +198,7 @@
 
 <!-- modal -->
 <div [ngClass]="{ 'opacity-0': !editModalVisible }">
-  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"/>
+  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"[pendingTransactions]="AllData"  (transactionsUpdated)="onTransactionsUpdated($event)"/>
 </div>
 
 

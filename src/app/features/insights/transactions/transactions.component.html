@@ -14,7 +14,10 @@
   <!--Table-->
   <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter()"  [isTransaction]="true" [options]="options" />
 </div>
-<div *ngIf="selectedTab === 'Updated'">Content for Updated</div>
+<div *ngIf="selectedTab === 'Updated'">
+  <!--Table-->
+<app-custom-table [AllData]="updatedTransactions" (openFilterModal)="openFilter()" [isTransaction]="true"
+  [options]="options" /></div>
 <div *ngIf="selectedTab === 'History'">Content for History</div>
 
 <!-- FilterModal -->

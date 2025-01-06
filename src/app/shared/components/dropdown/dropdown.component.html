@@ -10,7 +10,6 @@
       Export as
     </button>
     }
-
     <div [ngClass]="{
         'rounded-e-md px-3 py-2 text-white bg-primary hover:bg-[#2B51B2]':
           !isSelectedOption
@@ -28,13 +27,16 @@
     }
     @for( option of filteredOptions ;track $index ; let first =$first) {
     @if(!isAccount)
-    {<div class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
+    {
+    <div class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
       (click)="selectOption(option, $event)" [ngClass]="{ 'mt-4': first }">
       {{ option.companyName?option.companyName:option }}
       <span class="text-gray-400 text-sm block">{{option.ownerName?+'Owner :'+option.ownerName:''}}</span>
 
-    </div>}
-    @else {
+    </div>
+    }
+    @else
+    {
     <div class="px-3 py-1 cursor-pointer hover:bg-gray-100 text-gray-400 mb-4 text-base"
       (click)="selectOption(option, $event)" [ngClass]="{ 'mt-4': first }">
       {{ option.fullName }}

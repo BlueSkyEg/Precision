@@ -15,10 +15,8 @@ export class UserComponent {
   @Input() userIconName: string = 'user';
   @Input() pcIconName: string = 'monitor';
   dropdownStateService = inject(DropdownStateService);
-  ngOnInit() {
-    console.log(this.business)
-  }
+
   get business() {
-    return this.dropdownStateService.getSelectedBusiness();
+   return this.dropdownStateService.getSelectedBusiness();
   }
 }

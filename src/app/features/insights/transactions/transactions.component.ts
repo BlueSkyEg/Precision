@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {  ChangeDetectorRef, Component, inject } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { OverlayComponent } from 'app/shared/components/transactions/overlay/overlay.component';
 import { ModalComponent } from 'app/shared/components/modal/modal.component';
@@ -25,7 +25,6 @@ import { InsightsCompanyService } from 'app/core/services/insights-company/insig
     FormsModule,
     CustomTableComponent,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush, // for performance optimization
   providers: [provideNativeDateAdapter()],
   templateUrl: './transactions.component.html',
 })
@@ -49,15 +48,19 @@ export class TransactionsComponent {
 
   //choose account
   selectedAccountsCount: number = 0;
-  options:any[] = [];
+  options: any[] = [];
   pendingTransactions: ITransactions[] = [];
   updatedTransactions: ITransactions[] = [];
 
   //Injected services
-  private _DropdownStateService: DropdownStateService = inject(DropdownStateService);
-  private _TransactionService: TransactionsService = inject(TransactionsService);
-  private _InsightsCompanyService: InsightsCompanyService = inject(InsightsCompanyService);
-    private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private _DropdownStateService: DropdownStateService =
+    inject(DropdownStateService);
+  private _TransactionService: TransactionsService =
+    inject(TransactionsService);
+  private _InsightsCompanyService: InsightsCompanyService = inject(
+    InsightsCompanyService
+  );
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     // Subscribe to the selected business state
@@ -67,10 +70,10 @@ export class TransactionsComponent {
 
       if (this.isBusinessSelected) {
         this.getPendingTransactions();
+        this.getUpdatedTransactions();
         this.getAccounts();
       }
     });
-
   }
   //get business Id
   get businessId() {
@@ -86,18 +89,42 @@ export class TransactionsComponent {
     if (this.businessId) {
       this.cdr.detectChanges();
 
-      this._TransactionService.getPendingTransactions(this.businessId).subscribe({
-        next: (data) => {
-          if (data.succeeded == true) {
-            console.log(data)
-            this.pendingTransactions = data.data;
-            this.cdr.detectChanges();
+      this._TransactionService
+        .getPendingTransactions(this.businessId)
+        .subscribe({
+          next: (data) => {
+            if (data.succeeded == true) {
+              console.log(data);
+              this.pendingTransactions = data.data;
+              this.cdr.detectChanges();
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
+    }
+  }
 
-          }
+  //Updated transactions
+  getUpdatedTransactions(): void {
+    this.cdr.detectChanges();
 
-        },
-        error: (err) => console.error('Error:', err),
-      });
+    if (this.businessId) {
+      this.cdr.detectChanges();
+
+      this._TransactionService
+        .getUpdatedTransactions(this.businessId)
+        .subscribe({
+          next: (data) => {
+                          console.log(data);
+
+            if (data.succeeded == true) {
+              console.log(data);
+              this.updatedTransactions = data.data;
+              this.cdr.detectChanges();
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
     }
   }
   //get accounts
@@ -105,11 +132,9 @@ export class TransactionsComponent {
     if (this.businessId) {
       this._InsightsCompanyService.getAccounts(this.businessId).subscribe({
         next: (data) => {
-          if (data.succeeded ) {
-            console.log(data)
+          if (data.succeeded) {
             this.options = data.data;
           }
-
         },
         error: (err) => console.error('Error:', err),
       });
