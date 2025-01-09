@@ -23,7 +23,7 @@ export class QuickBooksComponent {
   private subscription: Subscription | null = null;
 
   ngOnInit(): void {
-    this.updateCompanyName();
+    this.updateCompanyName() ;
 
     this.subscription = this._DropDownStateService.selectedBusiness$.subscribe(() => {
       this.updateCompanyName();
