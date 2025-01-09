@@ -4,7 +4,7 @@
   <div class="lg:w-96 my-6 flex gap-2 items-center">
     <app-search-input class="flex-1" [searchQuery]="searchQuery" (searchQueryChange)="onSearch($event)"
       placeholder="Search Transactions" />
-    <div class="border border-gray-300 p-3 rounded-md cursor-pointer hover:bg-gray-100" (click)="openFilter()">
+    <div class="border border-gray-300 p-3 rounded-md cursor-pointer hover:bg-gray-100" (click)="openFilter(false ,0)">
       <app-navigation-icon iconType="common" iconName="filter" />
     </div>
   </div>
@@ -14,7 +14,7 @@
       {{ selectedAccountsCount }} Selected</span>
     <button
       class="bg-primary text-white text-sm font-semibold p-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
-      (click)="openFilter()">
+      (click)="openFilter(true,selectedAccountsCount)">
       Choose Account
     </button>
   </div>
@@ -32,7 +32,7 @@
         <th scope="col" class="p-4 ">
           <div class="flex items-center">
             <input #selectAllCheckbox id="checkbox-all-search" type="checkbox"
-              class="text-primary border border-gray-300 rounded w-4 h-4 cursor-pointer"
+              class="text-primary border border-gray-300 rounded w-4 h-4 cursor-pointer" [checked]="areAllSelected"
               (change)="toggleSelectAll(selectAllCheckbox.checked)" />
           </div>
         </th>
@@ -60,10 +60,13 @@
       @for(item of PaginatedData ; track $index){
       @if(isTransaction)
       {
-      <tr class="border-b border-gray-300 last:border-0 cursor-pointer" (click)="openEditModal(item)">
+      <tr class="border-b border-gray-300 last:border-0 cursor-pointer"
+        (click)="openEditModal(item) ; getHistoryByTransactionId(item.id) ;$event.stopPropagation();getSingleHistory(item.txnId )">
         <td class="w-4 px-4 py-3">
           <div class="flex items-center">
-            <input type="checkbox" (click)="$event.stopPropagation()" (change)="toggleSelection(item)"
+
+            <input type="checkbox" (click)="$event.stopPropagation()" [checked]="item.selected"
+              (change)="toggleSelection(item) "
               class="w-4 h-4 text-blue-600 border border-gray-300 rounded cursor-pointer" />
             <label class="sr-only">Select {{ item.txnName }}</label>
           </div>
@@ -83,24 +86,49 @@
         <td class="truncate max-w-custom py-3 text-gray-400  pe-8">
           {{ item.txnMemo }}
         </td>
-        <td class="py-3 z-50  pe-5 " >
+        @if(!historyLogs)
+        {<td class="py-3 z-50  pe-5 ">
           <div class="border border-gray-300 rounded-md">
             <app-dropdown (click)="$event.stopPropagation()" [options]="options" [isSearchBoxVisible]="true"
-              [selectedOption]="getAccountName(item.accountId)" [isAccount]="true"  />
+              [selectedOption]="getAccountName(item.accountId)" [isAccount]="true"
+              (optionSelected)="onDropdownChange($event,item.id )" />
           </div>
         </td>
+        @if(isUpdated && !updatedTransactions[item.id]){
         <td class="py-3 pe-1">
-          <button (click)="$event.stopPropagation() "
+          <button (click)="$event.stopPropagation(); getId(item.id); clearTransaction()"
+            class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]">
+            Clear
+          </button>
+        </td>
+        }
+        @else {
+        <td class="py-3 pe-1">
+          <button (click)="$event.stopPropagation(); getId(item.id);updateTransaction() "
             class="bg-primary text-white text-sm font-semibold py-2 px-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]">
             Update
           </button>
         </td>
-      </tr>}
+        }}
+        @else {
+        <td class="truncate max-w-custom py-6 text-gray-400  pe-8">
+          {{ item.toAccountName }}
+        </td>
+        <td class="truncate max-w-custom py-3 text-gray-400  pe-8">
+          {{ item.actionIssuerName }}
+        </td>
+        <td class="truncate max-w-custom py-3 text-gray-400  pe-8">
+          {{ item.createdAt| date : 'yyyy-MM-dd' }}
+        </td>
+        }
+      </tr>
+      }
       @else {
       <tr class="border-b border-gray-300 last:border-0 cursor-pointer">
         <td class="p-4 text-gray-400 ">{{$index+1}}</td>
         @if(!isBusiness)
-        {<td class="p-4 text-gray-400 " (click)="getProfileInfo(item.profileId ,item.profileType)">
+        {
+        <td class="p-4 text-gray-400 " (click)="getProfileInfo(item.profileId ,item.profileType)">
           {{ item.profileName?item.profileName:'-' }}
         </td>
         <td class="p-4 text-gray-400 text-center">
@@ -198,7 +226,8 @@
 
 <!-- modal -->
 <div [ngClass]="{ 'opacity-0': !editModalVisible }">
-  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"[pendingTransactions]="AllData"  (transactionsUpdated)="onTransactionsUpdated($event)"/>
+  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"
+    [pendingTransactions]="AllData" (transactionsUpdated)="onTransactionsUpdated($event)" [historyLogs]="historyLogs"
+    [isHistory]="isHistory" [transactionHistory]="transactionHistory"
+    [singleTransactionHistory]="singleTransactionHistory" />
 </div>
-
-

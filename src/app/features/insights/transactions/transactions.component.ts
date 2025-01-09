@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import {  ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { OverlayComponent } from 'app/shared/components/transactions/overlay/overlay.component';
 import { ModalComponent } from 'app/shared/components/modal/modal.component';
@@ -12,6 +12,7 @@ import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-
 import { IBusinesses } from 'app/shared/interfaces/insights/business-model';
 import { TransactionsService } from 'app/core/services/transactions/transactions.service';
 import { InsightsCompanyService } from 'app/core/services/insights-company/insights-company.service';
+import { ChooseBusinessComponent } from "../choose-business/choose-business.component";
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -24,7 +25,8 @@ import { InsightsCompanyService } from 'app/core/services/insights-company/insig
     TabsComponent,
     FormsModule,
     CustomTableComponent,
-  ],
+    ChooseBusinessComponent
+],
   providers: [provideNativeDateAdapter()],
   templateUrl: './transactions.component.html',
 })
@@ -41,7 +43,8 @@ export class TransactionsComponent {
 
   //filter modal
   filterVisible: boolean = false;
-
+  isChooseAccount: boolean = false;
+  selectedTransactions:any[]|undefined  = [];
   //businesses
   selectedBusiness: IBusinesses | null = null;
   isBusinessSelected: boolean = false;
@@ -51,7 +54,7 @@ export class TransactionsComponent {
   options: any[] = [];
   pendingTransactions: ITransactions[] = [];
   updatedTransactions: ITransactions[] = [];
-
+  HistoryLogs: any[] = [];
   //Injected services
   private _DropdownStateService: DropdownStateService =
     inject(DropdownStateService);
@@ -72,6 +75,7 @@ export class TransactionsComponent {
         this.getPendingTransactions();
         this.getUpdatedTransactions();
         this.getAccounts();
+        this.getHistory();
       }
     });
   }
@@ -115,12 +119,30 @@ export class TransactionsComponent {
         .getUpdatedTransactions(this.businessId)
         .subscribe({
           next: (data) => {
-                          console.log(data);
+            console.log(data);
 
             if (data.succeeded == true) {
               console.log(data);
               this.updatedTransactions = data.data;
               this.cdr.detectChanges();
+            }
+          },
+          error: (err) => console.error('Error:', err),
+        });
+    }
+  }
+  //History
+  getHistory(): void {
+    if (this.businessId) {
+      this._TransactionService
+        .getAllHistoryLogs(this.businessId)
+        .subscribe({
+          next: (data) => {
+            console.log(data);
+
+            if (data.succeeded == true) {
+              console.log(data);
+              this.HistoryLogs = data.data;
             }
           },
           error: (err) => console.error('Error:', err),
@@ -147,11 +169,44 @@ export class TransactionsComponent {
   }
 
   //MODAL
-  openFilter() {
+  openFilter(filterData: { isChooseAccount: boolean, selectedAccountsCount: any , selectedTransactions?: any[] }) {
+    const { isChooseAccount, selectedAccountsCount, selectedTransactions } = filterData;
+    this.selectedAccountsCount = selectedAccountsCount;
+    this.isChooseAccount = isChooseAccount;
+    if (isChooseAccount ) {
+      this.selectedTransactions = selectedTransactions;
+    }
+
     this.filterVisible = true;
   }
   closeFilter(event?: Event) {
     this.filterVisible = false;
     event?.preventDefault();
   }
+
+  //history
+  historyTableHeaders = [
+    { Name: 'Name', colName: 'txnName', isSorted: false, width: '15%' },
+    {
+      Name: 'date',
+      colName: 'txnDate',
+      isSorted: true,
+      sortOrder: '' as '' | 'asc' | 'desc',
+      width: '10%',
+    },
+    { Name: 'CHK', isSorted: false, width: '5%' },
+    { Name: 'Type', isSorted: false, width: '10%' },
+    {
+      Name: 'amount',
+      colName: 'txnAmount',
+      isSorted: true,
+      sortOrder: '' as '' | 'asc' | 'desc',
+      width: '10%',
+    },
+    { Name: 'Source', isSorted: false, width: '8%' },
+    { Name: 'Comment', isSorted: false, width: '10%' },
+    { Name: 'Classification/Account', isSorted: false, width: '20%' },
+    { Name: 'Approved by', isSorted: false },
+    { Name: 'Approved on', isSorted: false }
+  ]
 }

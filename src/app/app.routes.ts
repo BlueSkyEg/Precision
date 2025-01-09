@@ -22,6 +22,7 @@ import { SubProfilesComponent } from './features/insights/profile/sub-profiles/s
 import { EditProfileComponent } from './features/insights/profile/profile-settings/edit-profile/edit-profile.component';
 import { ChangePasswordComponent } from './features/insights/profile/profile-settings/change-password/change-password.component';
 import { DocumentsComponent } from './features/insights/documents/documents.component';
+import { QuickBooksComponent } from './features/insights/documents/quick-books/quick-books.component';
 
 
 export const routes: Routes = [
@@ -54,17 +55,25 @@ export const routes: Routes = [
           },
           { path: 'balance-sheet', component: BalanceSheetComponent },
           { path: 'profit-loos', component: ProfitLossComponent },
+
           {
             path: 'documents',
             component: DocumentsComponent,
-          },
-          {
-            path: 'documents/request-document',
-            component: RequestDocumentsComponent,
-          },
-          {
-            path: 'documents/document-dashboard',
-            component: DocumentsDashboardComponent,
+            children: [
+              {
+                path: 'quick-books',
+                component: QuickBooksComponent,
+              },
+              {
+                path: 'request-document',
+                component: RequestDocumentsComponent,
+              },
+              {
+                path: 'document-dashboard',
+                component: DocumentsDashboardComponent,
+              },
+              { path: '', redirectTo: 'quick-books', pathMatch: 'full' },
+            ],
           },
           { path: 'subcontractors', component: SubcontractorsComponent },
           { path: 'tax-return-history', component: TaxReturnHistoryComponent },

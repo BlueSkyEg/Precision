@@ -49,7 +49,8 @@ export class DropdownComponent {
   }
 
   // Toggles dropdown visibility
-  toggleDropdown(): void {
+  toggleDropdown(event:Event): void {
+    event.stopPropagation();
     this.dropdownVisible = !this.dropdownVisible;
   }
 

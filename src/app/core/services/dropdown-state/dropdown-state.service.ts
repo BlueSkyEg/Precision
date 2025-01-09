@@ -13,7 +13,7 @@ export class DropdownStateService {
 
   selectedBusiness$ = this.selectedBusinessSubject.asObservable();
 
-  private readonly apiUrl = `${environment.apiUrl}/company`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/company`;
 
   setSelectedBusiness(business: IBusinesses | null): void {
     this.selectedBusinessSubject.next(business);

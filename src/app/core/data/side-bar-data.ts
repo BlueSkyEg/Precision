@@ -46,6 +46,10 @@ export const navBarData: SideNavElements[] = [
         expanded: false,
         children: [
           {
+            name: 'QuickBooks',
+            route: 'insights/documents/quick-books',
+          },
+          {
             name: 'Request Document',
             route: 'insights/documents/request-document',
           },

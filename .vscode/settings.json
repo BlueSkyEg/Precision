@@ -24,6 +24,8 @@
         "exportdropdown",
         "getbusinesses",
         "handlecompany",
+        "ngrx",
+        "primeng",
         "selectedbussiness"
     ]
 }

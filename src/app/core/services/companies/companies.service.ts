@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class CompaniesService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/company`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/company`;
 
   getCompanyList(): Observable<any> {
     return this._HttpClient.get<any>(`${this.apiUrl}/list`);

@@ -11,10 +11,11 @@
       'rounded-e-md !border-r-0': isLast(tab),
       'border-r-0 rounded-s-none rounded-e-none !bg-white':!isBoarded,
       'border-b-2 border-b-primary  !bg-white': selectedTab === tab &&!isBoarded,
+      ' w-full':isHistory
 
     }">
-    <div class="flex items-center gap-2">
-      <span>{{ tab }}</span>
+    <div class="flex items-center  gap-2" [ngClass]="{'justify-center':isHistory}">
+      <span >{{ tab }}</span>
       @if(amount > 0){
       <span class="py-1 px-2 rounded-full border bg-gray-200" [ngClass]="{'border-0': selectedTab === tab &&!isBoarded}">{{amount}}</span>
       }

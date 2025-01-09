@@ -48,6 +48,7 @@ export class LoginComponent {
       const loginData = this.loginForm.value as ILoginData;
       this._AuthService.Login(loginData).subscribe({
         next: (res) => {
+          console.log(res);
           if (res.succeeded) {
             if (isPlatformBrowser(this.platformId)) {
               if (this.loginForm.value.rememberMe) {
@@ -55,6 +56,9 @@ export class LoginComponent {
               } else {
                 localStorage.removeItem('savedEmail');
               }
+              console.log(res.id)
+              localStorage.setItem('id', res.data.id);
+
             }
           }
           const role = res.data?.accessRole;

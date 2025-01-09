@@ -1,34 +1,34 @@
-<app-top-nav
-  [items]="breadcrumbItems"
-  [user]="true"
-/>
+<app-top-nav [items]="breadcrumbItems" [user]="true" />
+@if(isBusinessSelected)
+{
 <div class="mt-12">
-<app-tabs
-  [tabs]="transactionTabs"
-  (tabsChanged)="selectTab($event)"
-  [selectedTab]="selectedTab"
-/>
+  <app-tabs [tabs]="transactionTabs" (tabsChanged)="selectTab($event)" [selectedTab]="selectedTab" />
 </div>
 
 <div *ngIf="selectedTab === 'Pending'">
   <!--Table-->
-  <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter()"  [isTransaction]="true" [options]="options" />
+  <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter($event)" [isTransaction]="true"
+    [options]="options" />
 </div>
 <div *ngIf="selectedTab === 'Updated'">
   <!--Table-->
-<app-custom-table [AllData]="updatedTransactions" (openFilterModal)="openFilter()" [isTransaction]="true"
-  [options]="options" /></div>
-<div *ngIf="selectedTab === 'History'">Content for History</div>
+  <app-custom-table [AllData]="updatedTransactions" (openFilterModal)="openFilter($event)" [isTransaction]="true"
+    [options]="options" [isUpdated]="true" [isHistory]="true" />
+</div>
+<div *ngIf="selectedTab === 'History'">
+  <app-custom-table [AllData]="HistoryLogs" (openFilterModal)="openFilter($event)" [isTransaction]="true"
+    [options]="options" [isUpdated]="true" [historyLogs]="true" [tableHeader]="historyTableHeaders"
+    [isHistory]="true" />
+</div>
 
 <!-- FilterModal -->
 <div [ngClass]="{ 'opacity-0': !filterVisible }">
-  <app-modal
-    [modalVisible]="filterVisible"
-    (ModalClosed)="closeFilter($event)"
-    [isFilter]="true"
-    [pendingTransactions]="pendingTransactions"
-  />
+  <app-modal [modalVisible]="filterVisible" (ModalClosed)="closeFilter($event)" [isFilter]="true "
+    [isChooseAccount]="isChooseAccount" [pendingTransactions]="pendingTransactions" [options]="options" [selectedAccountsCount]="selectedAccountsCount" [data]="selectedTransactions" />
 </div>
-
 <!-- overlay -->
 <app-overlay [modalVisible]="filterVisible" />
+}
+@else {
+<app-choose-business />
+}

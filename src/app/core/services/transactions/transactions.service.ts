@@ -10,7 +10,7 @@ export class TransactionsService {
 
   private readonly _HttpClient: HttpClient = inject
     (HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/suspense`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/suspense`;
 
   //get
   getPendingTransactions(companyId: string, isSuspense: boolean = true): Observable<any> {
@@ -35,4 +35,22 @@ export class TransactionsService {
     return this._HttpClient.post(url, data);
   }
 
+  //Clear
+  clearSuspenseAccount(companyId: string | null, data: any): Observable<any> {
+    const url = `${this.apiUrl}/clear/${companyId}`;
+    return this._HttpClient.post(url, data);
+  }
+  //History
+  getHistoryByTransactionId(companyId: string|null, suspenseId:string): Observable<any> {
+    const url = `${this.apiUrl}/log/${companyId}/${suspenseId}`;
+    return this._HttpClient.get<any>(url);
+  }
+  getAllHistoryLogs(companyId: string | null): Observable<any> {
+    const url = `${this.apiUrl}/log/${companyId}`;
+    return this._HttpClient.get<any>(url);
+  }
+  getHistory(companyId: string | null, suspenseId: string): Observable<any> {
+    const url = `${this.apiUrl}/log/${companyId}/history/${suspenseId}`;
+    return this._HttpClient.get<any>(url);
+  }
 }

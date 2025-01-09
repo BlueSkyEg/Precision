@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IApiResponse } from 'app/shared/interfaces/api-response-interface';
 import { IAuthedUser } from 'app/shared/interfaces/auth/authed-user.interface';
 import { ILoginData } from 'app/shared/interfaces/auth/login-form.interface';
+import { environment } from 'environments/environment.development';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,9 +12,9 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly _Router: Router = inject(Router);
-  Login(data: ILoginData): Observable<IApiResponse<IAuthedUser>> {
-    return this._HttpClient.post<IApiResponse<IAuthedUser>>('http://10.1.1.83:5090/core/auth/login',data
-    );
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  Login(data: ILoginData): Observable<any> {
+    const url = `${this.apiUrl}/login`;
+    return this._HttpClient.post(url, data);
   }
 }

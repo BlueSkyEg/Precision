@@ -15,6 +15,9 @@ import { OverlayComponent } from '../transactions/overlay/overlay.component';
 import { CommonModule } from '@angular/common';
 
 import { InsightsCompanyService } from 'app/core/services/insights-company/insights-company.service';
+import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
+import { TransactionsService } from 'app/core/services/transactions/transactions.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-table',
@@ -27,6 +30,7 @@ import { InsightsCompanyService } from 'app/core/services/insights-company/insig
     ModalComponent,
     OverlayComponent,
     CommonModule,
+    FormsModule
   ],
   templateUrl: './custom-table.component.html',
 })
@@ -36,6 +40,9 @@ export class CustomTableComponent {
   @Input() isBusiness: boolean = false;
   @Input() placeholderText: string = '';
   @Input() options: any[] = [];
+  @Input() isUpdated: boolean = false;
+  @Input() isHistory: boolean = false;
+  @Input() historyLogs: boolean = false;
   data: any = null;
   @Input() tableHeader: any[] = [
     { Name: 'Name', colName: 'txnName', isSorted: false, width: '15%' },
@@ -60,10 +67,10 @@ export class CustomTableComponent {
     { Name: 'Classification/Account', isSorted: false, width: '20%' },
     { Name: 'Actions', isSorted: false },
   ];
-  @Output() openFilterModal = new EventEmitter<void>();
+  @Output() openFilterModal = new EventEmitter<{ isChooseAccount: boolean, selectedAccountsCount: any }>();
   @Output() getUserId = new EventEmitter<{ userId: string; type: string }>();
   @Output() getCompanyId = new EventEmitter<string>();
-
+  isChooseAccount: boolean = false;
   currentPage: number = 1;
   itemsPerPage: number = 5;
   selectedAccountsCount: number = 0;
@@ -71,11 +78,21 @@ export class CustomTableComponent {
   sortedData: any[] = [];
   sortKey: string = '';
   sortOrder: 'asc' | 'desc' | '' = '';
-
+  _accountId: string = '';
+  _transactionId: string = '';
+  updatedTransactions: Record<string, boolean> = {};
+  transactionHistory: any[] = [];
+  singleTransactionHistory: any[] = [];
+  selectedTransactions: any[] = [];
+  areAllSelected:boolean = false;
+  storedId = localStorage.getItem('id');
   private _InsightsCompanyService: InsightsCompanyService = inject(
     InsightsCompanyService
   );
-
+  private _DropdownStateService: DropdownStateService =
+    inject(DropdownStateService);
+  private _transactionService: TransactionsService =
+    inject(TransactionsService);
   //editModal
   editModalVisible: boolean = false;
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,19 +106,42 @@ export class CustomTableComponent {
     this.currentPage = page;
   }
 
-  openFilter() {
-    this.openFilterModal.emit();
+  openFilter(isChooseAccount: boolean, selectedAccountsCount: any) {
+    // Filter AllData to get only the selected transactions (chosen accounts)
+    const filteredTransactions = this.AllData.filter(transaction =>
+      this.selectedTransactions.includes(transaction)
+    );
+
+    // Prepare the data to be passed to the modal
+    const filterData = {
+      isChooseAccount,
+      selectedAccountsCount,
+      selectedTransactions: filteredTransactions  // Pass the filtered transactions
+    };
+
+    this.openFilterModal.emit(filterData);  // Emit the filtered data to the modal
   }
+
+  toggleSelection(transaction: any) {
+    this.areAllSelected = this.PaginatedData.every((item) => item.selected);
+    transaction.selected = !transaction.selected;
+    this.updateSelectedCount();
+    if (this.selectedTransactions.includes(transaction)) {
+      // Deselect the transaction
+      this.selectedTransactions = this.selectedTransactions.filter(t => t !== transaction);
+    } else {
+      // Select the transaction
+      this.selectedTransactions.push(transaction);
+    }
+    // Update the selected count
+    this.selectedAccountsCount = this.selectedTransactions.length;
+  }
+
   onTransactionsUpdated(updatedData: any[]) {
-    console.log("updatedData hoiiiiiiiiiiiiiiiiiii");
     this.AllData = updatedData;
     this.updateSortedData();
-    console.log(this.AllData);
     this.filteredItems;
-        console.log(this.filteredItems);
-            this.PaginatedData;
-
-        console.log(this.PaginatedData);
+    this.PaginatedData;
 
   }
   toggleSort(columnName: string): void {
@@ -258,18 +298,17 @@ export class CustomTableComponent {
     this.currentPage = 1;
   }
 
-  toggleSelection(transaction: any) {
-    transaction.selected = !transaction.selected;
-    this.updateSelectedCount();
-  }
 
-  toggleSelectAll(isChecked?: boolean): void {
-    this.AllData.forEach((tx) => (tx.selected = isChecked));
+  toggleSelectAll(isChecked: boolean): void {
+    this.areAllSelected = isChecked;
+    this.PaginatedData.forEach((tx) => {
+      tx.selected = isChecked ?? false;
+    });
     this.updateSelectedCount();
   }
 
   updateSelectedCount(): void {
-    this.selectedAccountsCount = this.AllData.filter(
+    this.selectedAccountsCount = this.PaginatedData.filter(
       (tx) => tx.selected
     ).length;
   }
@@ -297,5 +336,123 @@ export class CustomTableComponent {
       this._InsightsCompanyService.getAccountNameById(accountId) ||
       'Unknown Account'
     );
+  }
+
+  //get business Id
+  get businessId(): string | null {
+    if (this._DropdownStateService.isBusinessSelected()) {
+      return (
+        this._DropdownStateService.getSelectedBusiness()?.companyId ?? null
+      );
+    }
+    return null;
+  }
+
+
+
+  //update and clear transactions
+
+  getId(id: string): void {
+    this._transactionId = id;
+  }
+
+  //get Account Id
+  get accountId(): string {
+    return this._accountId;
+  }
+  //get transactionId
+  get transactionId(): string {
+    return this._transactionId;
+  }
+
+  onDropdownChange(event: { id: string }, id: string): void {
+    this.updatedTransactions[id] = true;
+    this._accountId = event.id;
+  }
+
+  updateTransaction() {
+    const requestBodyData: any = {
+      suspenseId: this.transactionId,
+      accountId: this.accountId,
+      clientMemo: 'try comment',
+      changerId: this.storedId,
+      isAccountantAction: true,
+    };
+    console.log(requestBodyData);
+
+    this._transactionService.updateSuspenseAccount(this.businessId, requestBodyData).subscribe({
+      next: (response) => {
+        if (response.statusCode === 200 && response.succeeded) {
+          console.log(response);
+          console.log(this.AllData);
+
+          // Find the transaction in AllData and update the accountId
+          const transactionIndex = this.AllData.findIndex(
+            (transaction: any) => transaction.id === this.transactionId
+          );
+
+          if (transactionIndex !== -1) {
+            // Update the accountId in AllData
+            this.AllData[transactionIndex].accountId = this.accountId;
+
+            // Reset the isUpdated status for this transaction
+            this.updatedTransactions[this.transactionId] = false;
+
+            console.log('Updated AllData:', this.AllData);
+          } else {
+            console.warn('Transaction not found in AllData');
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error updating transaction:', err);
+      },
+    });
+  }
+  clearTransaction() {
+    const requestBodyData: any = {
+      "suspenseId": this.transactionId,
+      "accountantId": this.storedId
+    }
+    console.log(requestBodyData, this.businessId);
+    this._transactionService
+      .clearSuspenseAccount(this.businessId, requestBodyData)
+      .subscribe({
+        next: (response) => {
+          if (response.statusCode == 200 && response.succeeded) {
+            const deletedTransactionId = response.data;
+            this.AllData = this.AllData.filter(transaction => transaction.id !== deletedTransactionId);
+            this.updateSortedData();
+            this.PaginatedData;
+          }
+        },
+      });
+  }
+  //history
+  getHistoryByTransactionId(transactionId: string) {
+    this._transactionService.getHistoryByTransactionId(this.businessId, transactionId).subscribe({
+      next: (response) => {
+        if (response.succeeded) {
+          console.log('Transaction History:', response.data);
+          this.transactionHistory = response.data;
+        }
+      },
+      error: (err) => {
+        console.error('Error getting transaction history:', err);
+      },
+    });
+  }
+  getSingleHistory(transactionId: string ) {
+    this._transactionService.getHistory(this.businessId, transactionId).subscribe({
+      next: (response) => {
+        if (response.succeeded) {
+          console.log('Single Transaction History:', response.data);
+          this.singleTransactionHistory = response.data;
+        }
+      },
+      error: (err) => {
+        console.error('Error getting transaction history:', err);
+      },
+    });
   }
 }

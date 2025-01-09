@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/dashbords`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/dashbords`;
 
   getProfiles(): Observable<any> {
     return this._HttpClient.get<any>(`${this.apiUrl}/profiles`);

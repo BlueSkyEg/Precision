@@ -14,6 +14,7 @@ export class TabsComponent {
   @Input() widthClass: 'full' | 'fit' = 'fit';
   @Input() isBoarded: boolean = true;
   @Input() amount:number=0;
+  @Input() isHistory: boolean = false;
   selectTab(tab: string) {
     this.tabsChanged.emit(tab);
   }

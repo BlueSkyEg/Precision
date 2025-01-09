@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class InsightsReportsService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/reports`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/reports`;
   getMonthlyReports(companyId: string, year: number = 2024): Observable<any> {
     // Construct the full URL with the path parameter
     const url = `${this.apiUrl}/pl-year/${companyId}`;

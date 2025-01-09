@@ -1,60 +1,63 @@
-<div class="fixed top-3 right-3 bottom-0 w-[400px] rounded-2xl p-6 bg-white transition-all duration-500 transform z-50"
+<div id="modal"
+  class="fixed top-3 py-5 right-3 overflow-auto bottom-0 w-[400px] rounded-2xl p-6 bg-white transition-all duration-500 transform z-50"
   [ngClass]="{
     'translate-x-full': !modalVisible,
     'translate-x-[-2000]': modalVisible
   }">
   <div class="flex items-center justify-between mb-8">
     <span class="font-medium text-xl">
-      {{ isFilter ? "Filters" : "Details" }}</span>
+      {{ (isFilter && isChooseAccount) ? 'Submit Selected (' + selectedAccountsCount +')': (isFilter ? "Filters" :
+      'Details') }}
+    </span>
     <div class="border border-gray-300 rounded-md p-[10px] cursor-pointer hover:bg-gray-100" (click)="closeModal()">
       <app-navigation-icon iconType="common" iconName="close" class="text-gray-400" />
     </div>
   </div>
   @if(!isFilter) {
-  <!-- <div class="mb-3 mt-12">
-    <app-tabs
-      [tabs]="EditTabs"
-      (tabsChanged)="selectTab($event)"
-      [selectedTab]="selectedTab"
-      widthClass="full"
-    />
+  @if(isHistory && !historyLogs)
+  {
+  <div class="mb-3 mt-12">
+    <app-tabs [isHistory]="true" [tabs]="EditTabs" (tabsChanged)="selectTab($event)" [selectedTab]="selectedTab"
+      widthClass="full" />
   </div>
-     @if(selectedTab === 'Submission')
-   { -->
+  }
+  @if(!historyLogs)
+  {
+  @if(selectedTab === 'Submission')
+  {
   <form class="flex flex-col h-[88%]" (ngSubmit)="updateTransaction()">
     @if(data) {
-
     <div class="flex-grow">
       <div class="border-b py-4 border-gray-300 flex items-center justify-between">
         <label for="name" class="text-sm font-semibold text-gray-400">Name</label>
         <input type="text" id="name" class="text-sm font-semibold text-end focus:outline-none"
-          [(ngModel)]="data.txnName" name="txnName" />
+          [(ngModel)]="data.txnName" name="txnName" readonly />
       </div>
       <div class="border-b py-4 border-gray-300 flex items-center justify-between">
         <label for="date" class="text-sm font-semibold text-gray-400">Date</label>
         <input type="date" id="date" class="text-sm font-semibold text-end focus:outline-none"
-          [(ngModel)]="data.txnDate" name="txnDate" [value]="data.txnDate | date : 'yyyy-MM-dd'" />
+          [(ngModel)]="data.txnDate" name="txnDate" [value]="data.txnDate | date : 'yyyy-MM-dd'" readonly />
       </div>
       <div class="border-b py-4 border-gray-300 flex items-center justify-between">
         <label for="chk" class="text-sm font-semibold text-gray-400">CHK</label>
         <input type="text" id="chk" class="text-sm font-semibold text-end focus:outline-none"
-          [(ngModel)]="data.refNumber" name="refNumber" />
+          [(ngModel)]="data.refNumber" name="refNumber" readonly />
       </div>
       <div class="border-b py-4 border-gray-300 flex items-center justify-between">
         <label for="amount" class="text-sm font-semibold text-gray-400">Amount</label>
-        <input type="number" id="amount" class="text-sm font-semibold text-end text-[#FF0000] focus:outline-none"
-          [(ngModel)]="data.txnAmount" name="txnAmount" />
+        <input type="text" id="amount" class="text-sm font-semibold text-end text-[#FF0000] focus:outline-none"
+          [(ngModel)]="data.txnAmount" name="txnAmount" readonly />
       </div>
       <div class="py-4 mb-4 border-gray-300 flex items-center justify-between">
         <label for="source" class="text-sm font-semibold text-gray-400">Source</label>
         <input type="text" id="source" class="text-sm font-semibold text-end focus:outline-none"
-          [(ngModel)]="data.txnSource" name="txnSource" />
+          [(ngModel)]="data.txnSource" name="txnSource" readonly />
       </div>
       <div class="flex flex-col gap-2 mb-4">
         <label for="Classification/Account" class="font-semibold">Classification/Account</label>
         <div class="border border-gray-300 rounded-md">
-          <app-dropdown [options]="options" [isSearchBoxVisible]="true"
-            [selectedOption]="selectedAccount" [isAccount]="true" (optionSelected)="getAccountId($event)"/>
+          <app-dropdown [options]="options" [isSearchBoxVisible]="true" [selectedOption]="selectedAccount"
+            [isAccount]="true" (optionSelected)="getAccountId($event)" />
         </div>
       </div>
       <div class="flex flex-col gap-2">
@@ -65,76 +68,137 @@
       </div>
     </div>
     }
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6 gap-2">
+      @if(isHistory){
+      <button type="button"
+        class="bg-white border border-gray-300 text-sm py-[10px] w-[168px] rounded-md text-black hover:bg-gray-100"
+        (click)="clearTransaction()">
+        Clear
+      </button>}
+      @else {
       <button type="button"
         class="bg-white border border-gray-300 text-sm py-[10px] w-[168px] rounded-md text-black hover:bg-gray-100"
         (click)="closeModal($event)">
         Close
       </button>
+      }
+
       <button type="submit" class="bg-primary text-sm py-[10px] w-[168px] rounded-md hover:bg-[#2B51B2] text-white">
         Update
       </button>
     </div>
   </form>
-<!--
+  }
+  }
+
+  @if(isHistory ||historyLogs)
+  {
   @if(selectedTab === 'History') {
-  <div class="flex flex-col h-[88%]">
+  <div class="flex flex-col gap-2">
+    <div class="flex text-gray-400 mt-2 mb-4 gap-1 items-center justify-center">
+      <app-navigation-icon iconType="common" iconName="warning-2" />
+      <span class="font-semibold text-sm">Sorted by newest first</span>
+    </div>
+    @if(!historyLogs)
+    {@for ( history of transactionHistory; track $index) {
     <div class="flex-grow">
-      <div class="flex text-gray-400 mt-2 mb-4 gap-1 items-center justify-center">
-        <app-navigation-icon iconType="common" iconName="warning-2" />
-        <span class="font-semibold text-sm">Sorted by newest first</span>
-      </div>
       <div class="p-4 bg-gray-100 mb-4">
         <div class="flex items-center gap-2 mb-3">
           <div class="w-1/2">
             <span class="font-semibold text-sm text-gray-400">User</span>
-            <p class="font-semibold text-sm text-primary">Ahmed Emad</p>
+            <p class="font-semibold text-sm text-primary">{{history.actionIssuerName}}</p>
           </div>
           <div>
             <span class="font-semibold text-sm text-gray-400">Date</span>
-            <p class="font-semibold text-sm text-primary">2023-01-23</p>
+            <p class="font-semibold text-sm text-primary">{{history.txnDate}}</p>
           </div>
         </div>
         <div class="mb-3">
           <span class="font-semibold text-sm text-gray-400">Memo</span>
           <p class="font-semibold text-sm">
-            AMERICAN EXPRESS DES:ACH PMT ID:M2910 INDN:Suheil Hussein CO
-            ID:1133133497 CCD
+            {{history.txnMemo}}
           </p>
         </div>
         <div class="mb-3">
           <span class="font-semibold text-sm text-gray-400">Classification/Account</span>
-          <p class="font-semibold text-sm">Computer And Internet Expenses</p>
+          <p class="font-semibold text-sm">{{history.toAccountName}}</p>
         </div>
         <div class="mb-3">
           <span class="font-semibold text-sm text-gray-400">Action Type</span>
-          <p class="font-semibold text-sm">Update</p>
+          <p class="font-semibold text-sm">{{history.logAction}}</p>
         </div>
       </div>
     </div>
-    <div class="flex justify-between items-center mb-6">
-      <button
-        class="bg-white border border-gray-300 text-sm py-[10px] w-[168px] rounded-md text-black hover:bg-gray-100"
-        (click)="closeModal($event)">
-        Close
-      </button>
-      <button class="bg-[#FF0000] text-sm py-[10px] w-[168px] rounded-md hover:bg-[#ff0000d5]">
-        <div class="flex gap-2 items-center justify-center">
-          <app-navigation-icon class="text-[#FF0000]" iconType="common" iconName="refresh-2" />
-          <span class="text-white">Reset</span>
+    }}
+    @else {
+    @for ( history of singleTransactionHistory; track $index) {
+    <div class="flex-grow">
+      <div class="p-4 bg-gray-100 mb-4">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-1/2">
+            <span class="font-semibold text-sm text-gray-400">User</span>
+            <p class="font-semibold text-sm text-primary">{{history.actionIssuerName}}</p>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-gray-400">Date</span>
+            <p class="font-semibold text-sm text-primary">{{history.txnDate}}</p>
+          </div>
         </div>
-      </button>
+        <div class="mb-3">
+          <span class="font-semibold text-sm text-gray-400">Memo</span>
+          <p class="font-semibold text-sm">
+            {{history.txnMemo}}
+          </p>
+        </div>
+        <div class="mb-3">
+          <span class="font-semibold text-sm text-gray-400">Classification/Account</span>
+          <p class="font-semibold text-sm">{{history.toAccountName}}</p>
+        </div>
+        <div class="mb-3">
+          <span class="font-semibold text-sm text-gray-400">Action Type</span>
+          <p class="font-semibold text-sm">{{history.logAction}}</p>
+        </div>
+      </div>
     </div>
+    }
+    }
   </div>
-  } -->
   }
-
+  }
+  }
   @if(isFilter) {
+  @if(isChooseAccount) {
+  <form class="flex flex-col h-[88%]" (ngSubmit)="updateTransaction()">
+    @if(data) {
+    <div class="flex-grow">
+      <div class="flex flex-col gap-2 mb-4">
+        <label for="Classification/Account" class="font-semibold">Classification/Account</label>
+        <div class="border border-gray-300 rounded-md">
+          <app-dropdown [options]="options" [isSearchBoxVisible]="true" [selectedOption]="selectedAccount"
+            [isAccount]="true" (optionSelected)="getAccountId($event)" />
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="Comment" class="font-semibold">Comment</label>
+        <textarea id="Comment"
+          class="text-sm font-semibold text-gray-400 p-3 bg-gray-100 rounded-md border max-h-52 h-36 border-gray-300 focus:outline-none"
+          [(ngModel)]="data.txnMemo" name="comment" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-6 gap-2">
+      <button type="submit" class="bg-primary text-sm py-[10px] w-[168px] rounded-md hover:bg-[#2B51B2] text-white">
+        Update
+      </button>
+    </div>}
+  </form>
+  }
+  @else {
   <form class="flex flex-col h-[94%]">
     <div class="flex-grow">
       <div class="mb-4">
         <label for="name" class="block mb-2 font-medium text-black">Name</label>
-        <input type="text" placeholder="Type name" id="name"
+        <input type="text" placeholder="Type name" id="name" readonly
           class="border text-gray-400 placeholder:text-gray-400 placeholder:font-semibold border-gray-300 rounded-md focus:outline-none block w-full p-2.5" />
       </div>
       <div class="mb-4">
@@ -156,5 +220,6 @@
       </button>
     </div>
   </form>
+  }
   }
 </div>

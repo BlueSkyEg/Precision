@@ -8,7 +8,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class InsightsCompanyService {
   private readonly _HttpClient: HttpClient = inject(HttpClient);
-  private readonly apiUrl = `${environment.apiUrl}/company`;
+  private readonly apiUrl = `${environment.apiUrl}/insights/company`;
 
   private accountsDictionary: Record<string, string> = {};
   getAccounts(companyId: string): Observable<any> {
