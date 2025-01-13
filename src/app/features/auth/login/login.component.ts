@@ -30,7 +30,7 @@ export class LoginComponent {
   private readonly _AuthService = inject(AuthService);
   private readonly _Router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-
+  message: string = '';
   loginForm = this.fb.group({
     email: ['', [Validators.required]],
     password: ['', [Validators.required]],
@@ -48,23 +48,32 @@ export class LoginComponent {
       const loginData = this.loginForm.value as ILoginData;
       this._AuthService.Login(loginData).subscribe({
         next: (res) => {
-          console.log(res);
           if (res.succeeded) {
+            console.log(res)
             if (isPlatformBrowser(this.platformId)) {
               if (this.loginForm.value.rememberMe) {
                 localStorage.setItem('savedEmail', loginData.email!);
               } else {
                 localStorage.removeItem('savedEmail');
               }
-              console.log(res.id)
-              localStorage.setItem('id', res.data.id);
-
+              this.message = res.message;
+              localStorage.setItem('userToken', res.data.accessToken);
+              this._AuthService.saveUserData();
+              const role = res.data?.accessRole;
+              if (role === 'CLIENT') {
+                this._Router.navigate(['/insights/dashboard/client-dashboard']);
+              } else if (role === 'ACCOUNTANT') {
+                this._Router.navigate(['/insights/dashboard/accountant-dashboard']);
+              } else {
+                this._Router.navigate(['/insights']);
+              }
             }
           }
-          const role = res.data?.accessRole;
-          if (role === 'admin' || role === '') {
-            this._Router.navigate(['/dashboard']);
+          else {
+            console.log(res);
+            this.message = res.message;
           }
+
         },
         error: (err) => {
           console.log(err);

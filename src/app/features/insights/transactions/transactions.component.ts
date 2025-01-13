@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Output } from '@angular/core';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { OverlayComponent } from 'app/shared/components/transactions/overlay/overlay.component';
 import { ModalComponent } from 'app/shared/components/modal/modal.component';
@@ -25,12 +25,13 @@ import { ChooseBusinessComponent } from "../choose-business/choose-business.comp
     TabsComponent,
     FormsModule,
     CustomTableComponent,
-    ChooseBusinessComponent
-],
+    ChooseBusinessComponent,
+  ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './transactions.component.html',
 })
 export class TransactionsComponent {
+  @Output() countUpdate = new EventEmitter<any>();
   //breadCrumbs
   breadcrumbItems: any[] = [
     { label: 'Insights', routerLink: '/insights' },
@@ -44,11 +45,10 @@ export class TransactionsComponent {
   //filter modal
   filterVisible: boolean = false;
   isChooseAccount: boolean = false;
-  selectedTransactions:any[]|undefined  = [];
+  selectedTransactions: any[] | undefined = [];
   //businesses
   selectedBusiness: IBusinesses | null = null;
   isBusinessSelected: boolean = false;
-
   //choose account
   selectedAccountsCount: number = 0;
   options: any[] = [];
@@ -134,19 +134,17 @@ export class TransactionsComponent {
   //History
   getHistory(): void {
     if (this.businessId) {
-      this._TransactionService
-        .getAllHistoryLogs(this.businessId)
-        .subscribe({
-          next: (data) => {
-            console.log(data);
+      this._TransactionService.getAllHistoryLogs(this.businessId).subscribe({
+        next: (data) => {
+          console.log(data);
 
-            if (data.succeeded == true) {
-              console.log(data);
-              this.HistoryLogs = data.data;
-            }
-          },
-          error: (err) => console.error('Error:', err),
-        });
+          if (data.succeeded == true) {
+            console.log(data);
+            this.HistoryLogs = data.data;
+          }
+        },
+        error: (err) => console.error('Error:', err),
+      });
     }
   }
   //get accounts
@@ -155,6 +153,7 @@ export class TransactionsComponent {
       this._InsightsCompanyService.getAccounts(this.businessId).subscribe({
         next: (data) => {
           if (data.succeeded) {
+            console.log(data);
             this.options = data.data;
           }
         },
@@ -169,11 +168,16 @@ export class TransactionsComponent {
   }
 
   //MODAL
-  openFilter(filterData: { isChooseAccount: boolean, selectedAccountsCount: any , selectedTransactions?: any[] }) {
-    const { isChooseAccount, selectedAccountsCount, selectedTransactions } = filterData;
+  openFilter(filterData: {
+    isChooseAccount: boolean;
+    selectedAccountsCount: any;
+    selectedTransactions?: any[];
+  }) {
+    const { isChooseAccount, selectedAccountsCount, selectedTransactions } =
+      filterData;
     this.selectedAccountsCount = selectedAccountsCount;
     this.isChooseAccount = isChooseAccount;
-    if (isChooseAccount ) {
+    if (isChooseAccount) {
       this.selectedTransactions = selectedTransactions;
     }
 
@@ -207,6 +211,16 @@ export class TransactionsComponent {
     { Name: 'Comment', isSorted: false, width: '10%' },
     { Name: 'Classification/Account', isSorted: false, width: '20%' },
     { Name: 'Approved by', isSorted: false },
-    { Name: 'Approved on', isSorted: false }
-  ]
+    { Name: 'Approved on', isSorted: false },
+  ];
+  onTransactionsUpdated(updatedData: any[]) {
+    console.log('Updated Transactions:', updatedData);
+    this.selectedAccountsCount = 0;
+    this.pendingTransactions = updatedData;
+  }
+  updateCount(count: any) {
+    console.log(count);
+    this.selectedAccountsCount = count;
+    this.countUpdate.emit(this.selectedAccountsCount);
+  }
 }

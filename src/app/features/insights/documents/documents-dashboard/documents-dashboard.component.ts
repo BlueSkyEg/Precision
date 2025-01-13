@@ -7,7 +7,6 @@ import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component
   standalone: true,
   imports: [
     TopNavComponent,
-    NavigationIconComponent,
   ],
   templateUrl: './documents-dashboard.component.html',
 })

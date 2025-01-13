@@ -33,16 +33,22 @@
   </div>
 </div>
 
-<div class="border rounded-xl border-gray-300  rounded-b-none border-b-0 ps-2 py-2">
+<div class="border rounded-xl border-gray-300 rounded-b-none border-b-0 ps-2 py-2">
   <app-tabs [tabs]="clientTabs" (tabsChanged)="selectTabClient($event)" [selectedTab]="selectedTab"
     [isBoarded]="false" />
 </div>
 @if(selectedTab=='Net income')
-{<app-bar-chart></app-bar-chart>}
+{@if(data.netIncomeList?.length)
+{<app-bar-chart [chartList]="data.netIncomeList" />}}
 @if(selectedTab=='Expenses ')
-{<h1>hhhhhhhhhh</h1>}
+{
+@if(data.expensesList?.length)
+{<app-bar-chart [chartList]="data.expensesList" barColor="#FF0000" />}
+}
 @if(selectedTab=='Gross profit')
-{<h1>jjjjjjjjjjjjjj</h1>
+{
+  @if(data.grossProfitList?.length)
+  {<app-bar-chart [chartList]="data.grossProfitList" barColor="#20B62F" />}
 }
 }
 @else{

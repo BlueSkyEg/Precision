@@ -9,6 +9,7 @@ import { TransactionsService } from 'app/core/services/transactions/transactions
 import { DropdownStateService } from 'app/core/services/dropdown-state/dropdown-state.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TabsComponent } from "../tabs/tabs.component";
+import { AuthService } from 'app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-modal',
@@ -21,7 +22,7 @@ import { TabsComponent } from "../tabs/tabs.component";
     FormsModule,
     NavigationIconComponent,
     ReactiveFormsModule,
-    TabsComponent
+    TabsComponent,
   ],
   templateUrl: './modal.component.html',
 })
@@ -37,17 +38,18 @@ export class ModalComponent {
 
   //outputs
   @Output() transactionsUpdated = new EventEmitter<any[]>();
+  @Output() countUpdated = new EventEmitter<any[]>();
+
   @Output() ModalClosed = new EventEmitter();
-  @Input() historyLogs:boolean = false;
-  @Input() transactionHistory:any[] = [];
+  @Input() historyLogs: boolean = false;
+  @Input() transactionHistory: any[] = [];
   @Input() singleTransactionHistory: any[] = [];
 
   private _selectedId: string = this.data?.accountId;
   //tabs
   EditTabs: string[] = ['Submission', 'History'];
   selectedTab: string = 'Submission';
-  storedId = localStorage.getItem('id');
-
+  role: string = '';
   selectTab(tab: string) {
     this.selectedTab = tab;
   }
@@ -59,6 +61,8 @@ export class ModalComponent {
     inject(TransactionsService);
   private _DropdownStateService: DropdownStateService =
     inject(DropdownStateService);
+  private _AuthService: AuthService = inject(AuthService);
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && this.data) {
@@ -77,13 +81,11 @@ export class ModalComponent {
     }
   }
 
-
   closeModal(event?: Event) {
     this.modalVisible = false;
-    if (this.data?.accountId)
-    {this._selectedId = this.data?.accountId;}
-    else{
-
+    if (this.data?.accountId) {
+      this._selectedId = this.data?.accountId;
+    } else {
     }
     this.ModalClosed.emit(event);
   }
@@ -95,7 +97,7 @@ export class ModalComponent {
 
   //get Account Id
   getAccountId(event: { id: string }): void {
-    console.log(event)
+    console.log(event);
     this._selectedId = event.id;
   }
 
@@ -115,21 +117,29 @@ export class ModalComponent {
     }
     return null;
   }
-
+  getChangerInformation() {
+    this.role = this._AuthService.saveUserData().Role;
+    console.log(this.role);
+  }
+  get changerId() {
+    return this._AuthService.saveUserData().Id;
+  }
   updateTransaction() {
+    this.getChangerInformation();
     const requestBodyData: any = {
       accountId: this.accountId,
       clientMemo: 'try comment',
-      changerId: this.storedId,
-      isAccountantAction: true,
+      changerId: this.changerId,
+      isAccountantAction: this.role == 'CLIENT' ? false : true,
     };
-    console.log(requestBodyData ,this.data)
     if (Array.isArray(this.data)) {
+      console.log(this.selectedAccountsCount);
+
       // Loop through all transactions in the array
       this.data.forEach((transaction: any) => {
         const transactionData = {
           ...requestBodyData,
-          suspenseId: transaction.id, // Transaction-specific ID
+          suspenseId: transaction.id,
         };
 
         this._transactionService
@@ -137,20 +147,28 @@ export class ModalComponent {
           .subscribe({
             next: (response) => {
               if (response.statusCode == 200 && response.succeeded) {
+                this.selectedAccountsCount = 0;
+                this.cdRef.detectChanges();
+                this.countUpdated.emit(this.selectedAccountsCount);
+
                 if (this.isHistory) {
                   transaction.accountId = this.accountId;
                 } else {
                   const updatedTransactions = this.pendingTransactions.filter(
                     (t: any) => t.id !== response.data
                   );
+                  console.log(updatedTransactions);
                   this.transactionsUpdated.emit(updatedTransactions);
+                  console.log(
+                    this.transactionsUpdated.emit(updatedTransactions)
+                  );
                 }
+                this.closeModal();
               }
             },
           });
       });
     } else {
-      // Handle case when data is not an array (if needed)
       const transactionData = {
         ...requestBodyData,
         suspenseId: this.data?.id, // Single transaction
@@ -176,12 +194,11 @@ export class ModalComponent {
     }
   }
 
-
   clearTransaction() {
     const requestBodyData: any = {
-      "suspenseId": this.data?.id,
-      "accountantId": this.storedId
-    }
+      suspenseId: this.data?.id,
+      accountantId: this.changerId,
+    };
     console.log(requestBodyData, this.businessId);
     this._transactionService
       .clearSuspenseAccount(this.businessId, requestBodyData)
@@ -204,9 +221,7 @@ export class ModalComponent {
     if (modal && !modal.contains(event.target as Node) && this.modalVisible) {
       this.closeModal();
       console.log(this.selectedTab);
-      console.log(this.historyLogs)
-
+      console.log(this.historyLogs);
     }
   }
-
 }

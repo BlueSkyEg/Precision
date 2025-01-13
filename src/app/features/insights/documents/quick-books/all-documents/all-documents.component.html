@@ -1,0 +1,13 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+  @for (document of AllDocuments; track $index) {
+<div
+    class="flex items-center text-gray-400 justify-between  min-w-[300px] max-w-[356px]  bg-gray-100 p-4 rounded-md cursor-pointer"
+    (click)="onDocumentClick(document.fullName)">
+    <div class=" flex gap-2 items-center">
+      <app-navigation-icon iconType="common" iconName="file" />
+      <span class="font-normal leading-6 text-black">{{document.fullName| extractFileName}}</span>
+    </div>
+    <app-navigation-icon iconType="common" iconName="arrow_right" />
+  </div>
+  }
+</div>

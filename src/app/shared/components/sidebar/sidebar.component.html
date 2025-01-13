@@ -1,121 +1,81 @@
 <header
-  class="border  border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm "
-  [ngClass]="!collapsed ? 'w-[248px]' : ''"
->
+  class="border  border-gray-300 bg-gray-100 h-screen transition-all duration-1000 fixed shadow-sm overflow-auto flex flex-col"
+  [ngClass]="!collapsed ? 'w-[280px]' : ''">
   <!-- logo and label -->
-  <div class="container my-5">
-    <div
-      class="flex items-center gap-5 relative transition-all duration-300"
-      [ngClass]="{ 'h-16': !collapsed, 'h-32': collapsed }">
+  <div class="container my-5" [ngClass]="{ 'my-0': collapsed }">
+    <div class="flex items-center gap-5 relative transition-all duration-300"
+      [ngClass]="{ 'h-16': !collapsed, 'h-20': collapsed }">
       <div class="flex flex-col gap-5 items-center justify-center">
-        @if(collapsed){
-        <div
-          class="close-open-btn"
-
-        >
-          <app-navigation-icon
-            (click)="toggleCollapse()"
-            iconName="Icon Button Open"
-            iconColor="text-gray-400"
-          ></app-navigation-icon>
+        <!-- @if(collapsed){
+        <div class="close-open-btn">
+          <app-navigation-icon (click)="toggleCollapse()" iconName="Icon Button Open"
+            iconColor="text-gray-400"></app-navigation-icon>
         </div>
-        }
+        } -->
         <picture (click)="toggleCollapse()" class="w-12 cursor-pointer">
-          <img
-            src="/assets/images/white-logo.webp"
-            alt="Precision Logo"
-            loading="lazy"
-            class="bg-primary p-3 rounded-md w-full"
-          />
+          <img src="/assets/images/white-logo.webp" alt="Precision Logo" loading="lazy"
+            class="bg-primary p-3 rounded-md w-full" />
         </picture>
       </div>
 
       @if(!collapsed) {
       <div>
-        <p class="text-primary font-medium text-lg">Precision Acc.</p>
+        <span class="text-primary font-medium text-lg">Precision Acc.</span>
         <p class="font-medium text-sm text-gray-400">Insights</p>
       </div>
-      } @if(!collapsed){
-      <div
-        class=" bg-white w-10 h-10 flex justify-center items-center rounded-full cursor-pointer text-gray-400 border absolute end-[-34px]  z-50"
-
-      >
-        <app-navigation-icon
-        (click)="toggleCollapse()"
-          iconName="Icon Button Close"
-          class="w-3 cursor-pointer ps-[2px]"
-          iconColor="text-gray-400"
-        ></app-navigation-icon>
-      </div>
       }
+       <!-- @if(!collapsed){
+      <div
+        class=" bg-white w-10 h-10 flex justify-center items-center rounded-full cursor-pointer text-gray-400 border absolute end-[-34px]  z-50">
+        <app-navigation-icon (click)="toggleCollapse()" iconName="Icon Button Close" class="w-3 cursor-pointer ps-[2px]"
+          iconColor="text-gray-400"></app-navigation-icon>
+      </div>
+      } -->
     </div>
-    <div
-      class="content-[''] block border-b border-gray-300 mt-4 w-full mx-auto"
-    ></div>
+    <div class="content-[''] block border-b border-gray-300 mt-3 w-full mx-auto"></div>
   </div>
   <!-- navigation links -->
-  <div class="container py-3">
-    <ul class="flex flex-col items-center gap-7 cursor-pointer">
+  <div class="container py-3 h-full">
+    <ul class="flex flex-col items-center gap-7  h-full">
       @for (item of navData ; track $index) {
-      <li
-        class="w-full font-bold text-black"
-        (click)="toggleExpand(item, navData)"
-      >
+      <li class="w-full font-bold text-black cursor-pointer"
+        (click)="toggleExpand(item, navData); $event.stopPropagation()">
         @if(!collapsed) {
         <div class="flex items-center mb-4">
-          <mat-icon class="pe-6" [ngClass]="{ 'rotate-180': item.expanded }"
-            >arrow_drop_down</mat-icon
-          >
+          <mat-icon class="pe-6" [ngClass]="{ 'rotate-180': item.expanded }">arrow_drop_down</mat-icon>
           <a>
             @if(!collapsed) {
-            <span >{{ item.name }}</span>
+            <span>{{ item.name }}</span>
             }
           </a>
         </div>
         } @if(item.children && (item.expanded ||collapsed)) {
         <ul class="p-0 m-0 ms-2 ">
           @for(child of item.children; track $index) {
-          <li
-            class="mb-3 text-gray-400"
-            (click)="
+          <li class="mb-3 text-gray-400" (click)="
               toggleExpand(child, item.children); $event.stopPropagation()
-            "
-          >
-            <a class="flex justify-between items-center  h-12 transition duration-200 "
-              [routerLink]="[child.route]"
-              routerLinkActive="text-secondary transition duration-1000 bg-white border border-gray-300 rounded-md py-2"
-            >
+            " [ngClass]="{ 'mb-0': collapsed }">
+            <a class="flex justify-between items-center  h-12 transition duration-200 " [routerLink]="[child.route]"
+              routerLinkActive="text-secondary transition duration-1000 bg-white border border-gray-300 rounded-md py-2">
               <div class="flex items-center gap-2  transition ">
                 @if(child.icon) {
-                <app-navigation-icon
-                  class=" ps-2"
-                  [iconName]="child.icon"
-                ></app-navigation-icon>
+                <app-navigation-icon class=" ps-2" [iconName]="child.icon"></app-navigation-icon>
                 } @if(!collapsed) {
-                <span >{{ child.name }}</span>
+                <span>{{ child.name }}</span>
                 }
               </div>
               @if(!collapsed && child.children?.length) {
-              <mat-icon [ngClass]="{ 'rotate-180': child.expanded }"
-                >arrow_drop_down</mat-icon
-              >
-
+              <mat-icon [ngClass]="{ 'rotate-180': child.expanded }">arrow_drop_down</mat-icon>
               }
             </a>
             @if(child.children &&(child.expanded||collapsed)) {
-            <ul class="ms-7 border-s my-3 text-sm !font-normal">
+            <ul class="ms-3 border-s my-3 text-sm !font-normal">
               @for(grandChild of child.children; track $index) {
-              <li
-                class="mb-3 text-gray-400"
-                (click)="$event.stopPropagation()"
-              >
+              <li class="mb-3 text-gray-400" (click)="$event.stopPropagation()">
                 @if(!collapsed) {
-                <a
-                  class="ps-3 hover:text-primary"
-                  [routerLink]="[grandChild.route]"
-                  routerLinkActive="border-s-2 border-primary  !text-primary"
-                >
-                  <span >{{ grandChild.name }}</span>
+                <a class="ps-3 hover:text-primary" [routerLink]="[grandChild.route]"
+                  routerLinkActive="border-s-2 border-primary  !text-primary">
+                  <span>{{ grandChild.name }}</span>
                 </a>
                 }
               </li>
@@ -127,6 +87,55 @@
         </ul>
         }
       </li>
+      }
+      @if(!collapsed)
+      {
+      <div class="mt-auto">
+        @if(isProfileEditsOpen){
+        <div class="border border-gray-300 rounded-lg p-4  bg-white mb-2 w-full">
+          <div class=" w-full flex items-center gap-3 text-gray-400 border-b border-gray-300 pb-3">
+            @if(userData?.profileImg)
+            {<img class="w-10 h-10 rounded-full" [src]="userData.profileImg" [alt]="userData.fullName">}
+            @else{
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-semibold bg-orange-500">
+              {{ userData?.fullName.charAt(0) }}
+            </div>
+            }
+            <div class="flex flex-col gap-1 font-semibold leading-5 ">
+              <span class="text-black text-sm tracking-[0.7px]">{{userData?.fullName}}</span>
+              <span class="text-xs tracking-[0.6px]">{{userData?.emailAddress}}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-gray-400 py-3 px-2">
+            <app-navigation-icon iconName="info-circle" iconType="common" />
+            <span class="text-sm font-semibold leading-5 tracking-[0.7px]">Help & Support</span>
+          </div>
+          <div class="flex items-center gap-3 text-state-fail-300 py-3 px-2 cursor-pointer" (click)="logOut()">
+            <app-navigation-icon iconName="log-out-01" iconType="common" />
+            <span class="text-sm font-semibold leading-5 tracking-[0.7px]">Logout</span>
+          </div>
+        </div>
+        }
+
+        <!-- User profile at the end-->
+        <li class="border-t border-gray-300 w-full flex items-center gap-3 text-gray-400 py-2 ">
+          @if(userData?.profileImg)
+          {<img class="w-10 h-10 rounded-full" [src]="userData.profileImg" [alt]="userData?.fullName">}
+          @else{
+          <div
+            class="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-semibold bg-orange-500">
+            {{ userData?.fullName.charAt(0) }}
+          </div>
+          }
+          <div class="flex flex-col gap-1 font-semibold leading-5 cursor-pointer" (click)="profileInfo()">
+            <span class="text-black text-sm tracking-[0.7px]">{{userData?.fullName}}</span>
+            <span class="text-xs tracking-[0.6px]">{{userData?.emailAddress}}</span>
+          </div>
+          <app-navigation-icon iconType="common" iconName="unfold_more" class="cursor-pointer"
+            (click)="toggleProfile()" />
+        </li>
+      </div>
       }
     </ul>
   </div>

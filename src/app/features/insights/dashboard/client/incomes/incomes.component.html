@@ -4,7 +4,7 @@
   </div>
   <div
     class="flex h-28 flex-col justify-center items-start gap-2 self-stretch border border-gray-300 bg-gray-100 p-4 rounded-md"   [ngClass]="themeColor">
-    <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px]">${{amount}}</span>
+    <span class=" text-[32px] font-semibold leading-[48px] tracking-[1.6px]">${{amount|number:'1.2-2'}}</span>
     <div class="flex items-center">
       <span class=" text-base font-semibold leading-6 tracking-[0.8px]">{{percentage}}%</span>
       <div class="">

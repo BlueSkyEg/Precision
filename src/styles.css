@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  html,
+  body,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  div,
+  a {
+    @apply font-sans;
+  }
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.mat-mdc-form-field-focus-overlay,
+.mdc-text-field__input {
+  background-color: #fff !important;
+  @apply focus:outline-none focus:ring-primary focus:border-primary;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+  @apply border text-gray-400 border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary;
+}
+
+.mdc-line-ripple::before {
+  z-index: 0 !important;
+  border-bottom-width: 0px !important;
+}
+
+.mdc-line-ripple {
+  display: none !important;
+}
+
+.cdk-overlay-pane {
+  @apply mt-2;
+}
+
+.cdk-overlay-pane .mat-calendar {
+  @apply bg-white border border-gray-300 rounded-md;
+}
+
+.mat-datepicker-content .mat-calendar {
+  width: 352px !important;
+  height: 400px !important;
+}
+
+.p-dropdown {
+  @apply border border-gray-300 rounded-md w-full text-start;
+}
+
+.p-table {
+  @apply border border-gray-500 rounded-md w-full text-start;
+}
+
+.p-dropdown-trigger-icon {
+  transition: transform 0.3s ease;
+}
+
+.p-dropdown .p-placeholder {
+  @apply text-gray-400 text-sm font-bold font-sans;
+}
+
+.p-dropdown input::-moz-placeholder {
+  @apply text-gray-400 text-sm  font-sans;
+}
+
+.p-dropdown input::placeholder {
+  @apply text-gray-400 text-sm  font-sans;
+}
+
+.p-dropdown-trigger[aria-expanded=true] {
+  transform: rotate(180deg);
+}
+
+.p-dropdown:not(.p-disabled).p-focus {
+  box-shadow: 0px 0px 3px 0px rgba(51, 96, 211, 0.5);
+  @apply border-[1.5px] border-primary;
+}
+
+.p-dropdown-header {
+  @apply bg-transparent;
+}
+
+.p-tabview-panels {
+  @apply border-t border-gray-300;
+}
+
+.p-tabview .p-tabview-nav .p-tabview-nav-link {
+  @apply text-[#282929];
+}
+
+.p-tabview .p-tabview-nav .p-highlight .p-tabview-nav-link {
+  @apply text-primary border-b-4 border-primary;
+}
+
+.p-tabview .p-tabview-nav .p-highlight .p-tabview-nav-link span {
+  @apply border-none;
+}
+
+.p-datatable-thead {
+  @apply border border-[#BFBFBF];
+}
+
+.p-datatable-thead th {
+  @apply bg-[#EAEAEA];
+}
+
+.p-datatable-tbody tr {
+  @apply border-b border-gray-300 hover:bg-gray-200 cursor-pointer;
+}
+
+.p-datatable-tbody tr:last-child {
+  border-bottom: none;
+}
+
+.p-datatable-table {
+  @apply text-sm font-bold;
+}
+
+p-dropdown {
+  @apply ms-auto;
+}
+
+.p-paginator button.p-disabled {
+  @apply hidden;
+}
+
+.p-paginator button {
+  @apply border border-gray-300 rounded-none text-gray-400 font-bold text-sm;
+}
+
+.p-paginator button.p-highlight {
+  @apply text-primary bg-gray-100;
+}/*# sourceMappingURL=styles.css.map */

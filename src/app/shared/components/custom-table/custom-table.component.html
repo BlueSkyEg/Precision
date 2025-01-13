@@ -8,15 +8,22 @@
       <app-navigation-icon iconType="common" iconName="filter" />
     </div>
   </div>
-  @if(selectedAccountsCount>0){
+  @if(selectedAccountsCount > 0 && (type=='updated'||type=='pending')){
   <div class="flex gap-2 items-center">
     <span class="text-gray-400 font-semibold text-sm">
       {{ selectedAccountsCount }} Selected</span>
-    <button
+      @if(type=='pending')
+    {<button
       class="bg-primary text-white text-sm font-semibold p-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
       (click)="openFilter(true,selectedAccountsCount)">
       Choose Account
-    </button>
+    </button>}
+    @else {
+      <button class="bg-primary text-white text-sm font-semibold p-3 rounded-md hover:bg-[#2B51B2] disabled:bg-[#3360d379]"
+        (click)="openIsWarningModal()">
+        {{selectedAccountsCount > 1?'Clear All':' Clear '}}
+      </button>
+    }
   </div>
   }
 </div>}
@@ -28,7 +35,7 @@
   <table class=" w-full text-sm text-left text-black font-semibold  ">
     <thead class="bg-gray-100 border-b border-gray-300 w-full">
       <tr>
-        @if(isTransaction){
+        @if(isTransaction && (type=='updated'||type=='pending')){
         <th scope="col" class="p-4 ">
           <div class="flex items-center">
             <input #selectAllCheckbox id="checkbox-all-search" type="checkbox"
@@ -62,16 +69,16 @@
       {
       <tr class="border-b border-gray-300 last:border-0 cursor-pointer"
         (click)="openEditModal(item) ; getHistoryByTransactionId(item.id) ;$event.stopPropagation();getSingleHistory(item.txnId )">
-        <td class="w-4 px-4 py-3">
+        @if((type=='updated'||type=='pending')){
+          <td class="w-4 px-4 py-3">
           <div class="flex items-center">
-
             <input type="checkbox" (click)="$event.stopPropagation()" [checked]="item.selected"
-              (change)="toggleSelection(item) "
-              class="w-4 h-4 text-blue-600 border border-gray-300 rounded cursor-pointer" />
+              (change)="toggleSelection(item) " class="w-4 h-4 text-blue-600 border border-gray-300 rounded cursor-pointer" />
             <label class="sr-only">Select {{ item.txnName }}</label>
           </div>
-        </td>
-        <td class=" max-w-fit">
+        </td>}
+
+        <td class=" max-w-fit px-3">
           <span>{{ item.txnName }}</span>
         </td>
         <td class="py-3 text-gray-400 max-w-fit">
@@ -226,8 +233,21 @@
 
 <!-- modal -->
 <div [ngClass]="{ 'opacity-0': !editModalVisible }">
-  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [data]="data" [options]="options"
-    [pendingTransactions]="AllData" (transactionsUpdated)="onTransactionsUpdated($event)" [historyLogs]="historyLogs"
+  <app-modal [modalVisible]="editModalVisible" (ModalClosed)="closeEditModal($event)" [pendingTransactions]="AllData"
+    [options]="options" (transactionsUpdated)="onTransactionsUpdated($event)" [historyLogs]="historyLogs"
     [isHistory]="isHistory" [transactionHistory]="transactionHistory"
-    [singleTransactionHistory]="singleTransactionHistory" />
+    [singleTransactionHistory]="singleTransactionHistory" [data]="data" />
+
+</div>
+
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-5"
+  >
+  <div class="w-[915px] h-[273px] [background:#FFF] rounded-3xl p-4 flex flex-col items-center gap-5">
+    <h1 class="text-state-fail-300 text-[32px] font-semibold leading-[48px] tracking-[1.6px] mt-4 mb-1">Attention!</h1>
+    <p class="text-gray-400 text-lg font-semibold leading-7 tracking-[0.9px]">Attention: Clearing all transactions will move them to history and it’s a permanent action. Are you sure you want to
+    proceed?</p>
+    <button class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" >
+      Close
+    </button>
+  </div>
 </div>

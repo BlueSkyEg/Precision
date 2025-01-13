@@ -1,15 +1,8 @@
 <div class="grid grid-cols-4 gap-0 ">
   <picture class="col-span-1 hidden lg:block">
-    <img
-      src="/assets/images/Login.webp"
-      alt="Login Image"
-      loading="lazy"
-      class="w-full h-full object-cover"
-    />
+    <img src="/assets/images/Login.webp" alt="Login Image" loading="lazy" class="w-full h-full object-cover" />
   </picture>
-  <div
-    class="col-span-4 lg:col-span-3 flex justify-center items-center flex-col h-svh w-full"
-  >
+  <div class="col-span-4 lg:col-span-3 flex justify-center items-center flex-col h-svh w-full">
     <picture class="mb-2">
       <img src="/assets/images/logo.webp" alt="Login Image" loading="lazy" />
     </picture>
@@ -19,57 +12,34 @@
     <p class="text-sub-text text-[20px]">
       We kindly request you to provide your details.
     </p>
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="onLogin()"
-      class="w-full px-12 mx-auto mt-8 lg:w-[40%] lg:px-0"
-    >
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="w-full px-12 mx-auto mt-8 lg:w-[40%] lg:px-0">
       <div class="mb-6">
-        <input
-          formControlName="email"
-          type="email"
-          id="email"
+        <input formControlName="email" type="email" id="email"
           class="bg-[#F8FAFC] w-full border border-[#CBD5E1] rounded-lg px-5 py-4 placeholder:text-[#64748B] focus-visible:border-[#CBD5E1] focus-visible:outline-none block"
-          placeholder="Email or Phone number"
-          required
-        />
+          placeholder="Email or Phone number" required />
         @if(emailControl?.touched && emailControl?.invalid) {
         <p class="text-red-600 text-xs p-2">You must enter an email.</p>
         }
       </div>
       <div class="mb-6">
-        <input
-          formControlName="password"
-          type="password"
-          id="password"
+        <input formControlName="password" type="password" id="password"
           class="bg-[#F8FAFC] w-full border border-[#CBD5E1] rounded-lg px-5 py-4 placeholder:text-[#64748B] focus-visible:border-[#CBD5E1] focus-visible:outline-none block"
-          placeholder="Password"
-          required
-        />
+          placeholder="Password" required />
         @if(passwordControl?.touched && passwordControl?.invalid) {
         <p class="text-red-600 text-xs p-2">You must enter a password.</p>
         }
       </div>
-      <div class="flex justify-between items-center">
+      <div class="flex justify-between items-center mb-10">
         <div class="flex items-center">
-          <input
-            id="remember"
-            formControlName="rememberMe"
-            type="checkbox"
-            value=""
-            class="w-4 h-4 border border-gray-300 rounded-sm focus:ring-3 focus:ring-blue-300"
-          />
-          <label for="remember" class="ms-2 text-sm text-[#465866]"
-            >Remember me</label
-          >
+          <input id="remember" formControlName="rememberMe" type="checkbox" value=""
+            class="w-4 h-4 border border-gray-300 rounded-sm focus:ring-3 focus:ring-blue-300" />
+          <label for="remember" class="ms-2 text-sm text-[#465866]">Remember me</label>
         </div>
         <a class="text-primary text-sm block">Forgot password?</a>
       </div>
-      <button
-        type="submit"
-        [disabled]="loginForm.invalid"
-        class="rounded-md w-full mt-20 text-xl bg-primary py-3 text-white disabled:bg-gray-300"
-      >
+      <p class="text-red-600 p-2 text-center ">{{message}}</p>
+      <button type="submit" [disabled]="loginForm.invalid"
+        class="rounded-md w-full mt-10 text-xl bg-primary py-3 text-white disabled:bg-gray-300">
         Sign In
       </button>
     </form>

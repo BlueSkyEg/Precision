@@ -1,0 +1,52 @@
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+  @for (file of allFiles; track $index){
+  @if(!file.downloadLink){
+  <div
+    class="flex items-center text-gray-400 justify-between  min-w-[300px] max-w-[356px]  bg-gray-100 p-4 rounded-md cursor-pointer"
+    (click)="onDocumentClick(file.fullName)">
+    <div class=" flex gap-2 items-center">
+      <app-navigation-icon iconType="common" iconName="file" />
+      <span class="font-normal leading-6 text-black">{{file.fullName| extractFileName}}</span>
+    </div>
+    <app-navigation-icon iconType="common" iconName="arrow_right" />
+  </div>
+  }
+  @else {
+  <div
+    class="flex items-center text-gray-400 justify-between  min-w-[300px] max-w-[356px]  bg-gray-100 p-4 rounded-md cursor-pointer">
+    <div class=" flex gap-2 items-center">
+      <app-navigation-icon iconType="common" iconName="Pdf" />
+      <span class="font-normal leading-6 text-black">{{file.fullName| extractFileName}}</span>
+    </div>
+    <div class="flex gap-2 items-center">
+      <a mat-icon-button color="primary" (click)="openPreview(file.previewLink)">
+        <mat-icon>visibility</mat-icon>
+      </a>
+      <a [href]="file.downloadLink">
+        <app-navigation-icon iconType="common" iconName="interactice download" />
+      </a>
+    </div>
+
+  </div>
+  }
+  }
+</div>
+<!-- Modal for Preview -->
+@if(isPreviewOpen)
+{
+<div class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50 w-full">
+  <div class="bg-white rounded-lg shadow-lg max-w-4xl w-full h-full">
+    <!-- Close Button -->
+    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" (click)="closePreview()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- PDF Preview -->
+    <div class="p-4 h-full w-full">
+      <app-file-viewer [fileUrl]="currentPreviewLink" />
+    </div>
+  </div>
+</div>
+}

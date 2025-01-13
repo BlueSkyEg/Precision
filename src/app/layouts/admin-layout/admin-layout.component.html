@@ -3,6 +3,6 @@
   <app-side-bar (collapseStateChange)="onCollapseChange($event)"></app-side-bar>
 
   <!-- Main content -->
-  <main class="px-8 lg:px-4 py-6 flex-grow" [ngClass]="{'ms-64': !collapsed, 'ms-28': collapsed}">
+  <main class="px-8 lg:px-4 py-6 flex-grow" [ngClass]="{'ms-[275px]': !collapsed, 'ms-28': collapsed}">
     <router-outlet></router-outlet>
   </main>

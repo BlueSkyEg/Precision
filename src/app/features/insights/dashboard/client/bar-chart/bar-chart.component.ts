@@ -1,79 +1,79 @@
-import { Component } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
-
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import Chart from 'chart.js/auto';
 @Component({
   selector: 'app-bar-chart',
   standalone: true,
-  imports: [ChartModule],
+  imports: [],
   templateUrl: './bar-chart.component.html',
 })
 export class BarChartComponent {
-  title = "GFG";
-  basicData = {
-    labels: [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
-    datasets: [
-      {
-        label: "Orders on Swiggy",
-        backgroundColor: "lightgreen",
-        data: [150 - (-200), 60 - (-200), 81, 71, 26, 65, 60]
-      },
-      {
-        label: "Orders on Zomato",
-        backgroundColor: "pink",
-        data: [56, 69, 89, 61, 36, 75, 50]
-      },
-      {
-        label: "Orders on Uber Eats",
-        backgroundColor: "gold",
-        data: [52, 59, 99, 71, 46, 85, 30]
-      },
-      {
-        label: "Orders on Licious",
-        backgroundColor: "skyblue",
-        data: [56, 52, 69, 81, 43, 55, 40]
-      }
-    ]
-  };
+  @Input() chartList: number[] = [];
+  @Input() barColor: string = '#3360D3';
+  constructor(private cdr: ChangeDetectorRef) {}
 
-  StackedOptions = {
-    plugins: {
-      legend: {
-        labels: {
-          color: "#black"
-        }
-      }
-    },
-    scales: {
-      x: {
-        stacked: true,
-        ticks: {
-          color: "#black"
-        },
-        grid: {
-          color: "rgba(255,255,255,0.2)"
-        }
+  ngOnInit(): void {
+    this.createChart();
+  }
+
+  ngOnChanges(): void {
+    this.cdr.detectChanges();
+  }
+  createChart(): void {
+    const ctx = document.getElementById('chartList') as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ],
+        datasets: [
+          {
+            data: this.chartList,
+            backgroundColor: this.barColor,
+            barThickness: 24,
+          },
+        ],
       },
-      y: {
-        stacked: true,
-        ticks: {
-          color: "#black"
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                return `$${context.raw.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}`;
+              },
+            },
+          },
         },
-        grid: {
-          color: "rgba(255,255,255,0.2)"
+        scales: {
+          y: {
+            beginAtZero: false,
+            ticks: {
+              callback: function (value: any) {
+                return value >= 0
+                  ? `$${value / 1000}K`
+                  : `-$${Math.abs(value) / 1000}K`;
+              },
+            },
+          },
         },
-
-        min: -200,
-        max: 400,
-
-      }
-    }
-  };
+      },
+    });
+  }
 }

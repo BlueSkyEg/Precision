@@ -1,12 +1,14 @@
-import { Component, Output, EventEmitter, OnInit, Inject, PLATFORM_ID, HostListener } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Inject, PLATFORM_ID, HostListener, inject } from '@angular/core';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { navBarData } from 'app/core/data/side-bar-data';
 import { SideNavElements } from 'app/core/interfaces/side-nav/side-nav-elements';
+import { AuthService } from 'app/core/services/auth/auth.service';
+import { UsersService } from 'app/core/services/users/users.service';
+import { getNavBarData } from 'app/core/data/side-bar-data';
 @Component({
   selector: 'app-side-bar',
   standalone: true,
@@ -24,11 +26,19 @@ import { SideNavElements } from 'app/core/interfaces/side-nav/side-nav-elements'
 })
 export class SideBarComponent implements OnInit {
   collapsed: boolean = false;
-  navData = navBarData;
+  userId: string = '';
+  userData: any = null;
+  userRole: string = '';
+  isProfileEditsOpen: boolean = false;
+  _AuthService: AuthService = inject(AuthService);
+  _UserService: UsersService = inject(UsersService);
+  _Router: Router = inject(Router);
+  navData: SideNavElements[] = [];
   @Output() collapseStateChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
   constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
   ngOnInit(): void {
+    this.getUserInfo();
     if (isPlatformBrowser(this.platformId)) {
       const storedCollapsedState = sessionStorage.getItem('sidebar-collapsed');
       if (storedCollapsedState !== null) {
@@ -55,6 +65,10 @@ export class SideBarComponent implements OnInit {
     sessionStorage.setItem('sidebar-collapsed', JSON.stringify(this.collapsed));
   }
   toggleExpand(item: SideNavElements, parentItems: SideNavElements[]): void {
+    if (this.isProfileEditsOpen) {
+      this.isProfileEditsOpen = false;
+      this.collapseAllChildren(item);
+    }
     parentItems.forEach((parentItem) => {
       if (parentItem !== item) {
         this.collapseAllChildren(parentItem);
@@ -106,5 +120,34 @@ export class SideBarComponent implements OnInit {
       }
       return item;
     });
+  }
+
+  //user profile information
+
+  get UserId() {
+    return this._AuthService.saveUserData().Id;
+  }
+  getUserInfo() {
+    this._UserService.getuserById(this.UserId).subscribe((data: any) => {
+      this.userData = data.data;
+    });
+    this.userRole = this._AuthService.saveUserData().Role;
+    this.navData = getNavBarData(this.userRole);
+  }
+
+  toggleProfile() {
+    if (this.isProfileEditsOpen) {
+      this.isProfileEditsOpen = false;
+      this.navData.forEach((item) => this.collapseAllChildren(item));
+    } else {
+      this.isProfileEditsOpen = true;
+      this.navData.forEach((item) => this.collapseAllChildren(item));
+    }
+  }
+  profileInfo() {
+    this._Router.navigate(['/insights/profile']);
+  }
+  logOut() {
+    this._AuthService.Logout();
   }
 }

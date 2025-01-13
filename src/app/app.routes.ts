@@ -23,12 +23,18 @@ import { EditProfileComponent } from './features/insights/profile/profile-settin
 import { ChangePasswordComponent } from './features/insights/profile/profile-settings/change-password/change-password.component';
 import { DocumentsComponent } from './features/insights/documents/documents.component';
 import { QuickBooksComponent } from './features/insights/documents/quick-books/quick-books.component';
+import { RelatedDocumentsComponent } from './features/insights/documents/quick-books/related-documents/related-documents.component';
+import { authGuard } from './core/guards/auth.guard';
+import { Loged } from './core/guards/loged-auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
+import { accountantGuard } from './core/guards/accountant.guard ';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
+    canActivate: [Loged],
     children: [
       { path: 'login', component: LoginComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -37,6 +43,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: 'insights',
@@ -47,18 +54,39 @@ export const routes: Routes = [
             path: 'dashboard',
             component: DashboardComponent,
             children: [
-              { path: 'admin-dashboard', component: AdminComponent },
-              { path: 'client-dashboard', component: ClientComponent },
-              { path: 'accountant-dashboard', component: AccountantComponent },
+              {
+                path: 'admin-dashboard',
+                component: AdminComponent,
+                canActivate: [adminGuard, accountantGuard],
+              },
+              {
+                path: 'client-dashboard',
+                component: ClientComponent,
+                
+              },
+              {
+                path: 'accountant-dashboard',
+                component: AccountantComponent,
+                canActivate: [adminGuard],
+              },
               { path: '', redirectTo: 'admin-dashboard', pathMatch: 'full' },
             ],
           },
-          { path: 'balance-sheet', component: BalanceSheetComponent },
-          { path: 'profit-loos', component: ProfitLossComponent },
+          {
+            path: 'balance-sheet',
+            component: BalanceSheetComponent,
+            canActivate: [adminGuard],
+          },
+          {
+            path: 'profit-loos',
+            component: ProfitLossComponent,
+            canActivate: [adminGuard],
+          },
 
           {
             path: 'documents',
             component: DocumentsComponent,
+            canActivate: [adminGuard],
             children: [
               {
                 path: 'quick-books',
@@ -73,25 +101,42 @@ export const routes: Routes = [
                 component: DocumentsDashboardComponent,
               },
               { path: '', redirectTo: 'quick-books', pathMatch: 'full' },
+              {
+                path: 'quick-books/related-documents',
+                component: RelatedDocumentsComponent,
+              },
             ],
           },
-          { path: 'subcontractors', component: SubcontractorsComponent },
-          { path: 'tax-return-history', component: TaxReturnHistoryComponent },
+          {
+            path: 'subcontractors',
+            component: SubcontractorsComponent,
+            canActivate: [adminGuard],
+          },
+          {
+            path: 'tax-return-history',
+            component: TaxReturnHistoryComponent,
+            canActivate: [adminGuard],
+          },
           { path: 'settings', component: SettingsComponent },
           {
-            path: 'profile', component: ProfileComponent, children: [
+            path: 'profile',
+            component: ProfileComponent,
+            children: [
               {
-                path: 'profile-settings', component: ProfileSettingsComponent,
+                path: 'profile-settings',
+                component: ProfileSettingsComponent,
                 children: [
                   { path: 'profile-edits', component: EditProfileComponent },
-                  { path: 'change-password', component: ChangePasswordComponent },
+                  {
+                    path: 'change-password',
+                    component: ChangePasswordComponent,
+                  },
                   { path: '', redirectTo: 'profile-edits', pathMatch: 'full' },
-                ]
+                ],
               },
               { path: 'sub-profiles', component: SubProfilesComponent },
               { path: '', redirectTo: 'profile-settings', pathMatch: 'full' },
-
-            ]
+            ],
           },
           { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         ],

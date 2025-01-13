@@ -6,25 +6,28 @@
 </div>
 
 <div *ngIf="selectedTab === 'Pending'">
-  <!--Table-->
+  <!--Pending Transactions Table-->
   <app-custom-table [AllData]="pendingTransactions" (openFilterModal)="openFilter($event)" [isTransaction]="true"
-    [options]="options" />
+    [options]="options"   (countUpdate)="updateCount($event)"  [selectedAccountsCount]="selectedAccountsCount" type="pending"/>
 </div>
 <div *ngIf="selectedTab === 'Updated'">
-  <!--Table-->
+  <!--Updated Transactions Table-->
   <app-custom-table [AllData]="updatedTransactions" (openFilterModal)="openFilter($event)" [isTransaction]="true"
-    [options]="options" [isUpdated]="true" [isHistory]="true" />
+    [options]="options" [isUpdated]="true" [isHistory]="true" [selectedAccountsCount]="selectedAccountsCount" type="updated"/>
 </div>
 <div *ngIf="selectedTab === 'History'">
   <app-custom-table [AllData]="HistoryLogs" (openFilterModal)="openFilter($event)" [isTransaction]="true"
     [options]="options" [isUpdated]="true" [historyLogs]="true" [tableHeader]="historyTableHeaders"
-    [isHistory]="true" />
+    [isHistory]="true" type="history" />
 </div>
 
 <!-- FilterModal -->
 <div [ngClass]="{ 'opacity-0': !filterVisible }">
   <app-modal [modalVisible]="filterVisible" (ModalClosed)="closeFilter($event)" [isFilter]="true "
-    [isChooseAccount]="isChooseAccount" [pendingTransactions]="pendingTransactions" [options]="options" [selectedAccountsCount]="selectedAccountsCount" [data]="selectedTransactions" />
+    [isChooseAccount]="isChooseAccount" [pendingTransactions]="pendingTransactions" [options]="options" (transactionsUpdated)="onTransactionsUpdated($event)"
+    [selectedAccountsCount]="selectedAccountsCount" [data]="selectedTransactions" (countUpdated)="updateCount($event)"
+      (countUpdated)="updateCount($event)"
+ />
 </div>
 <!-- overlay -->
 <app-overlay [modalVisible]="filterVisible" />

@@ -2,5 +2,18 @@
 <div class="my-6">
   <span class="text-gray-400  font-semibold leading-6 tracking-[0.8px]">{{companyName}}</span>
 </div>
-<app-search-input class="flex-1" placeholder="Search Documents" />
+<div class="lg:w-96 my-6 flex gap-2 items-center">
+  <app-search-input class="flex-1" [searchQuery]="searchQuery" (searchQueryChange)="onSearch($event)"
+    placeholder="Search Documents" />
+  <div class="bg-white border border-gray-300  text-sm rounded-md focus:outline-none  block  py-0.5">
+    <app-dropdown (click)="$event.stopPropagation()" [options]="options" [selectedOption]="options[0]" />
+  </div>
+</div>
+@if(showAllDocuments)
+{
+  <app-all-documents  [AllDocuments]="AllDocuments" (documentClick)="getDocumentsByDocumentName($event)"/>}
+@else {
+<app-related-documents [allFiles]="AllFiles" (documentClick)="getDocumentsByDocumentNameSecondLevel($event)" />
+
+}
 

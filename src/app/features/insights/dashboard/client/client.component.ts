@@ -1,8 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NavigationIconComponent } from 'app/core/icons/navigation-icons/navigation-icon.component';
 import { TopNavComponent } from 'app/shared/components/top-nav/top-nav.component';
-import { ChartModule } from 'primeng/chart';
-import { TabViewModule } from 'primeng/tabview';
 import { IncomesComponent } from "./incomes/incomes.component";
 import { TabsComponent } from "../../../../shared/components/tabs/tabs.component";
 import { BarChartComponent } from "./bar-chart/bar-chart.component";
@@ -17,12 +15,10 @@ import { ChooseBusinessComponent } from "../../choose-business/choose-business.c
   imports: [
     TopNavComponent,
     NavigationIconComponent,
-    ChartModule,
-    TabViewModule,
     IncomesComponent,
     TabsComponent,
     BarChartComponent,
-    ChooseBusinessComponent
+    ChooseBusinessComponent,
   ],
   templateUrl: './client.component.html',
 })
@@ -36,13 +32,15 @@ export class ClientComponent implements OnInit {
 
   //tabs
   clientTabs: string[] = ['Net income', 'Expenses ', 'Gross profit'];
-  selectedTab: string = 'Net income';
+  selectedTab: string = this.clientTabs[0];
+  data: any = [];
   selectTabClient(tab: string) {
     this.selectedTab = tab;
   }
   //Injected Services
   private _DashboardService: DashboardService = inject(DashboardService);
-  private _DropdownStateService: DropdownStateService = inject(DropdownStateService);
+  private _DropdownStateService: DropdownStateService =
+    inject(DropdownStateService);
 
   selectedBusiness: IBusinesses | null = null;
   isBusinessSelected: boolean = false;
@@ -64,20 +62,19 @@ export class ClientComponent implements OnInit {
   netIncomeRate: number = 0;
   pendingTrx: number = 0;
 
-
   ngOnInit() {
     this._DropdownStateService.selectedBusiness$.subscribe((business) => {
       this.selectedBusiness = business;
       this.isBusinessSelected = business !== null;
 
       if (this.isBusinessSelected) {
-        this.getBusinessAnalysis()
+        this.getBusinessAnalysis();
       }
     });
   }
   getBusinessAnalysis() {
     this._DashboardService.getBusinessAnalysis(this.businessId).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log(response.data);
         this.grossProfitRate = response.data.grossProfitRate;
         this.expensesRate = response.data.expensesRate;
@@ -87,12 +84,13 @@ export class ClientComponent implements OnInit {
         this.expensesTotal = response.data.expensesList[12];
         this.grossProfitTotal = response.data.grossProfitList[12];
         this.netIncomeTotal = response.data.netIncomeList[12];
+        this.data = response.data;
+        console.log(this.data);
         //this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching business', err);
       },
-
     });
   }
 }
